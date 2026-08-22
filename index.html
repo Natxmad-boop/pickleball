@@ -3,130 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Pickleball</title>
+    <title>Gestión Completa Pickleball</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h1, h2 { color: #2c3e50; text-align: center; }
-        .section { margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-        input, button { width: 100%; padding: 12px; margin-top: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+        input, button { width: 100%; padding: 12px; margin-top: 6px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
         button { background-color: #3498db; color: white; border: none; font-weight: bold; cursor: pointer; }
         button:hover { background-color: #2980b9; }
         ul { list-style: none; padding: 0; }
         li { background: #ecf0f1; padding: 10px; margin-top: 6px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
-        .sync-status { text-align: center; font-size: 14px; color: #7f8c8d; margin-bottom: 15px; }
+        .sync-status { text-align: center; font-size: 14px; color: #7f8c8d; margin-bottom: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>🏓 Pickleball Club</h1>
+    <h1>🏓 Club de Pickleball</h1>
     <div id="status" class="sync-status">Sincronizado con la nube ☁️</div>
 
-    <!-- Sección Socios -->
+    <!-- 1. Sección Socios -->
     <div class="section">
-        <h2>Registrar Socio</h2>
+        <h2>👥 Registrar Socio</h2>
         <input type="text" id="nombreSocio" placeholder="Nombre y Apellidos">
-        <button onclick="agregarSocio()">Añadir Socio</button>
-        <h3>Listado de Socios</h3>
+        <button onclick="agregarDato('socios', 'nombreSocio')">Añadir Socio</button>
         <ul id="listaSocios"></ul>
     </div>
 
-    <!-- Sección Clases -->
+    <!-- 2. Sección Monitores -->
     <div class="section">
-        <h2>Apuntar Clase / Pista</h2>
+        <h2>🎾 Registrar Monitor</h2>
+        <input type="text" id="nombreMonitor" placeholder="Nombre del Monitor">
+        <button onclick="agregarDato('monitores', 'nombreMonitor')">Añadir Monitor</button>
+        <ul id="listaMonitores"></ul>
+    </div>
+
+    <!-- 3. Sección Clases -->
+    <div class="section">
+        <h2>📅 Clases / Pistas</h2>
         <input type="text" id="nombreClase" placeholder="Ej: Clase Martes 18:00">
-        <button onclick="agregarClase()">Añadir Clase</button>
-        <h3>Clases Disponibles</h3>
+        <button onclick="agregarDato('clases', 'nombreClase')">Añadir Clase</button>
         <ul id="listaClases"></ul>
+    </div>
+
+    <!-- 4. Sección Bonos -->
+    <div class="section">
+        <h2>🎟️ Control de Bonos</h2>
+        <input type="text" id="nombreBono" placeholder="Socio y número de sesiones (Ej: Juan - Bono 10)">
+        <button onclick="agregarDato('bonos', 'nombreBono')">Añadir Bono</button>
+        <ul id="listaBonos"></ul>
+    </div>
+
+    <!-- 5. Sección Torneos -->
+    <div class="section">
+        <h2>🏆 Torneos y Eventos</h2>
+        <input type="text" id="nombreTorneo" placeholder="Nombre del Torneo / Fecha">
+        <button onclick="agregarDato('torneos', 'nombreTorneo')">Añadir Torneo</button>
+        <ul id="listaTorneos"></ul>
     </div>
 </div>
 
 <script>
     const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
 
-    // Cargar datos al abrir la página
     async function cargarDatos() {
         try {
             document.getElementById('status').innerText = "Cargando datos...";
             let respuesta = await fetch(API_URL);
             let datos = await respuesta.json();
             
-            mostrarSocios(datos.socios || []);
-            mostrarClases(datos.clases || []);
+            actualizarInterfaz(datos);
             document.getElementById('status').innerText = "Sincronizado con la nube ☁️";
         } catch (error) {
             document.getElementById('status').innerText = "Error al conectar con la nube ⚠️";
         }
     }
 
-    async function guardarEnNube(socios, clases) {
+    async function agregarDato(tipo, inputId) {
+        let input = document.getElementById(inputId);
+        let valor = input.value.trim();
+        if(!valor) return alert("Por favor, escribe algo.");
+
         try {
             document.getElementById('status').innerText = "Guardando...";
+            let respuesta = await fetch(API_URL);
+            let datos = await respuesta.json();
+
+            // Asegurar que las listas existan
+            datos.socios = datos.socios || [];
+            datos.monitores = datos.monitores || [];
+            datos.clases = datos.clases || [];
+            datos.bonos = datos.bonos || [];
+            datos.torneos = datos.torneos || [];
+
+            // Añadir el nuevo elemento a su categoría correspondiente
+            datos[tipo].push(valor);
+            input.value = "";
+
+            // Guardar todo en la nube
             await fetch(API_URL, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ socios, clases })
+                body: JSON.stringify(datos)
             });
+
+            actualizarInterfaz(datos);
             document.getElementById('status').innerText = "Sincronizado con la nube ☁️";
         } catch (error) {
             document.getElementById('status').innerText = "Error al guardar ⚠️";
         }
     }
 
-    async function agregarSocio() {
-        let input = document.getElementById('nombreSocio');
-        let nombre = input.value.trim();
-        if(!nombre) return alert("Escribe un nombre");
+    function actualizarInterfaz(datos) {
+        // Socios
+        let lSocios = document.getElementById('listaSocios');
+        lSocios.innerHTML = "";
+        (datos.socios || []).forEach(s => { lSocios.innerHTML += `<li>👤 ${s}</li>`; });
 
-        let respuesta = await fetch(API_URL);
-        let datos = await respuesta.json();
-        let socios = datos.socios || [];
-        let clases = datos.clases || [];
+        // Monitores
+        let lMonitores = document.getElementById('listaMonitores');
+        lMonitores.innerHTML = "";
+        (datos.monitores || []).forEach(m => { lMonitores.innerHTML += `<li>🎾 ${m}</li>`; });
 
-        socios.push(nombre);
-        input.value = "";
-        
-        await guardarEnNube(socios, clases);
-        mostrarSocios(socios);
-        mostrarClases(clases);
+        // Clases
+        let lClases = document.getElementById('listaClases');
+        lClases.innerHTML = "";
+        (datos.clases || []).forEach(c => { lClases.innerHTML += `<li>📅 ${c}</li>`; });
+
+        // Bonos
+        let lBonos = document.getElementById('listaBonos');
+        lBonos.innerHTML = "";
+        (datos.bonos || []).forEach(b => { lBonos.innerHTML += `<li>🎟️ ${b}</li>`; });
+
+        // Torneos
+        let lTorneos = document.getElementById('listaTorneos');
+        lTorneos.innerHTML = "";
+        (datos.torneos || []).forEach(t => { lTorneos.innerHTML += `<li>🏆 ${t}</li>`; });
     }
 
-    async function agregarClase() {
-        let input = document.getElementById('nombreClase');
-        let clase = input.value.trim();
-        if(!clase) return alert("Escribe el nombre de la clase");
-
-        let respuesta = await fetch(API_URL);
-        let datos = await respuesta.json();
-        let socios = datos.socios || [];
-        let clases = datos.clases || [];
-
-        clases.push(clase);
-        input.value = "";
-        
-        await guardarEnNube(socios, clases);
-        mostrarSocios(socios);
-        mostrarClases(clases);
-    }
-
-    function mostrarSocios(socios) {
-        let lista = document.getElementById('listaSocios');
-        lista.innerHTML = "";
-        socios.forEach(s => {
-            lista.innerHTML += `<li>👤 ${s}</li>`;
-        });
-    }
-
-    function mostrarClases(clases) {
-        let lista = document.getElementById('listaClases');
-        lista.innerHTML = "";
-        clases.forEach(c => {
-            lista.innerHTML += `<li>🏓 ${c}</li>`;
-        });
-    }
-
-    // Cargar al iniciar
+    // Cargar al iniciar la página
     cargarDatos();
 </script>
 
