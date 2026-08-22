@@ -25,8 +25,8 @@
                 <p class="text-slate-600 text-sm mb-4">Bienvenido a la aplicación oficial de nuestro club.</p>
                 
                 <div class="bg-emerald-50 border-l-4 border-emerald-600 p-3 rounded-r-xl">
-                    <span class="block text-xs font-bold text-emerald-800 uppercase">Próximo Entrenamiento</span>
-                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Consulta las clases disponibles</span>
+                    <span class="block text-xs font-bold text-emerald-800 uppercase">Próximo Evento / Clase</span>
+                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Consulta las actividades disponibles</span>
                 </div>
             </div>
 
@@ -55,16 +55,19 @@
         <!-- VISTA: BONO -->
         <section id="view-bono" class="view-section hidden space-y-4">
             <h2 class="text-xl font-bold text-slate-800">🎟️ Mi Bono</h2>
-            <div class="bg-white p-5 rounded-xl shadow-sm border text-center space-y-3">
-                <p class="text-slate-600 text-sm">Selecciona tu nombre:</p>
-                <select id="userSelect" onchange="renderUserCard()" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                    <option value="">-- Elige un alumno --</option>
+            <div class="bg-white p-5 rounded-xl shadow-sm border text-center space-y-4">
+                <p class="text-slate-600 text-sm">Selecciona tu nombre de socio:</p>
+                <select id="userSelect" onchange="renderUserCard()" class="w-full p-3 border rounded-xl text-sm bg-slate-50 font-bold">
+                    <option value="">-- Elige un socio --</option>
                 </select>
-                <div id="cardDisplay" style="display:none;" class="py-4 space-y-2">
-                    <span class="text-4xl font-extrabold text-[#0f5c32]" id="used-count">0</span>
-                    <p class="text-xs text-slate-500">Sesiones consumidas de 10</p>
+                <div id="cardDisplay" style="display:none;" class="py-2 space-y-3">
+                    <div class="bg-slate-50 p-4 rounded-xl border">
+                        <span class="text-4xl font-extrabold text-[#0f5c32]" id="used-count">0</span>
+                        <p class="text-xs text-slate-500 mt-1">Sesiones consumidas de un total de 10</p>
+                    </div>
+                    <p class="text-xs text-slate-400">Muestra este estado al monitor cuando asistas para que te selle tu sesión.</p>
                 </div>
-                <button onclick="solicitarBono()" class="bg-[#0f5c32] text-white px-4 py-3 rounded-xl font-bold text-sm w-full">Solicitar nuevo bono</button>
+                <button onclick="solicitarNuevoBonoSocio()" class="bg-blue-600 text-white px-4 py-3 rounded-xl font-bold text-sm w-full shadow">Solicitar Bono Nuevo / Recarga</button>
             </div>
         </section>
 
@@ -105,6 +108,19 @@
                 <button onclick="switchView('mas')" class="text-xs bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Cerrar Sesión</button>
             </div>
 
+            <!-- GESTIÓN DE SOCIOS Y BONOS (SELLADO) -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3 border-blue-200">
+                <h3 class="font-bold text-sm text-blue-800">🎟️ Control de Bonos y Socios</h3>
+                <input type="text" id="nuevoNombreSocio" placeholder="Nombre del nuevo socio" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <button onclick="crearSocio()" class="w-full bg-blue-600 text-white p-3 rounded-xl font-bold text-sm">Dar de alta nuevo socio</button>
+                <div class="pt-2 border-t">
+                    <p class="text-xs text-slate-500 mb-2 font-semibold">Sellar sesión o renovar bono a socio:</p>
+                    <div id="lista-socios-admin" class="space-y-2">
+                        <!-- Se cargan dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
             <!-- CREAR NUEVO MONITOR -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3 border-emerald-200">
                 <h3 class="font-bold text-sm text-emerald-800">➕ Crear Nuevo Perfil de Monitor</h3>
@@ -113,15 +129,13 @@
                 <button onclick="crearMonitor()" class="w-full bg-emerald-700 text-white p-3 rounded-xl font-bold text-sm">Guardar Nuevo Monitor</button>
             </div>
 
-            <!-- LISTA DE MONITORES EXISTENTES -->
+            <!-- LISTA DE MONITORES -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
                 <h3 class="font-bold text-xs text-slate-500 uppercase">Monitores Registrados:</h3>
-                <div id="lista-monitores-reg" class="space-y-1 text-sm">
-                    <!-- Se cargan dinámicamente -->
-                </div>
+                <div id="lista-monitores-reg" class="space-y-1 text-sm"></div>
             </div>
 
-            <!-- CREAR NUEVO ENTRENAMIENTO -->
+            <!-- CREAR ENTRENAMIENTO -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
                 <h3 class="font-bold text-sm text-slate-700">🏓 Publicar Clase / Entrenamiento</h3>
                 <input type="text" id="adminTituloClase" placeholder="Título (ej: Entrenamiento Nivel Medio)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
@@ -130,7 +144,7 @@
                 <button onclick="crearEntrenamiento()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm">Publicar Entrenamiento</button>
             </div>
 
-            <!-- CREAR NUEVO EVENTO / TORNEO -->
+            <!-- CREAR EVENTO -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
                 <h3 class="font-bold text-sm text-slate-700">🏆 Publicar Torneo / Evento</h3>
                 <input type="text" id="adminTituloEvento" placeholder="Título del Torneo" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
@@ -141,9 +155,7 @@
             <!-- SOLICITUDES DE PRUEBA -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
                 <h3 class="font-bold text-sm text-slate-700">👋 Solicitudes de Prueba Pendientes:</h3>
-                <div id="lista-solicitudes" class="space-y-2">
-                    <!-- Se cargan dinámicamente -->
-                </div>
+                <div id="lista-solicitudes" class="space-y-2"></div>
             </div>
         </section>
 
@@ -162,11 +174,13 @@
     </nav>
 
     <script>
-        let players = { "Juan Pérez": 4, "María Gómez": 2 };
-        
-        // Cero monitores predefinidos (completamente vacío)
-        let listaMonitores = [];
+        // Base de datos de socios y bonos (ejemplo limpio inicial)
+        let socios = {
+            "Juan Pérez": { usadas: 3 },
+            "María Gómez": { usadas: 9 }
+        };
 
+        let listaMonitores = [];
         let listaEntrenamientos = [];
         let listaEventos = [];
         let listaPruebas = [];
@@ -182,10 +196,12 @@
         function updateSelects() {
             const uSelect = document.getElementById('userSelect');
             if(!uSelect) return;
-            uSelect.innerHTML = '<option value="">-- Elige un alumno --</option>';
-            for (let name in players) {
+            const currentVal = uSelect.value;
+            uSelect.innerHTML = '<option value="">-- Elige un socio --</option>';
+            for (let name in socios) {
                 uSelect.innerHTML += `<option value="${name}">${name}</option>`;
             }
+            uSelect.value = currentVal;
         }
 
         function renderUserCard() {
@@ -193,10 +209,14 @@
             const display = document.getElementById('cardDisplay');
             if (!name) { display.style.display = 'none'; return; }
             display.style.display = 'block';
-            document.getElementById('used-count').innerText = players[name];
+            document.getElementById('used-count').innerText = socios[name].usadas;
         }
 
-        function solicitarBono() { alert("📩 Solicitud enviada a los monitores."); }
+        function solicitarNuevoBonoSocio() {
+            const name = document.getElementById('userSelect').value;
+            if(!name) { alert("Por favor, selecciona primero tu nombre en el desplegable."); return; }
+            alert(`📩 Solicitud de nuevo bono enviada a los monitores para ${name}.`);
+        }
 
         function enviarSolicitudPrueba() {
             const nombre = document.getElementById('nombrePrueba').value;
@@ -211,16 +231,83 @@
             switchView('inicio');
         }
 
+        // --- GESTIÓN DE SOCIOS Y BONOS (MONITORES) ---
+        function crearSocio() {
+            const nombre = document.getElementById('nuevoNombreSocio').value.trim();
+            if(!nombre) { alert("Escribe el nombre del socio."); return; }
+            if(socios[nombre]) { alert("Este socio ya existe."); return; }
+
+            socios[nombre] = { usadas: 0 };
+            document.getElementById('nuevoNombreSocio').value = '';
+            alert(`✅ Socio ${nombre} dado de alta con un bono nuevo.`);
+            renderizarTodo();
+        }
+
+        function sellarSesion(nombreSocio) {
+            if (socios[nombreSocio].usadas < 10) {
+                socios[nombreSocio].usadas++;
+                if (socios[nombreSocio].usadas === 10) {
+                    alert(`🎉 ¡${nombreSocio} ha completado las 10 sesiones! Se le facilitará un nuevo bono.`);
+                } else {
+                    alert(`✅ Sesión sellada a ${nombreSocio}. Llevan ${socios[nombreSocio].usadas}/10.`);
+                }
+            } else {
+                // Si ya llegó a 10, renovar bono automáticamente y poner a 1
+                socios[nombreSocio].usadas = 1;
+                alert(`🔄 ¡Bono renovado! Se ha iniciado un nuevo bono de 10 sesiones para ${nombreSocio}.`);
+            }
+            renderizarTodo();
+        }
+
+        // --- INSCRIPCIÓN A ENTRENAMIENTOS Y EVENTOS ---
+        function inscribirseClase(idClase) {
+            const nombreSocio = prompt("Introduce tu nombre de socio para inscribirte a esta clase:");
+            if(!nombreSocio) return;
+            if(!socios[nombreSocio]) {
+                alert("No se encuentra ese socio registrado. Pide al monitor que te dé de alta.");
+                return;
+            }
+            const clase = listaEntrenamientos.find(c => c.id === idClase);
+            if(clase) {
+                if(!clase.inscritos) clase.inscritos = [];
+                if(clase.inscritos.includes(nombreSocio)) {
+                    alert("Ya estás inscrito en esta clase.");
+                } else {
+                    clase.inscritos.push(nombreSocio);
+                    alert(`✅ ¡Inscripción correcta a: ${clase.titulo}!`);
+                    renderizarTodo();
+                }
+            }
+        }
+
+        function inscribirseEvento(idEvento) {
+            const nombreSocio = prompt("Introduce tu nombre de socio para inscribirte a este torneo/evento:");
+            if(!nombreSocio) return;
+            if(!socios[nombreSocio]) {
+                alert("No se encuentra ese socio registrado.");
+                return;
+            }
+            const evento = listaEventos.find(e => e.id === idEvento);
+            if(evento) {
+                if(!evento.inscritos) evento.inscritos = [];
+                if(evento.inscritos.includes(nombreSocio)) {
+                    alert("Ya estás inscrito en este evento.");
+                } else {
+                    evento.inscritos.push(nombreSocio);
+                    alert(`🏆 ¡Inscrito con éxito al evento: ${evento.titulo}!`);
+                    renderizarTodo();
+                }
+            }
+        }
+
         // --- GESTIÓN DE MONITORES ---
         function crearMonitor() {
             const nombre = document.getElementById('nuevoNombreMonitor').value;
             const pin = document.getElementById('nuevoPinMonitor').value;
-
-            if(!nombre || !pin) { alert("Introduce el nombre y el PIN para el nuevo monitor."); return; }
+            if(!nombre || !pin) { alert("Introduce nombre y PIN."); return; }
 
             listaMonitores.push({ nombre, pin });
-            alert("✅ ¡Perfil de monitor creado con éxito!");
-            
+            alert("✅ Monitor creado con éxito.");
             document.getElementById('nuevoNombreMonitor').value = '';
             document.getElementById('nuevoPinMonitor').value = '';
             renderizarTodo();
@@ -228,37 +315,30 @@
 
         function validarPinPantalla() {
             const pinInput = document.getElementById('inputPinMonitor').value;
-
-            // EXCEPCIÓN DE PRIMER ACCESO: Si no hay ningún monitor creado todavía, permitimos entrar para crear el primero
             if (listaMonitores.length === 0) {
                 document.getElementById('inputPinMonitor').value = '';
-                document.getElementById('titulo-panel-monitor').innerText = `🛠️ Panel de Configuración Inicial`;
+                document.getElementById('titulo-panel-monitor').innerText = `🛠️ Panel de Configuración`;
                 switchView('admin');
                 return;
             }
-
             const monitorEncontrado = listaMonitores.find(m => m.pin === pinInput);
-
             if (monitorEncontrado) {
                 document.getElementById('inputPinMonitor').value = '';
                 document.getElementById('titulo-panel-monitor').innerText = `🛠️ Panel de: ${monitorEncontrado.nombre}`;
                 switchView('admin');
             } else {
-                alert("PIN incorrecto. Introduce el PIN de un monitor registrado.");
+                alert("PIN incorrecto.");
             }
         }
 
-        // --- CREAR CLASES Y EVENTOS ---
         function crearEntrenamiento() {
             const titulo = document.getElementById('adminTituloClase').value;
             const horario = document.getElementById('adminHorarioClase').value;
             const ubicacion = document.getElementById('adminUbicacionClase').value;
+            if(!titulo || !horario) { alert("Rellena título y horario."); return; }
 
-            if(!titulo || !horario) { alert("Rellena al menos el título y el horario."); return; }
-
-            listaEntrenamientos.push({ id: Date.now(), titulo, horario, ubicacion });
+            listaEntrenamientos.push({ id: Date.now(), titulo, horario, ubicacion, inscritos: [] });
             alert("✅ ¡Entrenamiento publicado!");
-            
             document.getElementById('adminTituloClase').value = '';
             document.getElementById('adminHorarioClase').value = '';
             document.getElementById('adminUbicacionClase').value = '';
@@ -268,19 +348,20 @@
         function crearEvento() {
             const titulo = document.getElementById('adminTituloEvento').value;
             const fecha = document.getElementById('adminFechaEvento').value;
+            if(!titulo) { alert("Rellena el título."); return; }
 
-            if(!titulo) { alert("Rellena el título del evento."); return; }
-
-            listaEventos.push({ id: Date.now(), titulo, fecha });
+            listaEventos.push({ id: Date.now(), titulo, fecha, inscritos: [] });
             alert("✅ ¡Evento publicado!");
-            
             document.getElementById('adminTituloEvento').value = '';
             document.getElementById('adminFechaEvento').value = '';
             renderizarTodo();
         }
 
-        // Renderizar contenidos dinámicamente
+        // Renderizado general
         function renderizarTodo() {
+            updateSelects();
+            renderUserCard();
+
             const badge = document.getElementById('badge-aviso');
             if(badge) {
                 if(listaPruebas.length > 0) {
@@ -291,84 +372,104 @@
                 }
             }
 
-            // Lista de Monitores en el panel
+            // Lista de monitores
             const contMonitores = document.getElementById('lista-monitores-reg');
             if(contMonitores) {
-                if(listaMonitores.length === 0) {
-                    contMonitores.innerHTML = '<p class="text-xs text-amber-600 py-1">No hay monitores creados. ¡Crea el primero arriba!</p>';
-                } else {
-                    contMonitores.innerHTML = '';
-                    listaMonitores.forEach(m => {
-                        contMonitores.innerHTML += `<div class="p-2 bg-slate-50 rounded-lg flex justify-between items-center text-xs font-semibold"><span>👤 ${m.nombre}</span> <span class="text-slate-400">PIN: ****</span></div>`;
-                    });
-                }
+                contMonitores.innerHTML = listaMonitores.length === 0 ? '<p class="text-xs text-amber-600">No hay monitores creados.</p>' : '';
+                listaMonitores.forEach(m => {
+                    contMonitores.innerHTML += `<div class="p-2 bg-slate-50 rounded-lg flex justify-between items-center text-xs font-semibold"><span>👤 ${m.nombre}</span></div>`;
+                });
             }
 
-            // Listado de Entrenamientos
+            // Lista de socios en Admin para sellar
+            const contSociosAdmin = document.getElementById('lista-socios-admin');
+            if(contSociosAdmin) {
+                let htmlSocios = Object.keys(socios).length === 0 ? '<p class="text-xs text-slate-400">No hay socios dados de alta.</p>' : '';
+                for(let s in socios) {
+                    let badgeColor = socios[s].usadas === 10 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700';
+                    htmlSocios += `
+                        <div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg text-xs">
+                            <div>
+                                <span class="font-bold">${s}</span> 
+                                <span class="px-2 py-0.5 rounded-full font-bold ${badgeColor}">Sesiones: ${socios[s].usadas}/10</span>
+                            </div>
+                            <button onclick="sellarSesion('${s}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-md font-bold">
+                                ${socios[s].usadas === 10 ? '🔄 Renovar Bono' : '🔏 Sellar'}
+                            </button>
+                        </div>
+                    `;
+                }
+                contSociosAdmin.innerHTML = htmlSocios;
+            }
+
+            // Entrenamientos públicos (con botón de inscripción)
             const contEntreno = document.getElementById('lista-entrenamientos-publicos');
             if(contEntreno) {
-                if(listaEntrenamientos.length === 0) {
-                    contEntreno.innerHTML = '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay entrenamientos programados todavía.</div>';
-                } else {
-                    contEntreno.innerHTML = '';
-                    listaEntrenamientos.forEach(item => {
-                        contEntreno.innerHTML += `
-                            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
-                                <h3 class="font-bold text-slate-800">${item.titulo}</h3>
-                                <p class="text-xs text-slate-600">🕒 ${item.horario}</p>
-                                <p class="text-xs text-slate-600">📍 ${item.ubicacion || 'Polideportivo Municipal'}</p>
-                            </div>
-                        `;
-                    });
-                }
+                contEntreno.innerHTML = listaEntrenamientos.length === 0 ? '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay entrenamientos programados todavía.</div>' : '';
+                listaEntrenamientos.forEach(item => {
+                    let listaInscritosHtml = item.inscritos && item.inscritos.length > 0 
+                        ? `<p class="text-[11px] text-emerald-700 mt-1">👥 Inscritos: ${item.inscritos.join(', ')}</p>` 
+                        : `<p class="text-[11px] text-slate-400 mt-1">👥 Sin inscritos todavía</p>`;
+
+                    contEntreno.innerHTML += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
+                            <h3 class="font-bold text-slate-800">${item.titulo}</h3>
+                            <p class="text-xs text-slate-600">🕒 ${item.horario}</p>
+                            <p class="text-xs text-slate-600">📍 ${item.ubicacion || 'Polideportivo Municipal'}</p>
+                            ${listaInscritosHtml}
+                            <button onclick="inscribirseClase(${item.id})" class="w-full bg-[#0f5c32] text-white py-2 rounded-lg text-xs font-bold mt-2 shadow-sm">
+                                📝 Inscribirme a esta clase
+                            </button>
+                        </div>
+                    `;
+                });
             }
 
-            // Listado de Eventos
+            // Eventos públicos (con botón de inscripción)
             const contEventos = document.getElementById('lista-eventos-publicos');
             if(contEventos) {
-                if(listaEventos.length === 0) {
-                    contEventos.innerHTML = '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay torneos o eventos publicados todavía.</div>';
-                } else {
-                    contEventos.innerHTML = '';
-                    listaEventos.forEach(item => {
-                        contEventos.innerHTML += `
-                            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
-                                <h3 class="font-bold text-amber-800">${item.titulo}</h3>
-                                <p class="text-xs text-slate-600">📅 ${item.fecha}</p>
-                            </div>
-                        `;
-                    });
-                }
+                contEventos.innerHTML = listaEventos.length === 0 ? '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay torneos o eventos publicados todavía.</div>' : '';
+                listaEventos.forEach(item => {
+                    let listaInscritosEv = item.inscritos && item.inscritos.length > 0 
+                        ? `<p class="text-[11px] text-amber-700 mt-1">👥 Apuntados: ${item.inscritos.join(', ')}</p>` 
+                        : `<p class="text-[11px] text-slate-400 mt-1">👥 Sin participantes todavía</p>`;
+
+                    contEventos.innerHTML += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
+                            <h3 class="font-bold text-amber-800">${item.titulo}</h3>
+                            <p class="text-xs text-slate-600">📅 ${item.fecha}</p>
+                            ${listaInscritosEv}
+                            <button onclick="inscribirseEvento(${item.id})" class="w-full bg-amber-600 text-white py-2 rounded-lg text-xs font-bold mt-2 shadow-sm">
+                                🏆 Apuntarme al Torneo
+                            </button>
+                        </div>
+                    `;
+                });
             }
 
             // Solicitudes de prueba
             const contenedorSolicitudes = document.getElementById('lista-solicitudes');
             if(contenedorSolicitudes) {
-                if(listaPruebas.length === 0) {
-                    contenedorSolicitudes.innerHTML = '<p class="text-xs text-slate-400 py-2">No hay solicitudes pendientes.</p>';
-                } else {
-                    contenedorSolicitudes.innerHTML = '';
-                    listaPruebas.forEach(item => {
-                        contenedorSolicitudes.innerHTML += `
-                            <div class="bg-slate-50 p-3 rounded-xl border flex justify-between items-center">
-                                <div>
-                                    <p class="font-bold text-sm text-slate-800">${item.nombre}</p>
-                                    <p class="text-xs text-slate-500">📞 ${item.telefono}</p>
-                                </div>
-                                <a href="https://wa.me/34${item.telefono}?text=Hola%20${item.nombre},%20te%20escribimos%20desde%20el%20Club%20de%20Pickleball%20El%20Escorial." 
-                                   target="_blank" 
-                                   class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-bold shadow">
-                                   💬 WhatsApp
-                                </a>
+                contenedorSolicitudes.innerHTML = listaPruebas.length === 0 ? '<p class="text-xs text-slate-400 py-2">No hay solicitudes pendientes.</p>' : '';
+                listaPruebas.forEach(item => {
+                    contenedorSolicitudes.innerHTML += `
+                        <div class="bg-slate-50 p-3 rounded-xl border flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-sm text-slate-800">${item.nombre}</p>
+                                <p class="text-xs text-slate-500">📞 ${item.telefono}</p>
                             </div>
-                        `;
-                    });
-                }
+                            <a href="https://wa.me/34${item.telefono}?text=Hola%20${item.nombre},%20te%20escribimos%20desde%20el%20Club%20de%20Pickleball%20El%20Escorial." 
+                               target="_blank" 
+                               class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-bold shadow">
+                               💬 WhatsApp
+                            </a>
+                        </div>
+                    `;
+                });
             }
         }
 
         window.onload = () => {
-            updateSelects();
             renderizarTodo();
         };
     </script>
