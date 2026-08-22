@@ -6,7 +6,7 @@
     <title>Club de Pickleball El Escorial</title>
     <!-- Tailwind CSS para diseño moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase Client -->
+    <!-- Supabase Client para base de datos y tiempo real -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-slate-100 font-sans pb-24">
@@ -14,7 +14,7 @@
     <!-- CABECERA -->
     <header class="bg-[#0f5c32] text-white p-4 text-center shadow-md">
         <div class="flex justify-center items-center mb-2">
-            <img src="https://i.ibb.co/3sS8M3Y/pickleball-logo.png" alt="Logo" class="max-w-[110px] h-auto object-contain">
+            <img src="https://i.ibb.co/3sS8M3Y/pickleball-logo.png" alt="Logo El Escorial" class="max-w-[110px] h-auto object-contain">
         </div>
         <h1 class="text-xl font-bold tracking-tight">EL ESCORIAL PICKLEBALL</h1>
     </header>
@@ -68,10 +68,9 @@
                 <h3 class="font-bold text-slate-700 text-sm">Apuntarme a la clase</h3>
                 <select id="selfAttendeeSelect" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                     <option value="">-- Elige tu nombre --</option>
-                    <option value="Juan Pérez">Juan Pérez</option>
-                    <option value="María Gómez">María Gómez</option>
                 </select>
-                <button onclick="alert('Te has apuntado correctamente')" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm">✓ Apuntarme</button>
+                <button onclick="selfAddAttendee()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm">✓ Apuntarme</button>
+                <button onclick="selfRemoveAttendee()" class="w-full bg-slate-500 text-white p-3 rounded-xl font-bold text-sm">✕ Borrarme de la clase</button>
             </div>
         </section>
 
@@ -80,15 +79,14 @@
             <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">🎟️ Mi Bono</h2>
             <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-center space-y-3">
                 <p class="text-slate-600 text-sm">Selecciona tu nombre para ver tu tarjeta:</p>
-                <select id="userSelect" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <select id="userSelect" onchange="renderUserCard()" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                     <option value="">-- Elige un alumno --</option>
-                    <option value="Juan Pérez">Juan Pérez</option>
                 </select>
-                <div class="py-4">
-                    <span class="text-4xl font-extrabold text-[#0f5c32]">6 / 10</span>
-                    <p class="text-xs text-slate-500 mt-1">Sesiones consumidas</p>
+                <div id="cardDisplay" style="display:none;" class="py-4 space-y-2">
+                    <span class="text-4xl font-extrabold text-[#0f5c32]" id="used-count">0</span>
+                    <p class="text-xs text-slate-500">Sesiones consumidas de 10</p>
                 </div>
-                <button onclick="alert('Solicitud de nuevo bono enviada a los monitores.')" class="bg-[#0f5c32] text-white px-4 py-3 rounded-xl font-bold text-sm w-full">Solicitar nuevo bono</button>
+                <button onclick="solicitarBono()" class="bg-[#0f5c32] text-white px-4 py-3 rounded-xl font-bold text-sm w-full">Solicitar nuevo bono</button>
             </div>
         </section>
 
@@ -100,50 +98,63 @@
             </div>
         </section>
 
-        <!-- VISTA: PRUEBA -->
+        <!-- VISTA: PRUEBA (CHAT / SOLICITUD) -->
         <section id="view-prueba" class="view-section hidden space-y-4">
             <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">👋 Primer Día de Prueba</h2>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-                <p class="text-sm text-slate-600">¿Quieres probar el pickleball? Rellena tus datos y nos pondremos en contacto contigo.</p>
-                <input type="text" placeholder="Tu Nombre y Apellidos" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                <input type="tel" placeholder="Teléfono de contacto" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                <button onclick="alert('Solicitud enviada con éxito. ¡Te contactaremos pronto!')" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm">Enviar Solicitud</button>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
+                <p class="text-sm text-slate-600">¿Quieres probar el pickleball? Rellena tus datos y los monitores recibirán el aviso al instante para contactarte.</p>
+                <input type="text" id="nombrePrueba" placeholder="Tu Nombre y Apellidos" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <input type="tel" id="telefonoPrueba" placeholder="Teléfono (para WhatsApp)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <textarea id="mensajePrueba" placeholder="¿Tienes experiencia previa?" class="w-full p-3 border rounded-xl text-sm bg-slate-50 h-20"></textarea>
+                <button onclick="enviarSolicitudPrueba()" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm">Enviar Solicitud a Monitores</button>
             </div>
         </section>
 
-        <!-- VISTA: MÁS / MENÚ -->
+        <!-- VISTA: MÁS / MENÚ Y PANEL DE MONITORES -->
         <section id="view-mas" class="view-section hidden space-y-4">
             <h2 class="text-xl font-bold text-slate-800">☰ Menú y Ajustes</h2>
             <div class="bg-white rounded-xl shadow-sm border border-slate-200 divide-y">
                 <button onclick="alert('Sección de noticias en desarrollo')" class="w-full text-left p-4 font-semibold text-slate-700 flex justify-between items-center">📰 Noticias del Club <span>›</span></button>
-                <button onclick="openAdminLogin()" class="w-full text-left p-4 font-semibold text-emerald-800 flex justify-between items-center">🔒 Acceso Monitores <span>›</span></button>
-                <button onclick="alert('Para instalar en Android: pulsa los tres puntos de Chrome y selecciona Añadir a pantalla de inicio.\n\nPara iPhone: pulsa el botón Compartir en Safari y selecciona Añadir a pantalla de inicio.')" class="w-full text-left p-4 font-semibold text-slate-700 flex justify-between items-center">❓ Cómo instalar la App <span>›</span></button>
+                <button onclick="openAdminPanel()" class="w-full text-left p-4 font-semibold text-emerald-800 flex justify-between items-center">🔒 Panel de Monitores (Avisos y Gestión) <span id="monitor-badge-count" class="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs hidden">0</span><span>›</span></button>
+                <button onclick="alert('Para instalar en Android: pulsa los tres puntos de Chrome y selecciona Añadir a pantalla de inicio.\n\nPara iPhone: pulsa el botón Compartir en Safari y selecciona Añadir a pantalla de inicio.')" class="w-full text-left p-4 font-semibold text-slate-700 flex justify-between items-center">❓ Cómo instalar la PWA <span>›</span></button>
             </div>
         </section>
 
     </main>
 
-    <!-- MENÚ INFERIOR FIJO (MÓVIL) -->
+    <!-- MENÚ INFERIOR FIJO (MÓVIL) CON GLOBO DE AVISO -->
     <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-2 shadow-lg max-w-md mx-auto z-50">
-        <button onclick="switchView('inicio')" class="nav-btn flex flex-col items-center text-[#0f5c32] font-bold text-xs">
+        <button onclick="switchView('inicio')" class="flex flex-col items-center text-[#0f5c32] font-bold text-xs">
             🏠 <span class="mt-1">Inicio</span>
         </button>
-        <button onclick="switchView('entrenamientos')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+        <button onclick="switchView('entrenamientos')" class="flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
             🏓 <span class="mt-1">Entrenar</span>
         </button>
-        <button onclick="switchView('eventos')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+        <button onclick="switchView('eventos')" class="flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
             🏆 <span class="mt-1">Eventos</span>
         </button>
-        <button onclick="switchView('bono')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+        <button onclick="switchView('bono')" class="flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
             🎟️ <span class="mt-1">Bono</span>
         </button>
-        <button onclick="switchView('mas')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+        <button onclick="switchView('mas')" class="relative flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+            <!-- Globo de aviso flotante para monitores -->
+            <span id="badge-aviso" class="hidden absolute -top-1 right-2 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">!</span>
             ☰ <span class="mt-1">Más</span>
         </button>
     </nav>
 
-    <!-- SCRIPT DE NAVEGACIÓN -->
+    <!-- SCRIPT GENERAL DE LA APLICACIÓN -->
     <script>
+        // CONFIGURACIÓN DE SUPABASE (Sustituye por tus claves reales cuando las crees)
+        const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
+        const SUPABASE_ANON_KEY = 'tu-clave-anon';
+        // const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Datos locales de demostración (se conectarán a Supabase en la siguiente fase)
+        let players = { "Juan Pérez": 4, "María Gómez": 2 };
+        let attendees = [];
+        let solicitudesPendientes = 2; // Simula solicitudes de prueba pendientes
+
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(section => {
                 section.classList.add('hidden');
@@ -155,14 +166,93 @@
             window.scrollTo(0, 0);
         }
 
-        function openAdminLogin() {
+        function updateSelects() {
+            const uSelect = document.getElementById('userSelect');
+            const selfSelect = document.getElementById('selfAttendeeSelect');
+            
+            uSelect.innerHTML = '<option value="">-- Elige un alumno --</option>';
+            selfSelect.innerHTML = '<option value="">-- Elige tu nombre --</option>';
+
+            for (let name in players) {
+                uSelect.innerHTML += `<option value="${name}">${name}</option>`;
+                selfSelect.innerHTML += `<option value="${name}">${name}</option>`;
+            }
+        }
+
+        function selfAddAttendee() {
+            const name = document.getElementById('selfAttendeeSelect').value;
+            if (!name) return alert("Por favor, selecciona tu nombre.");
+            if (!attendees.includes(name)) {
+                attendees.push(name);
+                alert("✅ Te has apuntado correctamente a la clase.");
+            } else {
+                alert("Ya estás apuntado/a a esta clase.");
+            }
+        }
+
+        function selfRemoveAttendee() {
+            const name = document.getElementById('selfAttendeeSelect'].value;
+            if (!name) return alert("Por favor, selecciona tu nombre.");
+            const index = attendees.indexOf(name);
+            if (index !== -1) {
+                attendees.splice(index, 1);
+                alert("Te has borrado de la clase.");
+            } else {
+                alert("No estás apuntado/a en esta clase.");
+            }
+        }
+
+        function renderUserCard() {
+            const name = document.getElementById('userSelect').value;
+            const display = document.getElementById('cardDisplay');
+            if (!name) { display.style.display = 'none'; return; }
+            display.style.display = 'block';
+            document.getElementById('used-count').innerText = players[name];
+        }
+
+        function solicitarBono() {
+            alert("📩 Solicitud de nuevo bono enviada a los monitores.");
+        }
+
+        function enviarSolicitudPrueba() {
+            const nombre = document.getElementById('nombrePrueba').value;
+            if(!nombre) { alert("Por favor, escribe tu nombre."); return; }
+            alert("✅ ¡Solicitud enviada! Los monitores han recibido tu aviso.");
+            solicitudesPendientes++;
+            actualizarAvisosMonitor();
+            switchView('inicio');
+        }
+
+        function actualizarAvisosMonitor() {
+            const badge = document.getElementById('badge-aviso');
+            const menuBadge = document.getElementById('monitor-badge-count');
+            if (solicitudesPendientes > 0) {
+                badge.classList.remove('hidden');
+                badge.innerText = solicitudesPendientes;
+                menuBadge.classList.remove('hidden');
+                menuBadge.innerText = solicitudesPendientes;
+            } else {
+                badge.classList.add('hidden');
+                menuBadge.classList.add('hidden');
+            }
+        }
+
+        function openAdminPanel() {
             let pin = prompt("Introduce el PIN de monitor:");
             if (pin === "1234") {
-                alert("¡Acceso autorizado! (Panel de monitores en preparación para la siguiente fase).");
+                alert(`🔒 PANEL DE MONITORES\n\nTienes ${solicitudesPendientes} solicitudes de primer día de prueba pendientes de contacto.`);
+                // Aquí abriremos la gestión completa de monitores
             } else if (pin !== null) {
                 alert("PIN incorrecto.");
             }
         }
+
+        // Inicialización
+        window.onload = () => {
+            updateSelects();
+            actualizarAvisosMonitor();
+            document.getElementById('home-next-training').innerText = "Miércoles 19:00 - Polideportivo Municipal";
+        };
     </script>
 </body>
 </html>
