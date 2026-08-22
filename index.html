@@ -26,7 +26,7 @@
 
 <div class="container">
     <h1>🏓 Club de Pickleball</h1>
-    <div id="status" class="sync-status">Sincronizando con la nube... 🌐</div>
+    <div id="status" class="sync-status">Conectado a la Nube ☁️</div>
 
     <!-- MENÚ PRINCIPAL -->
     <div id="menuPrincipal">
@@ -112,7 +112,7 @@
 </div>
 
 <script>
-    // Endpoint único compartido en la nube
+    // Usamos un servicio de almacenamiento compartido optimizado
     const BIN_URL = "https://api.npoint.io/40778c43093b13783a30";
 
     async function obtenerDatosNube() {
@@ -121,27 +121,31 @@
             if(res.ok) {
                 let json = await res.json();
                 if(json && json.socios) {
-                    document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
+                    localStorage.setItem('pickleball_club_v10', JSON.stringify(json));
                     return json;
                 }
             }
         } catch(e) {}
         
-        let local = localStorage.getItem('pickleball_club_v9');
+        let local = localStorage.getItem('pickleball_club_v10');
         if(local) return JSON.parse(local);
         return { socios: [], entrenamientos: [], torneos: [], bonosGlobales: [], solicitudes: [] };
     }
 
     async function guardarDatosNube(datos) {
-        localStorage.setItem('pickleball_club_v9', JSON.stringify(datos));
+        localStorage.setItem('pickleball_club_v10', JSON.stringify(datos));
         document.getElementById('status').innerText = "Sincronizando cambios... 🔄";
         try {
-            await fetch(BIN_URL, {
+            let res = await fetch(BIN_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos)
             });
-            document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
+            if(res.ok) {
+                document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
+            } else {
+                document.getElementById('status').innerText = "Guardado localmente (Error de red) ⚠️";
+            }
         } catch(e) {
             document.getElementById('status').innerText = "Guardado localmente (Sin internet) ⚠️";
         }
