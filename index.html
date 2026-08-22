@@ -22,16 +22,16 @@
         <section id="view-inicio" class="view-section space-y-4">
             <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
                 <h2 class="text-lg font-bold text-slate-800 mb-1">👋 ¡Hola!</h2>
-                <p class="text-slate-600 text-sm mb-4">Bienvenido a la aplicación oficial de nuestro club. Selecciona una opción para empezar.</p>
+                <p class="text-slate-600 text-sm mb-4">Bienvenido a la aplicación oficial de nuestro club.</p>
                 
                 <div class="bg-emerald-50 border-l-4 border-emerald-600 p-3 rounded-r-xl">
                     <span class="block text-xs font-bold text-emerald-800 uppercase">Próximo Entrenamiento</span>
-                    <span class="text-sm font-semibold text-slate-700">Miércoles 19:00 - Polideportivo Municipal</span>
+                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Miércoles 19:00 - Polideportivo Municipal</span>
                 </div>
             </div>
 
             <button onclick="switchView('entrenamientos')" class="w-full bg-[#0f5c32] text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3">
-                🏓 ENTRENAMIENTOS
+                🏓 ENTRENAMIENTOS Y CLASES
             </button>
             <button onclick="switchView('bono')" class="w-full bg-blue-600 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3">
                 🎟️ MI BONO DE 10 SESIONES
@@ -46,22 +46,9 @@
 
         <!-- VISTA: ENTRENAMIENTOS -->
         <section id="view-entrenamientos" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-bold text-slate-800">🏓 Entrenamientos</h2>
-            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
-                <div class="bg-slate-100 p-3 rounded-lg text-sm text-slate-700">📍 Ubicación: Polideportivo Municipal</div>
-                <div class="flex justify-between text-sm py-1 border-b">
-                    <span class="text-slate-500">Horario:</span>
-                    <span class="font-bold">Miércoles 19:00 - 20:30</span>
-                </div>
-            </div>
-
-            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-slate-700 text-sm">Apuntarme a la clase</h3>
-                <select id="selfAttendeeSelect" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                    <option value="">-- Elige tu nombre --</option>
-                </select>
-                <button onclick="selfAddAttendee()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm">✓ Apuntarme</button>
-                <button onclick="selfRemoveAttendee()" class="w-full bg-slate-500 text-white p-3 rounded-xl font-bold text-sm">✕ Borrarme de la clase</button>
+            <h2 class="text-xl font-bold text-slate-800">🏓 Entrenamientos Programados</h2>
+            <div id="lista-entrenamientos-publicos" class="space-y-3">
+                <!-- Se cargan dinámicamente -->
             </div>
         </section>
 
@@ -84,8 +71,8 @@
         <!-- VISTA: EVENTOS -->
         <section id="view-eventos" class="view-section hidden space-y-4">
             <h2 class="text-xl font-bold text-slate-800">🏆 Torneos y Eventos</h2>
-            <div class="bg-white p-4 rounded-xl shadow-sm border text-center py-8 text-slate-500">
-                <p class="text-sm">Próximamente publicaremos nuevos eventos.</p>
+            <div id="lista-eventos-publicos" class="space-y-3">
+                <!-- Se cargan dinámicamente -->
             </div>
         </section>
 
@@ -100,34 +87,46 @@
             </div>
         </section>
 
-        <!-- VISTA: MÁS (ACCESO A LOGIN DE MONITORES SIN BLOQUEOS) -->
+        <!-- VISTA: MÁS / ACCESO MONITORES -->
         <section id="view-mas" class="view-section hidden space-y-4">
             <h2 class="text-xl font-bold text-slate-800">☰ Menú y Ajustes</h2>
-            
-            <!-- TARJETA ACCESO MONITORES EN PANTALLA -->
             <div class="bg-white p-5 rounded-xl shadow-sm border space-y-3">
                 <h3 class="font-bold text-sm text-emerald-800 flex items-center gap-2">🔒 Acceso Exclusivo Monitores</h3>
-                <p class="text-xs text-slate-500">Introduce el PIN (1234) para acceder a la gestión de solicitudes:</p>
+                <p class="text-xs text-slate-500">Introduce el PIN (1234) para gestionar clases y solicitudes:</p>
                 <input type="password" id="inputPinMonitor" placeholder="PIN de acceso" class="w-full p-3 border rounded-xl text-sm bg-slate-50 tracking-widest text-center font-bold" maxlength="4">
-                <button onclick="validarPinPantalla()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm shadow">Entrar al Panel</button>
-            </div>
-
-            <div class="bg-white rounded-xl shadow-sm border p-4 text-xs text-slate-500 space-y-2">
-                <p class="font-bold text-slate-700">Ayuda de instalación:</p>
-                <p>Para añadir la app a la pantalla de tu móvil y que funcione como una aplicación normal, pulsa en los ajustes de tu navegador y selecciona "Añadir a la pantalla de inicio".</p>
+                <button onclick="validarPinPantalla()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm shadow">Entrar al Panel de Control</button>
             </div>
         </section>
 
-        <!-- VISTA: PANEL DE MONITORES REAL -->
+        <!-- VISTA: PANEL DE MONITORES ( CREACIÓN DE CLASES Y EVENTOS ) -->
         <section id="view-admin" class="view-section hidden space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-xl font-bold text-emerald-900">🔒 Panel de Monitores</h2>
+                <h2 class="text-xl font-bold text-emerald-900">🛠️ Panel de Gestión</h2>
                 <button onclick="switchView('mas')" class="text-xs bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Cerrar Sesión</button>
             </div>
+
+            <!-- CREAR NUEVO ENTRENAMIENTO -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-sm text-slate-700">Solicitudes de Primer Día de Prueba:</h3>
+                <h3 class="font-bold text-sm text-slate-700">➕ Crear Nueva Clases / Entrenamiento</h3>
+                <input type="text" id="adminTituloClase" placeholder="Título (ej: Entrenamiento Nivel Medio)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <input type="text" id="adminHorarioClase" placeholder="Fecha y Hora (ej: Miércoles 19:00)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <input type="text" id="adminUbicacionClase" placeholder="Ubicación (ej: Polideportivo Municipal)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <button onclick="crearEntrenamiento()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm">Publicar Entrenamiento</button>
+            </div>
+
+            <!-- CREAR NUEVO EVENTO / TORNEO -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
+                <h3 class="font-bold text-sm text-slate-700">🏆 Crear Nuevo Torneo / Evento</h3>
+                <input type="text" id="adminTituloEvento" placeholder="Título del Torneo" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <input type="text" id="adminFechaEvento" placeholder="Fecha (ej: Sábado 15 de Octubre)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <button onclick="crearEvento()" class="w-full bg-amber-600 text-white p-3 rounded-xl font-bold text-sm">Publicar Evento</button>
+            </div>
+
+            <!-- SOLICITUDES DE PRUEBA -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
+                <h3 class="font-bold text-sm text-slate-700">👋 Solicitudes de Prueba Pendientes:</h3>
                 <div id="lista-solicitudes" class="space-y-2">
-                    <!-- Aquí se cargan dinámicamente -->
+                    <!-- Se cargan dinámicamente -->
                 </div>
             </div>
         </section>
@@ -147,11 +146,24 @@
     </nav>
 
     <script>
+        // CONFIGURACIÓN SUPABASE (Opcional por ahora)
+        const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
+        const SUPABASE_ANON_KEY = 'tu-clave-anon';
+        // const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
         let players = { "Juan Pérez": 4, "María Gómez": 2 };
-        let attendees = [];
+        
+        // Datos de ejemplo editables por los monitores
+        let listaEntrenamientos = [
+            { id: 1, titulo: "Entrenamiento General Club", horario: "Miércoles 19:00 - 20:30", ubicacion: "Polideportivo Municipal" }
+        ];
+
+        let listaEventos = [
+            { id: 1, titulo: "I Torneo Social El Escorial", fecha: "Próximamente" }
+        ];
+
         let listaPruebas = [
-            { nombre: "Carlos Martínez", telefono: "600111222" },
-            { nombre: "Lucía Fernández", telefono: "600333444" }
+            { nombre: "Carlos Martínez", telefono: "600111222" }
         ];
 
         function switchView(viewId) {
@@ -159,40 +171,15 @@
             const target = document.getElementById('view-' + viewId);
             if (target) target.classList.remove('hidden');
             window.scrollTo(0, 0);
+            renderizarTodo();
         }
 
         function updateSelects() {
             const uSelect = document.getElementById('userSelect');
-            const selfSelect = document.getElementById('selfAttendeeSelect');
-            if(!uSelect || !selfSelect) return;
+            if(!uSelect) return;
             uSelect.innerHTML = '<option value="">-- Elige un alumno --</option>';
-            selfSelect.innerHTML = '<option value="">-- Elige tu nombre --</option>';
             for (let name in players) {
                 uSelect.innerHTML += `<option value="${name}">${name}</option>`;
-                selfSelect.innerHTML += `<option value="${name}">${name}</option>`;
-            }
-        }
-
-        function selfAddAttendee() {
-            const name = document.getElementById('selfAttendeeSelect').value;
-            if (!name) return alert("Selecciona tu nombre.");
-            if (!attendees.includes(name)) {
-                attendees.push(name);
-                alert("✅ Te has apuntado.");
-            } else {
-                alert("Ya estás apuntado.");
-            }
-        }
-
-        function selfRemoveAttendee() {
-            const name = document.getElementById('selfAttendeeSelect').value;
-            if (!name) return alert("Selecciona tu nombre.");
-            const index = attendees.indexOf(name);
-            if (index !== -1) {
-                attendees.splice(index, 1);
-                alert("Te has borrado de la clase.");
-            } else {
-                alert("No estás apuntado.");
             }
         }
 
@@ -204,7 +191,7 @@
             document.getElementById('used-count').innerText = players[name];
         }
 
-        function solicitarBono() { alert("📩 Solicitud enviada."); }
+        function solicitarBono() { alert("📩 Solicitud enviada a los monitores."); }
 
         function enviarSolicitudPrueba() {
             const nombre = document.getElementById('nombrePrueba').value;
@@ -212,34 +199,105 @@
             if(!nombre || !telefono) { alert("Por favor, rellena tu nombre y teléfono."); return; }
             
             listaPruebas.push({ nombre, telefono });
-            alert("✅ ¡Solicitud enviada con éxito! Los monitores la revisarán.");
+            alert("✅ ¡Solicitud enviada con éxito!");
             document.getElementById('nombrePrueba').value = '';
             document.getElementById('telefonoPrueba').value = '';
-            actualizarAvisosMonitor();
+            renderizarTodo();
             switchView('inicio');
         }
 
-        function actualizarAvisosMonitor() {
-            const badge = document.getElementById('badge-aviso');
-            const contenedor = document.getElementById('lista-solicitudes');
-            
-            if(!badge) return;
+        // --- FUNCIONES DE LOS MONITORES PARA CREAR ACCIONES ---
+        function crearEntrenamiento() {
+            const titulo = document.getElementById('adminTituloClase').value;
+            const horario = document.getElementById('adminHorarioClase').value;
+            const ubicacion = document.getElementById('adminUbicacionClase').value;
 
-            let count = listaPruebas.length;
-            if (count > 0) {
-                badge.classList.remove('hidden');
-                badge.innerText = count;
+            if(!titulo || !horario) { alert("Rellena al menos el título y el horario."); return; }
+
+            listaEntrenamientos.push({ id: Date.now(), titulo, horario, ubicacion });
+            alert("✅ ¡Entrenamiento creado y publicado con éxito!");
+            
+            document.getElementById('adminTituloClase').value = '';
+            document.getElementById('adminHorarioClase').value = '';
+            document.getElementById('adminUbicacionClase').value = '';
+            renderizarTodo();
+        }
+
+        function crearEvento() {
+            const titulo = document.getElementById('adminTituloEvento').value;
+            const fecha = document.getElementById('adminFechaEvento').value;
+
+            if(!titulo) { alert("Rellena el título del evento."); return; }
+
+            listaEventos.push({ id: Date.now(), titulo, fecha });
+            alert("✅ ¡Torneo/Evento publicado con éxito!");
+            
+            document.getElementById('adminTituloEvento').value = '';
+            document.getElementById('adminFechaEvento').value = '';
+            renderizarTodo();
+        }
+
+        function validarPinPantalla() {
+            const pinInput = document.getElementById('inputPinMonitor').value;
+            if (pinInput === "1234") {
+                document.getElementById('inputPinMonitor').value = '';
+                switchView('admin');
             } else {
-                badge.classList.add('hidden');
+                alert("PIN incorrecto. Prueba con 1234");
+            }
+        }
+
+        // Renderizar contenidos dinámicamente en las pantallas
+        function renderizarTodo() {
+            // Actualizar avisos
+            const badge = document.getElementById('badge-aviso');
+            if(badge) {
+                if(listaPruebas.length > 0) {
+                    badge.classList.remove('hidden');
+                    badge.innerText = listaPruebas.length;
+                } else {
+                    badge.classList.add('hidden');
+                }
             }
 
-            if(contenedor) {
-                if(count === 0) {
-                    contenedor.innerHTML = '<p class="text-xs text-slate-400 py-2">No hay solicitudes pendientes.</p>';
+            // Listado de Entrenamientos para alumnos
+            const contEntreno = document.getElementById('lista-entrenamientos-publicos');
+            if(contEntreno) {
+                contEntreno.innerHTML = '';
+                listaEntrenamientos.forEach(item => {
+                    contEntreno.innerHTML += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
+                            <h3 class="font-bold text-slate-800">${item.titulo}</h3>
+                            <p class="text-xs text-slate-600">🕒 ${item.horario}</p>
+                            <p class="text-xs text-slate-600">📍 ${item.ubicacion || 'Polideportivo Municipal'}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            // Listado de Eventos para alumnos
+            const contEventos = document.getElementById('lista-eventos-publicos');
+            if(contEventos) {
+                contEventos.innerHTML = '';
+                listaEventos.forEach(item => {
+                    contEventos.innerHTML += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
+                            <h3 class="font-bold text-amber-800">${item.titulo}</h3>
+                            <p class="text-xs text-slate-600">📅 ${item.fecha}</p>
+                        </div>
+                    `;
+                });
+            }
+
+            // Listado de Solicitudes en el Panel de Monitores
+            const contenedorSolicitudes = document.getElementById('lista-solicitudes');
+            if(contenedorSolicitudes) {
+                if(listaPruebas.length === 0) {
+                    contenedorSolicitudes.innerHTML = '<p class="text-xs text-slate-400 py-2">No hay solicitudes pendientes.</p>';
                 } else {
-                    contenedor.innerHTML = '';
-                    listaPruebas.forEach((item, index) => {
-                        contenedor.innerHTML += `
+                    contenedorSolicitudes.innerHTML = '';
+                    listaPruebas.forEach(item => {
+                        contenedorSolicitudes.innerHTML += `
                             <div class="bg-slate-50 p-3 rounded-xl border flex justify-between items-center">
                                 <div>
                                     <p class="font-bold text-sm text-slate-800">${item.nombre}</p>
@@ -257,21 +315,9 @@
             }
         }
 
-        // Validación limpia directamente en pantalla (sin ventanas bloqueadas)
-        function validarPinPantalla() {
-            const pinInput = document.getElementById('inputPinMonitor').value;
-            if (pinInput === "1234") {
-                document.getElementById('inputPinMonitor').value = ''; // Limpiar campo
-                actualizarAvisosMonitor();
-                switchView('admin'); // Abre la pantalla de gestión
-            } else {
-                alert("PIN incorrecto. Prueba con 1234");
-            }
-        }
-
         window.onload = () => {
             updateSelects();
-            actualizarAvisosMonitor();
+            renderizarTodo();
         };
     </script>
 </body>
