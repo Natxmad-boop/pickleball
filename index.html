@@ -145,15 +145,9 @@
 
     <!-- SCRIPT GENERAL DE LA APLICACIÓN -->
     <script>
-        // CONFIGURACIÓN DE SUPABASE (Sustituye por tus claves reales cuando las crees)
-        const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
-        const SUPABASE_ANON_KEY = 'tu-clave-anon';
-        // const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Datos locales de demostración (se conectarán a Supabase en la siguiente fase)
         let players = { "Juan Pérez": 4, "María Gómez": 2 };
         let attendees = [];
-        let solicitudesPendientes = 2; // Simula solicitudes de prueba pendientes
+        let solicitudesPendientes = 2;
 
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(section => {
@@ -191,7 +185,7 @@
         }
 
         function selfRemoveAttendee() {
-            const name = document.getElementById('selfAttendeeSelect'].value;
+            const name = document.getElementById('selfAttendeeSelect').value;
             if (!name) return alert("Por favor, selecciona tu nombre.");
             const index = attendees.indexOf(name);
             if (index !== -1) {
@@ -215,8 +209,8 @@
         }
 
         function enviarSolicitudPrueba() {
-            const nombre = document.getElementById('nombrePrueba').value;
-            if(!nombre) { alert("Por favor, escribe tu nombre."); return; }
+            const name = document.getElementById('nombrePrueba').value;
+            if(!name) { alert("Por favor, escribe tu nombre."); return; }
             alert("✅ ¡Solicitud enviada! Los monitores han recibido tu aviso.");
             solicitudesPendientes++;
             actualizarAvisosMonitor();
@@ -241,13 +235,12 @@
             let pin = prompt("Introduce el PIN de monitor:");
             if (pin === "1234") {
                 alert(`🔒 PANEL DE MONITORES\n\nTienes ${solicitudesPendientes} solicitudes de primer día de prueba pendientes de contacto.`);
-                // Aquí abriremos la gestión completa de monitores
             } else if (pin !== null) {
                 alert("PIN incorrecto.");
             }
         }
 
-        // Inicialización
+        // Inicialización al cargar la página
         window.onload = () => {
             updateSelects();
             actualizarAvisosMonitor();
