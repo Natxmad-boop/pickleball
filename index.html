@@ -99,8 +99,19 @@
     let tipoUsuarioActual = null;
 
     async function obtenerDatosNube() {
-        let respuesta = await fetch(API_URL);
-        return await respuesta.json();
+        try {
+            let respuesta = await fetch(API_URL);
+            let datos = await respuesta.json();
+            // Aseguramos que la estructura básica exista siempre
+            return {
+                socios: datos.socios || [],
+                eventos: datos.eventos || [],
+                bonosGlobales: datos.bonosGlobales || [],
+                solicitudes: datos.solicitudes || []
+            };
+        } catch (error) {
+            return { socios: [], eventos: [], bonosGlobales: [], solicitudes: [] };
+        }
     }
 
     async function guardarDatosNube(datos) {
@@ -113,7 +124,7 @@
 
     function mostrarLoginMonitor() {
         let pass = prompt("Introduce la contraseña de monitor:");
-        if (pass === "monitor123") { // Puedes cambiar esta contraseña de monitor aquí
+        if (pass === "monitor123") { // Contraseña de monitor por defecto
             tipoUsuarioActual = "monitor";
             document.getElementById('menuPrincipal').style.display = "none";
             document.getElementById('panelMonitor').style.display = "block";
@@ -125,11 +136,12 @@
 
     function mostrarLoginSocio() {
         let nombre = prompt("Introduce tu nombre de socio:");
+        if(!nombre) return;
         let clave = prompt("Introduce tu contraseña personal:");
+        if(!clave) return;
         
         obtenerDatosNube().then(datos => {
-            let socios = datos.socios || [];
-            let socioEncontrado = socios.find(s => s.nombre.toLowerCase() === nombre.toLowerCase() && s.clave === clave);
+            let socioEncontrado = datos.socios.find(s => s.nombre.toLowerCase() === nombre.trim().toLowerCase() && s.clave === clave.trim());
             
             if (socioEncontrado) {
                 usuarioActual = socioEncontrado;
@@ -157,7 +169,6 @@
         if(!nombre) return;
         
         let datos = await obtenerDatosNube();
-        datos.solicitudes = datos.solicitudes || [];
         datos.solicitudes.push(`Clase de prueba solicitada por: ${nombre}`);
         await guardarDatosNube(datos);
         alert("¡Solicitud enviada! Un monitor se pondrá en contacto contigo para tu día de prueba.");
@@ -169,8 +180,7 @@
         if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
 
         let datos = await obtenerDatosNube();
-        datos.socios = datos.socios || [];
-        datos.socios.push({ nombre, clave, bonos: [] });
+        datos.socios.push({ nombre, clave });
         
         await guardarDatosNube(datos);
         document.getElementById('nuevoNombreSocio').value = "";
@@ -185,7 +195,6 @@
         if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del evento.");
 
         let datos = await obtenerDatosNube();
-        datos.eventos = datos.eventos || [];
         datos.eventos.push({ titulo, fecha, lugar, inscritos: [] });
 
         await guardarDatosNube(datos);
@@ -200,7 +209,6 @@
         if(!detalle) return alert("Escribe los detalles del bono.");
 
         let datos = await obtenerDatosNube();
-        datos.bonosGlobales = datos.bonosGlobales || [];
         datos.bonosGlobales.push(detalle);
 
         await guardarDatosNube(datos);
@@ -212,7 +220,11 @@
         let datos = await obtenerDatosNube();
         let lSolicitudes = document.getElementById('listaSolicitudes');
         lSolicitudes.innerHTML = "";
-        (datos.solicitudes || []).forEach((s, idx) => {
+        if (datos.solicitudes.length === 0) {
+            lSolicitudes.innerHTML = "<li>No hay solicitudes pendientes.</li>";
+            return;
+        }
+        datos.solicitudes.forEach((s, idx) => {
             lSolicitudes.innerHTML += `<li>📌 ${s} <button onclick="borrarSolicitud(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Atendido</button></li>`;
         });
     }
@@ -228,8 +240,7 @@
         // Cargar bonos
         let lMisBonos = document.getElementById('misBonos');
         lMisBonos.innerHTML = "";
-        let bonosG = datos.bonosGlobales || [];
-        let misBonosEncontrados = bonosG.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
+        let misBonosEncontrados = datos.bonosGlobales.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
         if(misBonosEncontrados.length > 0) {
             misBonosEncontrados.forEach(b => { lMisBonos.innerHTML += `<li>🎟️ ${b}</li>`; });
         } else {
@@ -239,9 +250,12 @@
         // Cargar eventos con contador de inscritos
         let lEventos = document.getElementById('listaEventosSocio');
         lEventos.innerHTML = "";
-        let eventos = datos.eventos || [];
+        if (datos.eventos.length === 0) {
+            lEventos.innerHTML = "<li>No hay eventos o entrenamientos publicados todavía.</li>";
+            return;
+        }
         
-        eventos.forEach((ev, idx) => {
+        datos.eventos.forEach((ev, idx) => {
             let yaInscrito = ev.inscritos.includes(usuarioActual.nombre);
             lEventos.innerHTML += `
                 <li>
@@ -262,7 +276,6 @@
 
     async function pedirBonoAlMonitor() {
         let datos = await obtenerDatosNube();
-        datos.solicitudes = datos.solicitudes || [];
         datos.solicitudes.push(`El socio ${usuarioActual.nombre} solicita un nuevo bono o recarga.`);
         await guardarDatosNube(datos);
         alert("Solicitud de bono enviada al monitor.");
