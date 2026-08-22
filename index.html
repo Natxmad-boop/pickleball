@@ -10,11 +10,9 @@
 <body class="bg-slate-100 font-sans pb-32">
 
     <!-- CABECERA -->
-    <header class="bg-[#0f5c32] text-white p-4 text-center shadow-md">
-        <div class="flex justify-center items-center mb-2">
-            <img src="https://i.ibb.co/3sS8M3Y/pickleball-logo.png" alt="Logo El Escorial" class="max-w-[110px] h-auto object-contain">
-        </div>
-        <h1 class="text-xl font-bold tracking-tight">EL ESCORIAL PICKLEBALL</h1>
+    <header class="bg-[#0f5c32] text-white p-5 text-center shadow-md">
+        <h1 class="text-xl font-black tracking-wider uppercase">🏓 El Escorial Pickleball</h1>
+        <p class="text-xs text-emerald-200 mt-1">Club Oficial</p>
     </header>
 
     <!-- CONTENEDOR PRINCIPAL DE VISTAS -->
@@ -28,7 +26,7 @@
                 
                 <div class="bg-emerald-50 border-l-4 border-emerald-600 p-3 rounded-r-xl">
                     <span class="block text-xs font-bold text-emerald-800 uppercase">Próximo Entrenamiento</span>
-                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Miércoles 19:00 - Polideportivo</span>
+                    <span class="text-sm font-semibold text-slate-700">Miércoles 19:00 - Polideportivo Municipal</span>
                 </div>
             </div>
 
@@ -95,19 +93,35 @@
         <section id="view-prueba" class="view-section hidden space-y-4">
             <h2 class="text-xl font-bold text-slate-800">👋 Primer Día de Prueba</h2>
             <div class="bg-white p-5 rounded-2xl shadow-sm border space-y-3">
+                <p class="text-sm text-slate-600">¿Quieres probar? Escribe tus datos y los monitores te contactarán.</p>
                 <input type="text" id="nombrePrueba" placeholder="Tu Nombre y Apellidos" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                <input type="tel" id="telefonoPrueba" placeholder="Teléfono" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <input type="tel" id="telefonoPrueba" placeholder="Teléfono (ej: 600123456)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                 <button onclick="enviarSolicitudPrueba()" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm">Enviar Solicitud</button>
             </div>
         </section>
 
         <!-- VISTA: MÁS -->
         <section id="view-mas" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-bold text-slate-800">☰ Menú</h2>
+            <h2 class="text-xl font-bold text-slate-800">☰ Menú y Ajustes</h2>
             <div class="bg-white rounded-xl shadow-sm border divide-y">
                 <button onclick="openAdminPanel()" class="w-full text-left p-4 font-semibold text-emerald-800 flex justify-between items-center">
-                    🔒 Panel de Monitores <span id="monitor-badge-count" class="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs hidden">0</span>
+                    🔒 Panel de Monitores 
+                    <span id="monitor-badge-count" class="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs hidden">0</span>
                 </button>
+            </div>
+        </section>
+
+        <!-- VISTA: PANEL DE MONITORES (Oculta hasta meter el PIN) -->
+        <section id="view-admin" class="view-section hidden space-y-4">
+            <div class="flex justify-between items-center">
+                <h2 class="text-xl font-bold text-emerald-900">🔒 Panel de Monitores</h2>
+                <button onclick="switchView('inicio')" class="text-xs bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Salir</button>
+            </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
+                <h3 class="font-bold text-sm text-slate-700">Solicitudes de Primer Día de Prueba:</h3>
+                <div id="lista-solicitudes" class="space-y-2">
+                    <!-- Aquí aparecerán los alumnos que se apunten -->
+                </div>
             </div>
         </section>
 
@@ -128,7 +142,12 @@
     <script>
         let players = { "Juan Pérez": 4, "María Gómez": 2 };
         let attendees = [];
-        let solicitudesPendientes = 2;
+        
+        // Lista de solicitudes de prueba simulada (con datos de ejemplo para que veas cómo queda)
+        let listaPruebas = [
+            { nombre: "Carlos Martínez", telefono: "600111222" },
+            { nombre: "Lucía Fernández", telefono: "600333444" }
+        ];
 
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
@@ -183,10 +202,14 @@
         function solicitarBono() { alert("📩 Solicitud enviada."); }
 
         function enviarSolicitudPrueba() {
-            const name = document.getElementById('nombrePrueba').value;
-            if(!name) { alert("Escribe tu nombre."); return; }
-            alert("✅ ¡Solicitud enviada!");
-            solicitudesPendientes++;
+            const nombre = document.getElementById('nombrePrueba').value;
+            const telefono = document.getElementById('telefonoPrueba').value;
+            if(!nombre || !telefono) { alert("Por favor, rellena tu nombre y teléfono."); return; }
+            
+            listaPruebas.push({ nombre, telefono });
+            alert("✅ ¡Solicitud enviada con éxito! Los monitores la revisarán.");
+            document.getElementById('nombrePrueba').value = '';
+            document.getElementById('telefonoPrueba').value = '';
             actualizarAvisosMonitor();
             switchView('inicio');
         }
@@ -194,22 +217,50 @@
         function actualizarAvisosMonitor() {
             const badge = document.getElementById('badge-aviso');
             const menuBadge = document.getElementById('monitor-badge-count');
+            const contenedor = document.getElementById('lista-solicitudes');
+            
             if(!badge || !menuBadge) return;
-            if (solicitudesPendientes > 0) {
+
+            let count = listaPruebas.length;
+            if (count > 0) {
                 badge.classList.remove('hidden');
-                badge.innerText = solicitudesPendientes;
+                badge.innerText = count;
                 menuBadge.classList.remove('hidden');
-                menuBadge.innerText = solicitudesPendientes;
+                menuBadge.innerText = count;
             } else {
                 badge.classList.add('hidden');
                 menuBadge.classList.add('hidden');
+            }
+
+            if(contenedor) {
+                if(count === 0) {
+                    contenedor.innerHTML = '<p class="text-xs text-slate-400 py-2">No hay solicitudes pendientes.</p>';
+                } else {
+                    contenedor.innerHTML = '';
+                    listaPruebas.forEach((item, index) => {
+                        contenedor.innerHTML += `
+                            <div class="bg-slate-50 p-3 rounded-xl border flex justify-between items-center">
+                                <div>
+                                    <p class="font-bold text-sm text-slate-800">${item.nombre}</p>
+                                    <p class="text-xs text-slate-500">📞 ${item.telefono}</p>
+                                </div>
+                                <a href="https://wa.me/35$ {item.telefono}?text=Hola%20${item.nombre},%20te%20escribimos%20desde%20el%20Club%20de%20Pickleball%20El%20Escorial%20sobre%20tu%20clase%20de%20prueba." 
+                                   target="_blank" 
+                                   class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-bold shadow">
+                                   💬 WhatsApp
+                                </a>
+                            </div>
+                        `;
+                    });
+                }
             }
         }
 
         function openAdminPanel() {
             let pin = prompt("Introduce el PIN de monitor:");
             if (pin === "1234") {
-                alert(`🔒 Tienes ${solicitudesPendientes} solicitudes pendientes.`);
+                actualizarAvisosMonitor();
+                switchView('admin'); // Abre la pantalla de gestión del monitor directamente
             } else if (pin !== null) {
                 alert("PIN incorrecto.");
             }
