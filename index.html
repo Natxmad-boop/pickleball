@@ -26,7 +26,7 @@
                 
                 <div class="bg-emerald-50 border-l-4 border-emerald-600 p-3 rounded-r-xl">
                     <span class="block text-xs font-bold text-emerald-800 uppercase">Próximo Entrenamiento</span>
-                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Miércoles 19:00 - Polideportivo Municipal</span>
+                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Consulta las clases disponibles</span>
                 </div>
             </div>
 
@@ -92,22 +92,38 @@
             <h2 class="text-xl font-bold text-slate-800">☰ Menú y Ajustes</h2>
             <div class="bg-white p-5 rounded-xl shadow-sm border space-y-3">
                 <h3 class="font-bold text-sm text-emerald-800 flex items-center gap-2">🔒 Acceso Exclusivo Monitores</h3>
-                <p class="text-xs text-slate-500">Introduce el PIN (1234) para gestionar clases y solicitudes:</p>
-                <input type="password" id="inputPinMonitor" placeholder="PIN de acceso" class="w-full p-3 border rounded-xl text-sm bg-slate-50 tracking-widest text-center font-bold" maxlength="4">
+                <p class="text-xs text-slate-500">Introduce tu PIN personal de monitor:</p>
+                <input type="password" id="inputPinMonitor" placeholder="Tu PIN" class="w-full p-3 border rounded-xl text-sm bg-slate-50 tracking-widest text-center font-bold" maxlength="6">
                 <button onclick="validarPinPantalla()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm shadow">Entrar al Panel de Control</button>
             </div>
         </section>
 
-        <!-- VISTA: PANEL DE MONITORES ( CREACIÓN DE CLASES Y EVENTOS ) -->
+        <!-- VISTA: PANEL DE MONITORES -->
         <section id="view-admin" class="view-section hidden space-y-4">
             <div class="flex justify-between items-center">
-                <h2 class="text-xl font-bold text-emerald-900">🛠️ Panel de Gestión</h2>
+                <h2 class="text-xl font-bold text-emerald-900" id="titulo-panel-monitor">🛠️ Panel de Gestión</h2>
                 <button onclick="switchView('mas')" class="text-xs bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Cerrar Sesión</button>
+            </div>
+
+            <!-- CREAR NUEVO MONITOR (NUEVO) -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3 border-emerald-200">
+                <h3 class="font-bold text-sm text-emerald-800">➕ Crear Nuevo Perfil de Monitor</h3>
+                <input type="text" id="nuevoNombreMonitor" placeholder="Nombre del monitor" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <input type="password" id="nuevoPinMonitor" placeholder="PIN secreto (ej: 5678)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <button onclick="crearMonitor()" class="w-full bg-emerald-700 text-white p-3 rounded-xl font-bold text-sm">Guardar Nuevo Monitor</button>
+            </div>
+
+            <!-- LISTA DE MONITORES EXISTENTES -->
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
+                <h3 class="font-bold text-xs text-slate-500 uppercase">Monitores Registrados:</h3>
+                <div id="lista-monitores-reg" class="space-y-1 text-sm">
+                    <!-- Se cargan dinámicamente -->
+                </div>
             </div>
 
             <!-- CREAR NUEVO ENTRENAMIENTO -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-sm text-slate-700">➕ Crear Nueva Clases / Entrenamiento</h3>
+                <h3 class="font-bold text-sm text-slate-700">🏓 Publicar Clase / Entrenamiento</h3>
                 <input type="text" id="adminTituloClase" placeholder="Título (ej: Entrenamiento Nivel Medio)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                 <input type="text" id="adminHorarioClase" placeholder="Fecha y Hora (ej: Miércoles 19:00)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                 <input type="text" id="adminUbicacionClase" placeholder="Ubicación (ej: Polideportivo Municipal)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
@@ -116,7 +132,7 @@
 
             <!-- CREAR NUEVO EVENTO / TORNEO -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
-                <h3 class="font-bold text-sm text-slate-700">🏆 Crear Nuevo Torneo / Evento</h3>
+                <h3 class="font-bold text-sm text-slate-700">🏆 Publicar Torneo / Evento</h3>
                 <input type="text" id="adminTituloEvento" placeholder="Título del Torneo" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                 <input type="text" id="adminFechaEvento" placeholder="Fecha (ej: Sábado 15 de Octubre)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                 <button onclick="crearEvento()" class="w-full bg-amber-600 text-white p-3 rounded-xl font-bold text-sm">Publicar Evento</button>
@@ -146,25 +162,17 @@
     </nav>
 
     <script>
-        // CONFIGURACIÓN SUPABASE (Opcional por ahora)
-        const SUPABASE_URL = 'https://tu-proyecto.supabase.co';
-        const SUPABASE_ANON_KEY = 'tu-clave-anon';
-        // const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
         let players = { "Juan Pérez": 4, "María Gómez": 2 };
         
-        // Datos de ejemplo editables por los monitores
-        let listaEntrenamientos = [
-            { id: 1, titulo: "Entrenamiento General Club", horario: "Miércoles 19:00 - 20:30", ubicacion: "Polideportivo Municipal" }
+        // Empezamos con un monitor por defecto (PIN 1234) para que no te quedes fuera, 
+        // pero puedes borrarlo o crear los tuyos propios desde el panel.
+        let listaMonitores = [
+            { nombre: "Administrador Principal", pin: "1234" }
         ];
 
-        let listaEventos = [
-            { id: 1, titulo: "I Torneo Social El Escorial", fecha: "Próximamente" }
-        ];
-
-        let listaPruebas = [
-            { nombre: "Carlos Martínez", telefono: "600111222" }
-        ];
+        let listaEntrenamientos = [];
+        let listaEventos = [];
+        let listaPruebas = [];
 
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
@@ -206,7 +214,35 @@
             switchView('inicio');
         }
 
-        // --- FUNCIONES DE LOS MONITORES PARA CREAR ACCIONES ---
+        // --- GESTIÓN DE MONITORES ---
+        function crearMonitor() {
+            const nombre = document.getElementById('nuevoNombreMonitor').value;
+            const pin = document.getElementById('nuevoPinMonitor').value;
+
+            if(!nombre || !pin) { alert("Introduce el nombre y el PIN para el nuevo monitor."); return; }
+
+            listaMonitores.push({ nombre, pin });
+            alert("✅ ¡Perfil de monitor creado con éxito!");
+            
+            document.getElementById('nuevoNombreMonitor').value = '';
+            document.getElementById('nuevoPinMonitor').value = '';
+            renderizarTodo();
+        }
+
+        function validarPinPantalla() {
+            const pinInput = document.getElementById('inputPinMonitor').value;
+            const monitorEncontrado = listaMonitores.find(m => m.pin === pinInput);
+
+            if (monitorEncontrado) {
+                document.getElementById('inputPinMonitor').value = '';
+                document.getElementById('titulo-panel-monitor').innerText = `🛠️ Panel de: ${monitorEncontrado.nombre}`;
+                switchView('admin');
+            } else {
+                alert("PIN incorrecto. Si es la primera vez, prueba con el PIN 1234.");
+            }
+        }
+
+        // --- CREAR CLASES Y EVENTOS ---
         function crearEntrenamiento() {
             const titulo = document.getElementById('adminTituloClase').value;
             const horario = document.getElementById('adminHorarioClase').value;
@@ -215,7 +251,7 @@
             if(!titulo || !horario) { alert("Rellena al menos el título y el horario."); return; }
 
             listaEntrenamientos.push({ id: Date.now(), titulo, horario, ubicacion });
-            alert("✅ ¡Entrenamiento creado y publicado con éxito!");
+            alert("✅ ¡Entrenamiento publicado!");
             
             document.getElementById('adminTituloClase').value = '';
             document.getElementById('adminHorarioClase').value = '';
@@ -230,26 +266,15 @@
             if(!titulo) { alert("Rellena el título del evento."); return; }
 
             listaEventos.push({ id: Date.now(), titulo, fecha });
-            alert("✅ ¡Torneo/Evento publicado con éxito!");
+            alert("✅ ¡Evento publicado!");
             
             document.getElementById('adminTituloEvento').value = '';
             document.getElementById('adminFechaEvento').value = '';
             renderizarTodo();
         }
 
-        function validarPinPantalla() {
-            const pinInput = document.getElementById('inputPinMonitor').value;
-            if (pinInput === "1234") {
-                document.getElementById('inputPinMonitor').value = '';
-                switchView('admin');
-            } else {
-                alert("PIN incorrecto. Prueba con 1234");
-            }
-        }
-
-        // Renderizar contenidos dinámicamente en las pantallas
+        // Renderizar contenidos dinámicamente
         function renderizarTodo() {
-            // Actualizar avisos
             const badge = document.getElementById('badge-aviso');
             if(badge) {
                 if(listaPruebas.length > 0) {
@@ -260,36 +285,53 @@
                 }
             }
 
-            // Listado de Entrenamientos para alumnos
+            // Lista de Monitores en el panel
+            const contMonitores = document.getElementById('lista-monitores-reg');
+            if(contMonitores) {
+                contMonitores.innerHTML = '';
+                listaMonitores.forEach(m => {
+                    contMonitores.innerHTML += `<div class="p-2 bg-slate-50 rounded-lg flex justify-between items-center text-xs font-semibold"><span>👤 ${m.nombre}</span> <span class="text-slate-400">PIN: ****</span></div>`;
+                });
+            }
+
+            // Listado de Entrenamientos
             const contEntreno = document.getElementById('lista-entrenamientos-publicos');
             if(contEntreno) {
-                contEntreno.innerHTML = '';
-                listaEntrenamientos.forEach(item => {
-                    contEntreno.innerHTML += `
-                        <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
-                            <h3 class="font-bold text-slate-800">${item.titulo}</h3>
-                            <p class="text-xs text-slate-600">🕒 ${item.horario}</p>
-                            <p class="text-xs text-slate-600">📍 ${item.ubicacion || 'Polideportivo Municipal'}</p>
-                        </div>
-                    `;
-                });
+                if(listaEntrenamientos.length === 0) {
+                    contEntreno.innerHTML = '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay entrenamientos programados todavía.</div>';
+                } else {
+                    contEntreno.innerHTML = '';
+                    listaEntrenamientos.forEach(item => {
+                        contEntreno.innerHTML += `
+                            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
+                                <h3 class="font-bold text-slate-800">${item.titulo}</h3>
+                                <p class="text-xs text-slate-600">🕒 ${item.horario}</p>
+                                <p class="text-xs text-slate-600">📍 ${item.ubicacion || 'Polideportivo Municipal'}</p>
+                            </div>
+                        `;
+                    });
+                }
             }
 
-            // Listado de Eventos para alumnos
+            // Listado de Eventos
             const contEventos = document.getElementById('lista-eventos-publicos');
             if(contEventos) {
-                contEventos.innerHTML = '';
-                listaEventos.forEach(item => {
-                    contEventos.innerHTML += `
-                        <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
-                            <h3 class="font-bold text-amber-800">${item.titulo}</h3>
-                            <p class="text-xs text-slate-600">📅 ${item.fecha}</p>
-                        </div>
-                    `;
-                });
+                if(listaEventos.length === 0) {
+                    contEventos.innerHTML = '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay torneos o eventos publicados todavía.</div>';
+                } else {
+                    contEventos.innerHTML = '';
+                    listaEventos.forEach(item => {
+                        contEventos.innerHTML += `
+                            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-2">
+                                <h3 class="font-bold text-amber-800">${item.titulo}</h3>
+                                <p class="text-xs text-slate-600">📅 ${item.fecha}</p>
+                            </div>
+                        `;
+                    });
+                }
             }
 
-            // Listado de Solicitudes en el Panel de Monitores
+            // Solicitudes de prueba
             const contenedorSolicitudes = document.getElementById('lista-solicitudes');
             if(contenedorSolicitudes) {
                 if(listaPruebas.length === 0) {
