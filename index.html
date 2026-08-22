@@ -3,18 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión Completa Pickleball</title>
+    <title>Club de Pickleball - Gestión Completa</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1, h2 { color: #2c3e50; text-align: center; }
+        .container { max-width: 650px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1, h2, h3 { color: #2c3e50; text-align: center; }
         .section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        input, button { width: 100%; padding: 12px; margin-top: 6px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        input, select, button { width: 100%; padding: 12px; margin-top: 6px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
         button { background-color: #3498db; color: white; border: none; font-weight: bold; cursor: pointer; }
         button:hover { background-color: #2980b9; }
+        .btn-monitor { background-color: #e67e22; }
+        .btn-monitor:hover { background-color: #d35400; }
+        .btn-socio { background-color: #27ae60; }
+        .btn-socio:hover { background-color: #219653; }
+        .btn-danger { background-color: #e74c3c; }
+        .btn-danger:hover { background-color: #c0392b; }
         ul { list-style: none; padding: 0; }
-        li { background: #ecf0f1; padding: 10px; margin-top: 6px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; }
+        li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .sync-status { text-align: center; font-size: 14px; color: #7f8c8d; margin-bottom: 15px; font-weight: bold; }
+        .panel { display: none; background: #fff8e1; padding: 15px; border-radius: 8px; border: 1px solid #ffe0b2; margin-bottom: 20px; }
+        .card { background: #f9f9f9; border: 1px solid #ddd; padding: 10px; margin-top: 8px; border-radius: 6px; }
     </style>
 </head>
 <body>
@@ -23,127 +31,252 @@
     <h1>🏓 Club de Pickleball</h1>
     <div id="status" class="sync-status">Sincronizado con la nube ☁️</div>
 
-    <!-- 1. Sección Socios -->
-    <div class="section">
-        <h2>👥 Registrar Socio</h2>
-        <input type="text" id="nombreSocio" placeholder="Nombre y Apellidos">
-        <button onclick="agregarDato('socios', 'nombreSocio')">Añadir Socio</button>
-        <ul id="listaSocios"></ul>
+    <!-- PANTALLA DE SELECCIÓN DE ACCESO -->
+    <div id="menuPrincipal">
+        <h2>Elige tu tipo de acceso</h2>
+        <button class="btn-monitor" onclick="mostrarLoginMonitor()">🔑 Acceso Monitores</button>
+        <button class="btn-socio" onclick="mostrarLoginSocio()">👤 Acceso Socios</button>
+        <div class="card" style="margin-top: 20px; text-align: center;">
+            <p>¿Eres nuevo o quieres probar?</p>
+            <button onclick="solicitarPrueba()">Solicitar Acceso de Prueba</button>
+        </div>
     </div>
 
-    <!-- 2. Sección Monitores -->
-    <div class="section">
-        <h2>🎾 Registrar Monitor</h2>
-        <input type="text" id="nombreMonitor" placeholder="Nombre del Monitor">
-        <button onclick="agregarDato('monitores', 'nombreMonitor')">Añadir Monitor</button>
-        <ul id="listaMonitores"></ul>
+    <!-- PANEL DE MONITOR -->
+    <div id="panelMonitor" class="panel">
+        <h2>🛠️ Panel de Control - Monitor</h2>
+        <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
+        
+        <div class="section">
+            <h3>👥 Registrar Nuevo Socio y Generar Clave</h3>
+            <input type="text" id="nuevoNombreSocio" placeholder="Nombre y Apellidos">
+            <input type="text" id="nuevaClaveSocio" placeholder="Contraseña de acceso para el socio">
+            <button onclick="crearSocio()">Crear Socio y Clave</button>
+        </div>
+
+        <div class="section">
+            <h3>🏆 Crear Evento (Torneo / Entrenamiento)</h3>
+            <input type="text" id="eventoTitulo" placeholder="Título (Ej: Torneo Relámpago / Entrenamiento Avanzado)">
+            <input type="text" id="eventoFecha" placeholder="Fecha y Hora (Ej: Viernes a las 18:00)">
+            <input type="text" id="eventoLugar" placeholder="Lugar / Pista (Ej: Pista Central Club)">
+            <button onclick="crearEvento()">Publicar Evento</button>
+        </div>
+
+        <div class="section">
+            <h3>🎟️ Asignar Bono a Socio</h3>
+            <input type="text" id="bonoDetalles" placeholder="Socio y sesiones (Ej: Juan - Bono 10 sesiones)">
+            <button onclick="asignarBono()">Enviar Bono</button>
+        </div>
+
+        <div class="section">
+            <h3>📥 Solicitudes Pendientes de Socios</h3>
+            <ul id="listaSolicitudes"></ul>
+        </div>
     </div>
 
-    <!-- 3. Sección Clases -->
-    <div class="section">
-        <h2>📅 Clases / Pistas</h2>
-        <input type="text" id="nombreClase" placeholder="Ej: Clase Martes 18:00">
-        <button onclick="agregarDato('clases', 'nombreClase')">Añadir Clase</button>
-        <ul id="listaClases"></ul>
+    <!-- PANEL DE SOCIO -->
+    <div id="panelSocio" class="panel" style="background: #e8f8f5; border-color: #a3e4d7;">
+        <h2>👤 Panel de Socio (<span id="nombreSocioLogueado"></span>)</h2>
+        <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
+        
+        <div class="section">
+            <h3>🎟️ Mis Bonos y Estado</h3>
+            <ul id="misBonos"></ul>
+            <button onclick="pedirBonoAlMonitor()">Solicitar Nuevo Bono / Recarga</button>
+        </div>
+
+        <div class="section">
+            <h3>📅 Eventos Disponibles (Apúntate y ve inscritos)</h3>
+            <ul id="listaEventosSocio"></ul>
+        </div>
     </div>
 
-    <!-- 4. Sección Bonos -->
-    <div class="section">
-        <h2>🎟️ Control de Bonos</h2>
-        <input type="text" id="nombreBono" placeholder="Socio y número de sesiones (Ej: Juan - Bono 10)">
-        <button onclick="agregarDato('bonos', 'nombreBono')">Añadir Bono</button>
-        <ul id="listaBonos"></ul>
-    </div>
-
-    <!-- 5. Sección Torneos -->
-    <div class="section">
-        <h2>🏆 Torneos y Eventos</h2>
-        <input type="text" id="nombreTorneo" placeholder="Nombre del Torneo / Fecha">
-        <button onclick="agregarDato('torneos', 'nombreTorneo')">Añadir Torneo</button>
-        <ul id="listaTorneos"></ul>
-    </div>
 </div>
 
 <script>
     const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
+    let usuarioActual = null;
+    let tipoUsuarioActual = null;
 
-    async function cargarDatos() {
-        try {
-            document.getElementById('status').innerText = "Cargando datos...";
-            let respuesta = await fetch(API_URL);
-            let datos = await respuesta.json();
+    async function obtenerDatosNube() {
+        let respuesta = await fetch(API_URL);
+        return await respuesta.json();
+    }
+
+    async function guardarDatosNube(datos) {
+        await fetch(API_URL, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        });
+    }
+
+    function mostrarLoginMonitor() {
+        let pass = prompt("Introduce la contraseña de monitor:");
+        if (pass === "monitor123") { // Puedes cambiar esta contraseña de monitor aquí
+            tipoUsuarioActual = "monitor";
+            document.getElementById('menuPrincipal').style.display = "none";
+            document.getElementById('panelMonitor').style.display = "block";
+            cargarPanelMonitor();
+        } else if(pass !== null) {
+            alert("Contraseña incorrecta.");
+        }
+    }
+
+    function mostrarLoginSocio() {
+        let nombre = prompt("Introduce tu nombre de socio:");
+        let clave = prompt("Introduce tu contraseña personal:");
+        
+        obtenerDatosNube().then(datos => {
+            let socios = datos.socios || [];
+            let socioEncontrado = socios.find(s => s.nombre.toLowerCase() === nombre.toLowerCase() && s.clave === clave);
             
-            actualizarInterfaz(datos);
-            document.getElementById('status').innerText = "Sincronizado con la nube ☁️";
-        } catch (error) {
-            document.getElementById('status').innerText = "Error al conectar con la nube ⚠️";
+            if (socioEncontrado) {
+                usuarioActual = socioEncontrado;
+                tipoUsuarioActual = "socio";
+                document.getElementById('menuPrincipal').style.display = "none";
+                document.getElementById('panelSocio').style.display = "block";
+                document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
+                cargarPanelSocio(datos);
+            } else {
+                alert("Nombre o contraseña incorrectos.");
+            }
+        });
+    }
+
+    function cerrarSesion() {
+        usuarioActual = null;
+        tipoUsuarioActual = null;
+        document.getElementById('panelMonitor').style.display = "none";
+        document.getElementById('panelSocio').style.display = "none";
+        document.getElementById('menuPrincipal').style.display = "block";
+    }
+
+    async function solicitarPrueba() {
+        let nombre = prompt("Escribe tu nombre y teléfono para solicitar una clase de prueba:");
+        if(!nombre) return;
+        
+        let datos = await obtenerDatosNube();
+        datos.solicitudes = datos.solicitudes || [];
+        datos.solicitudes.push(`Clase de prueba solicitada por: ${nombre}`);
+        await guardarDatosNube(datos);
+        alert("¡Solicitud enviada! Un monitor se pondrá en contacto contigo para tu día de prueba.");
+    }
+
+    async function crearSocio() {
+        let nombre = document.getElementById('nuevoNombreSocio').value.trim();
+        let clave = document.getElementById('nuevaClaveSocio').value.trim();
+        if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
+
+        let datos = await obtenerDatosNube();
+        datos.socios = datos.socios || [];
+        datos.socios.push({ nombre, clave, bonos: [] });
+        
+        await guardarDatosNube(datos);
+        document.getElementById('nuevoNombreSocio').value = "";
+        document.getElementById('nuevaClaveSocio').value = "";
+        alert("Socio creado con éxito. Ya puede iniciar sesión con su clave.");
+    }
+
+    async function crearEvento() {
+        let titulo = document.getElementById('eventoTitulo').value.trim();
+        let fecha = document.getElementById('eventoFecha').value.trim();
+        let lugar = document.getElementById('eventoLugar').value.trim();
+        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del evento.");
+
+        let datos = await obtenerDatosNube();
+        datos.eventos = datos.eventos || [];
+        datos.eventos.push({ titulo, fecha, lugar, inscritos: [] });
+
+        await guardarDatosNube(datos);
+        document.getElementById('eventoTitulo').value = "";
+        document.getElementById('eventoFecha').value = "";
+        document.getElementById('eventoLugar').value = "";
+        alert("Evento publicado correctamente.");
+    }
+
+    async function asignarBono() {
+        let detalle = document.getElementById('bonoDetalles').value.trim();
+        if(!detalle) return alert("Escribe los detalles del bono.");
+
+        let datos = await obtenerDatosNube();
+        datos.bonosGlobales = datos.bonosGlobales || [];
+        datos.bonosGlobales.push(detalle);
+
+        await guardarDatosNube(datos);
+        document.getElementById('bonoDetalles').value = "";
+        alert("Bono registrado en la nube.");
+    }
+
+    async function cargarPanelMonitor() {
+        let datos = await obtenerDatosNube();
+        let lSolicitudes = document.getElementById('listaSolicitudes');
+        lSolicitudes.innerHTML = "";
+        (datos.solicitudes || []).forEach((s, idx) => {
+            lSolicitudes.innerHTML += `<li>📌 ${s} <button onclick="borrarSolicitud(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Atendido</button></li>`;
+        });
+    }
+
+    async function borrarSolicitud(index) {
+        let datos = await obtenerDatosNube();
+        datos.solicitudes.splice(index, 1);
+        await guardarDatosNube(datos);
+        cargarPanelMonitor();
+    }
+
+    async function cargarPanelSocio(datos) {
+        // Cargar bonos
+        let lMisBonos = document.getElementById('misBonos');
+        lMisBonos.innerHTML = "";
+        let bonosG = datos.bonosGlobales || [];
+        let misBonosEncontrados = bonosG.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
+        if(misBonosEncontrados.length > 0) {
+            misBonosEncontrados.forEach(b => { lMisBonos.innerHTML += `<li>🎟️ ${b}</li>`; });
+        } else {
+            lMisBonos.innerHTML = "<li>No tienes bonos activos asignados actualmente.</li>";
+        }
+
+        // Cargar eventos con contador de inscritos
+        let lEventos = document.getElementById('listaEventosSocio');
+        lEventos.innerHTML = "";
+        let eventos = datos.eventos || [];
+        
+        eventos.forEach((ev, idx) => {
+            let yaInscrito = ev.inscritos.includes(usuarioActual.nombre);
+            lEventos.innerHTML += `
+                <li>
+                    <div>
+                        <strong>${ev.titulo}</strong><br>
+                        🕒 ${ev.fecha} | 📍 ${ev.lugar}<br>
+                        <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ev.inscritos.length} personas</small>
+                    </div>
+                    <div>
+                        ${yaInscrito ? 
+                            '<span style="color: #27ae60; font-weight: bold;">✓ Ya apuntado</span>' : 
+                            `<button onclick="apuntarseEvento(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`
+                        }
+                    </div>
+                </li>`;
+        });
+    }
+
+    async function pedirBonoAlMonitor() {
+        let datos = await obtenerDatosNube();
+        datos.solicitudes = datos.solicitudes || [];
+        datos.solicitudes.push(`El socio ${usuarioActual.nombre} solicita un nuevo bono o recarga.`);
+        await guardarDatosNube(datos);
+        alert("Solicitud de bono enviada al monitor.");
+    }
+
+    async function apuntarseEvento(indexEvento) {
+        let datos = await obtenerDatosNube();
+        if(!datos.eventos[indexEvento].inscritos.includes(usuarioActual.nombre)) {
+            datos.eventos[indexEvento].inscritos.push(usuarioActual.nombre);
+            await guardarDatosNube(datos);
+            alert("¡Te has apuntado con éxito!");
+            cargarPanelSocio(datos);
         }
     }
-
-    async function agregarDato(tipo, inputId) {
-        let input = document.getElementById(inputId);
-        let valor = input.value.trim();
-        if(!valor) return alert("Por favor, escribe algo.");
-
-        try {
-            document.getElementById('status').innerText = "Guardando...";
-            let respuesta = await fetch(API_URL);
-            let datos = await respuesta.json();
-
-            // Asegurar que las listas existan
-            datos.socios = datos.socios || [];
-            datos.monitores = datos.monitores || [];
-            datos.clases = datos.clases || [];
-            datos.bonos = datos.bonos || [];
-            datos.torneos = datos.torneos || [];
-
-            // Añadir el nuevo elemento a su categoría correspondiente
-            datos[tipo].push(valor);
-            input.value = "";
-
-            // Guardar todo en la nube
-            await fetch(API_URL, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datos)
-            });
-
-            actualizarInterfaz(datos);
-            document.getElementById('status').innerText = "Sincronizado con la nube ☁️";
-        } catch (error) {
-            document.getElementById('status').innerText = "Error al guardar ⚠️";
-        }
-    }
-
-    function actualizarInterfaz(datos) {
-        // Socios
-        let lSocios = document.getElementById('listaSocios');
-        lSocios.innerHTML = "";
-        (datos.socios || []).forEach(s => { lSocios.innerHTML += `<li>👤 ${s}</li>`; });
-
-        // Monitores
-        let lMonitores = document.getElementById('listaMonitores');
-        lMonitores.innerHTML = "";
-        (datos.monitores || []).forEach(m => { lMonitores.innerHTML += `<li>🎾 ${m}</li>`; });
-
-        // Clases
-        let lClases = document.getElementById('listaClases');
-        lClases.innerHTML = "";
-        (datos.clases || []).forEach(c => { lClases.innerHTML += `<li>📅 ${c}</li>`; });
-
-        // Bonos
-        let lBonos = document.getElementById('listaBonos');
-        lBonos.innerHTML = "";
-        (datos.bonos || []).forEach(b => { lBonos.innerHTML += `<li>🎟️ ${b}</li>`; });
-
-        // Torneos
-        let lTorneos = document.getElementById('listaTorneos');
-        lTorneos.innerHTML = "";
-        (datos.torneos || []).forEach(t => { lTorneos.innerHTML += `<li>🏆 ${t}</li>`; });
-    }
-
-    // Cargar al iniciar la página
-    cargarDatos();
 </script>
 
 </body>
