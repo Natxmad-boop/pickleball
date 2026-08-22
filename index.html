@@ -153,13 +153,17 @@
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
-      margin-top: 10px;
+      margin-top: 8px;
+    }
+
+    .btn-secondary {
+      background-color: #64748b;
     }
 
     ul.attendees-list {
       list-style: none;
       padding: 0;
-      margin: 8px 0 0;
+      margin: 12px 0 0;
     }
 
     ul.attendees-list li {
@@ -246,6 +250,7 @@
 
   <div class="container">
 
+    <!-- TAB ENTRENAMIENTO JUGADORES -->
     <div id="entrenamiento" class="tab-content active">
       <div class="card">
         <h2 class="card-title">📍 Próximo Entrenamiento</h2>
@@ -262,12 +267,25 @@
         </div>
       </div>
 
+      <!-- SECCIÓN PARA QUE EL ALUMNO SE APUNTE DIRECTAMENTE -->
+      <div class="card">
+        <h2 class="card-title">✋ Apuntarse a esta Clase</h2>
+        <label class="label">Selecciona tu nombre:</label>
+        <select id="selfAttendeeSelect">
+          <option value="">-- Elige tu nombre --</option>
+        </select>
+
+        <button class="btn-action" onclick="selfAddAttendee()">+ Apuntarme a la clase</button>
+        <button class="btn-action btn-secondary" onclick="selfRemoveAttendee()">- Borrarme de la clase</button>
+      </div>
+
       <div class="card">
         <h2 class="card-title">👥 Jugadores Apuntados (<span id="attendee-count">0</span>)</h2>
         <ul class="attendees-list" id="attendees-list-user"></ul>
       </div>
     </div>
 
+    <!-- TAB TARJETA JUGADORES -->
     <div id="tarjeta" class="tab-content">
       <div class="card">
         <h2 class="card-title">🎴 Consulta tu Bono</h2>
@@ -290,6 +308,7 @@
       </div>
     </div>
 
+    <!-- TAB PANEL MONITORES -->
     <div id="admin" class="tab-content">
       <div class="card" id="loginCard">
         <h2 class="card-title">🔒 Acceso Monitores</h2>
@@ -302,8 +321,8 @@
         
         <div class="card">
           <h2 class="card-title">⚙️ Configurar Entrenamiento</h2>
-          <label class="label">Ubicación:</label>
-          <input type="text" id="editLocation" placeholder="Ej. Polideportivo Municipal">
+          <label class="label">Ubicación / Estado:</label>
+          <input type="text" id="editLocation" placeholder="Ej. Polideportivo / SUSPENDIDO POR LLUVIA">
           <label class="label">Horario:</label>
           <input type="text" id="editTime" placeholder="Ej. 10:00 - 11:30">
           <label class="label">Monitores:</label>
@@ -313,13 +332,7 @@
 
         <div class="card">
           <h2 class="card-title">📝 Gestión de Lista de Asistencia</h2>
-          <label class="label">Apuntar jugador a la sesión:</label>
-          <select id="addAttendeeSelect">
-            <option value="">-- Seleccionar alumno --</option>
-          </select>
-          <button class="btn-action" style="background-color: var(--primary-light);" onclick="addAttendeeByCoach()">+ Apuntar a Sesión</button>
-
-          <h3 style="font-size: 14px; margin-top: 15px; color: var(--text-muted);">Inscritos actual:</h3>
+          <h3 style="font-size: 14px; margin-top: 5px; color: var(--text-muted);">Inscritos actuales en la sesión:</h3>
           <ul class="attendees-list" id="attendees-list-admin"></ul>
         </div>
 
@@ -362,16 +375,16 @@
     function updateSelects() {
       const uSelect = document.getElementById('userSelect');
       const aSelect = document.getElementById('adminPlayerSelect');
-      const attSelect = document.getElementById('addAttendeeSelect');
+      const selfSelect = document.getElementById('selfAttendeeSelect');
       
       uSelect.innerHTML = '<option value="">-- Elige un alumno --</option>';
       aSelect.innerHTML = '<option value="">-- Seleccionar alumno --</option>';
-      attSelect.innerHTML = '<option value="">-- Seleccionar alumno --</option>';
+      selfSelect.innerHTML = '<option value="">-- Elige tu nombre --</option>';
 
       for (let name in players) {
         uSelect.innerHTML += `<option value="${name}">${name}</option>`;
         aSelect.innerHTML += `<option value="${name}">${name}</option>`;
-        attSelect.innerHTML += `<option value="${name}">${name}</option>`;
+        selfSelect.innerHTML += `<option value="${name}">${name}</option>`;
       }
     }
 
@@ -386,6 +399,7 @@
 
       if(attendees.length === 0) {
         uList.innerHTML = '<li style="color:#94a3b8; justify-content:center;">No hay alumnos apuntados.</li>';
+        aList.innerHTML = '<li style="color:#94a3b8; justify-content:center;">No hay alumnos apuntados.</li>';
       }
 
       attendees.forEach((name, index) => {
@@ -415,6 +429,35 @@
       }
     }
 
+    /* FUNCIONES DE AUTOGESTIÓN DE ALUMNOS */
+    function selfAddAttendee() {
+      const name = document.getElementById('selfAttendeeSelect').value;
+      if (!name) return alert("Por favor, selecciona tu nombre.");
+      
+      if (!attendees.includes(name)) {
+        attendees.push(name);
+        renderAttendees();
+        alert("Te has apuntado correctamente a la clase.");
+      } else {
+        alert("Ya estás apuntado/a a esta clase.");
+      }
+    }
+
+    function selfRemoveAttendee() {
+      const name = document.getElementById('selfAttendeeSelect').value;
+      if (!name) return alert("Por favor, selecciona tu nombre.");
+      
+      const index = attendees.indexOf(name);
+      if (index !== -1) {
+        attendees.splice(index, 1);
+        renderAttendees();
+        alert("Te has borrado de la clase.");
+      } else {
+        alert("No estás apuntado/a en esta clase.");
+      }
+    }
+
+    /* FUNCIONES DEL MONITOR */
     function loginAdmin() {
       const pin = document.getElementById('pinInput').value;
       if (pin === "1234") {
@@ -445,18 +488,6 @@
         document.getElementById('newPlayerName').value = "";
         updateSelects();
         alert("Alumno registrado: " + name);
-      }
-    }
-
-    function addAttendeeByCoach() {
-      const name = document.getElementById('addAttendeeSelect').value;
-      if (!name) return alert("Selecciona un alumno.");
-      
-      if (!attendees.includes(name)) {
-        attendees.push(name);
-        renderAttendees();
-      } else {
-        alert("Ya está inscrito.");
       }
     }
 
