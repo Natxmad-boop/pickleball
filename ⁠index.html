@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>El Escorial Pickleball</title>
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<style>
+  :root{
+    --court:#0B4F3F;
+    --court-2:#0E6B54;
+    --chalk:#FAF7F0;
+    --ball:#D9F13B;
+    --ink:#12251F;
+    --line:rgba(250,247,240,0.16);
+    --coral:#FF6B4A;
+    --muted:rgba(250,247,240,0.62);
+    --whatsapp:#25D366;
+  }
+  *{box-sizing:border-box;}
+  html, body{
+    margin:0;
+    background:var(--court);
+    color:var(--chalk);
+    min-height:100%;
+  }
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    padding-bottom:84px;
+  }
+  h1,h2,h3,.score{
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+    font-weight:800;
+    letter-spacing:0.01em;
+  }
+  .wrap{max-width:520px;margin:0 auto;padding:18px 16px 8px;}
+  
+  header.top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:8px 4px 16px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:16px;
+  }
+  .header-brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .club-logo{
+    width:52px;
+    height:52px;
+    flex-shrink:0;
+  }
+  header.top h1{font-size:22px;margin:0;line-height:1.1;color:var(--chalk);}
+  header.top p{margin:4px 0 0;font-size:11px;color:var(--muted);letter-spacing:0.06em;text-transform:uppercase;}
+  .ball-dot{width:12px;height:12px;border-radius:50%;background:var(--ball);box-shadow:0 0 0 3px rgba(217,241,59,0.18);flex-shrink:0;}
+
+  .id-box{
+    background:rgba(250,247,240,0.06);
+    border:1px dashed var(--line);
+    border-radius:14px;
+    padding:12px 14px;
+    margin-bottom:16px;
+  }
+  .id-box .lbl{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:8px;}
+  .id-row{display:flex;gap:8px;}
+  input, select{
+    width:100%;
+    background:rgba(250,247,240,0.08);
+    border:1px solid var(--line);
+    color:var(--chalk);
+    padding:10px 12px;
+    border-radius:10px;
+    font-size:14px;
+    font-family:inherit;
+    outline:none;
+  }
+  input::placeholder{color:rgba(250,247,240,0.4);}
+  input:focus, select:focus{border-color:var(--ball);}
+  .card{
+    background:rgba(250,247,240,0.05);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    margin-bottom:12px;
+  }
+  .card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+  .card h3{font-size:22px;margin:0 0 2px;line-height:1;}
+  .meta{font-size:12.5px;color:var(--muted);margin:2px 0;}
+  .score-box{
+    background:var(--ink);
+    border-radius:12px;
+    padding:8px 12px;
+    text-align:center;
+    min-width:56px;
+    flex-shrink:0;
+  }
+  .score-box .score{font-size:26px;color:var(--ball);line-height:1;}
+  .score-box .score-lbl{font-size:8.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+  .attendees{font-size:12px;color:var(--muted);margin-top:8px;line-height:1.5;}
+  .btn{
+    border:none;border-radius:10px;padding:10px 14px;
+    font-family:'Inter',sans-serif;font-weight:700;font-size:13.5px;
+    cursor:pointer;width:100%;margin-top:10px;
+    transition:opacity .15s;
+    display:flex;align-items:center;justify-content:center;gap:6px;
+  }
+  .btn:active{opacity:0.75;}
+  .btn-primary{background:var(--ball);color:var(--ink);}
+  .btn-danger{background:transparent;color:var(--coral);border:1px solid rgba(255,107,74,0.4);}
+  .btn-ghost{background:transparent;color:var(--chalk);border:1px solid var(--line);}
+  .btn-ws{background:var(--whatsapp);color:#fff;margin-top:6px;}
+  .empty{
+    text-align:center;padding:40px 20px;color:var(--muted);font-size:13px;
+    border:1px dashed var(--line);border-radius:16px;
+  }
+  nav.tabs{
+    position:fixed;bottom:0;left:0;right:0;
+    background:var(--ink);
+    border-top:1px solid rgba(250,247,240,0.1);
+    display:flex;
+    z-index:40;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  nav.tabs button{
+    flex:1;background:none;border:none;color:var(--muted);
+    padding:12px 4px 10px;font-family:'Inter';font-size:10.5px;font-weight:600;
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    cursor:pointer;text-transform:uppercase;letter-spacing:0.03em;
+  }
+  nav.tabs button .ic{font-size:18px;}
+  nav.tabs button.active{color:var(--ball);}
+  .tab-content{display:none;}
+  .tab-content.active{display:block;}
+  .lock-screen{text-align:center;padding:60px 20px 40px;}
+  .lock-screen .ic{font-size:40px;}
+  .lock-screen h2{font-size:24px;margin:14px 0 4px;}
+  .lock-screen p{color:var(--muted);font-size:13px;margin:0 0 20px;}
+  .subtabs{display:flex;gap:6px;margin-bottom:16px;overflow-x:auto;}
+  .subtabs button{
+    background:rgba(250,247,240,0.06);border:1px solid var(--line);color:var(--muted);
+    padding:8px 13px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;cursor:pointer;
+  }
+  .subtabs button.active{background:var(--ball);color:var(--ink);border-color:var(--ball);}
+  .subtab-content{display:none;}
+  .subtab-content.active{display:block;}
+  .form-grid{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;}
+  .player-row{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:11px 4px;border-bottom:1px solid var(--line);gap:10px;
+  }
+  .player-row:last-child{border-bottom:none;}
+  .pass-track{display:flex;gap:3px;margin-top:4px;}
+  .pass-dot{width:9px;height:9px;border-radius:50%;background:rgba(250,247,240,0.15);}
+  .pass-dot.used{background:var(--ball);}
+  .small-btn{
+    background:rgba(250,247,240,0.1);border:1px solid var(--line);color:var(--chalk);
+    border-radius:8px;padding:6px 10px;font-size:12px;font-weight:700;cursor:pointer;
+  }
+  .toast{
+    position:fixed;bottom:96px;left:50%;transform:translateX(-50%);
+    background:var(--ball);color:var(--ink);padding:10px 18px;border-radius:30px;
+    font-size:13px;font-weight:700;z-index:60;opacity:0;pointer-events:none;
+    transition:opacity .25s, transform .25s;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px);}
+  .mycard-big{text-align:center;padding:26px 18px;}
+  .mycard-big .score{font-size:64px;color:var(--ball);line-height:1;}
+  .badge{
+    display:inline-block;background:rgba(217,241,59,0.15);color:var(--ball);
+    font-size:10.5px;font-weight:700;padding:3px 9px;border-radius:20px;text-transform:uppercase;letter-spacing:0.04em;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="header-brand">
+      <svg class="club-logo" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 10 L180 35 V120 C180 165 140 195 100 210 C60 195 20 165 20 120 V35 L100 10 Z" fill="#25D366" stroke="#12251F" stroke-width="6"/>
+        <path d="M100 20 L170 42 V118 C170 155 135 182 100 196 C65 182 30 155 30 118 V42 L100 20 Z" fill="#12251F"/>
+        <path d="M45 80 L65 55 L80 70 L100 45 L120 70 L135 55 L155 80 Z" fill="none" stroke="#25D366" stroke-width="4"/>
+        <rect x="85" y="70" width="30" height="42" rx="10" fill="none" stroke="#25D366" stroke-width="4"/>
+        <rect x="96" y="112" width="8" height="20" fill="#25D366"/>
+        <circle cx="100" cy="91" r="3" fill="#25D366"/>
+        <circle cx="93" cy="85" r="2" fill="#25D366"/>
+        <circle cx="107" cy="85" r="2" fill="#25D366"/>
+        <circle cx="93" cy="97" r="2" fill="#25D366"/>
+        <circle cx="107" cy="97" r="2" fill="#25D366"/>
+        <path d="M25 130 H175 V175 H25 Z" fill="#25D366"/>
+        <text x="100" y="148" fill="#12251F" font-family="Arial, sans-serif" font-weight="900" font-size="14" text-anchor="middle">EL ESCORIAL</text>
+        <text x="100" y="166" fill="#12251F" font-family="Arial, sans-serif" font-weight="900" font-size="12" text-anchor="middle">PICKLEBALL</text>
+      </svg>
+      <div>
+        <h1 id="clubTitle">El Escorial Pickleball</h1>
+        <p>Entrenamientos · Torneos · Tarjetas</p>
+      </div>
+    </div>
+    <div class="ball-dot"></div>
+  </header>
+
+  <div class="id-box" id="idBox">
+    <div class="lbl">¿Quién eres?</div>
+    <div class="id-row">
+      <input type="text" id="pName" placeholder="Nombre">
+      <input type="tel" id="pPhone" placeholder="Teléfono">
+    </div>
+  </div>
+
+  <div class="tab-content active" id="tab-trainings">
+    <div id="trainingsList"></div>
+  </div>
+
+  <div class="tab-content" id="tab-tournaments">
+    <div id="tournamentsList"></div>
+  </div>
+
+  <div class="tab-content" id="tab-mycard">
+    <div id="myCardArea"></div>
+  </div>
+
+  <div class="tab-content" id="tab-monitor">
+    <div id="monitorArea"></div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="trainings"><span class="ic">📅</span>Entrenos</button>
+  <button class="tab-btn" data-tab="tournaments"><span class="ic">🏆</span>Torneos</button>
+  <button class="tab-btn" data-tab="mycard"><span class="ic">🎟️</span>Mi tarjeta</button>
+  <button class="tab-btn" data-tab="monitor"><span class="ic">🔒</span>Monitores</button>
+</nav>
+
+<script>
+const firebaseConfig = {
+  apiKey: "TU_API_KEY",
+  authDomain: "TU_PROYECTO.firebaseapp.com",
+  databaseURL: "https://TU_PROYECTO-default-rtdb.firebaseio.com",
+  projectId: "TU_PROYECTO",
+  storageBucket: "TU_PROYECTO.appspot.com",
+  messagingSenderId: "123456789",
+  appId: "1:123456789:web:abcdef"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+const MONITOR_PIN = 'PICKLE10';
+let data = { clubName:'El Escorial Pickleball', trainings:[], tournaments:[], players:{} };
+let unlocked = false;
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function playerKey(name, phone){ return (name.trim().toLowerCase()+'|'+phone.trim()); }
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 1800);
+}
+
+function getIdentity(){
+  return {
+    name: document.getElementById('pName').value.trim(),
+    phone: document.getElementById('pPhone').value.trim()
+  };
+}
+
+function requireIdentity(){
+  const {name, phone} = getIdentity();
+  if(!name || !phone){ showToast('Escribe tu nombre y teléfono arriba primero'); return null; }
+  localStorage.setItem('pb_user_name', name);
+  localStorage.setItem('pb_user_phone', phone);
+  return {name, phone};
+}
+
+window.addEventListener('DOMContentLoaded', ()=>{
+  const savedName = localStorage.getItem('pb_user_name');
+  const savedPhone = localStorage.getItem('pb_user_phone');
+  if(savedName) document.getElementById('pName').value = savedName;
+  if(savedPhone) document.getElementById('pPhone').value = savedPhone;
+});
+
+db.ref('clubData').on('value', (snapshot) => {
+  const val = snapshot.val();
+  if(val){
+    data = val;
+    if(!data.trainings) data.trainings = [];
+    if(!data.tournaments) data.tournaments = [];
+    if(!data.players) data.players = {};
+    renderAll();
+  }
+});
+
+function saveData(){
+  db.ref('clubData').set(data);
+}
+
+function ensurePlayer(name, phone){
+  const key = playerKey(name, phone);
+  if(!data.players) data.players = {};
+  if(!data.players[key]) data.players[key] = {name, phone, used:0, completed:0};
+  return key;
+}
+
+function fmtDate(d){
+  try{
+    const dt = new Date(d+'T00:00:00');
+    return dt.toLocaleDateString('es-ES', {weekday:'short', day:'numeric', month:'short'});
+  }catch(e){ return d; }
+}
+
+function shareTrainingWS(id){
+  const tr = data.trainings.find(t=>t.id===id);
+  if(!tr) return;
+  const baseUrl = window.location.href.split('?')[0];
+  const shareUrl = `${baseUrl}?tr=${id}`;
+  const count = tr.attendees ? tr.attendees.length : 0;
+  const cap = tr.capacity ? `/${tr.capacity}` : '';
+  const text = `🎾 *Entrenamiento El Escorial Pickleball*\n📅 ${fmtDate(tr.date)} a las ${tr.time}\n📍 ${tr.location}\n👥 Apuntados: ${count}${cap}\n\n👉 ¡Apúntate aquí!: ${shareUrl}`;
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function shareTournamentWS(id){
+  const t = data.tournaments.find(x=>x.id===id);
+  if(!t) return;
+  const baseUrl = window.location.href.split('?')[0];
+  const shareUrl = `${baseUrl}?to=${id}`;
+  const total = t.categories.reduce((s,c)=>s+(c.participants||[]).length,0);
+  const text = `🏆 *Torneo: ${t.name}*\n📆 ${fmtDate(t.date)}\n📍 ${t.location}\n👥 Inscritos: ${total}\n\n👉 ¡Inscríbete aquí!: ${shareUrl}`;
+  window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
+}
+
+function renderTrainings(){
+  const el = document.getElementById('trainingsList');
+  const list = [...data.trainings].sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
+  if(list.length===0){ el.innerHTML = '<div class="empty">Aún no hay entrenamientos publicados.</div>'; return; }
+  
+  el.innerHTML = list.map(tr=>{
+    const {name, phone} = getIdentity();
+    const key = name && phone ? playerKey(name, phone) : null;
+    const going = key && tr.attendees && tr.attendees.includes(key);
+    const waiting = key && tr.waitlist && tr.waitlist.includes(key);
+    const names = (tr.attendees || []).map(k=> data.players[k] ? data.players[k].name : '').filter(Boolean);
+    const waitNames = (tr.waitlist || []).map(k=> data.players[k] ? data.players[k].name : '').filter(Boolean);
+    const full = tr.capacity && (tr.attendees || []).length >= tr.capacity;
+    const capLabel = tr.capacity ? `/${tr.capacity}` : '';
+    let btnLabel, btnClass;
+    if(going){ btnLabel='Quitarme'; btnClass='btn-danger'; }
+    else if(waiting){ btnLabel='Salir de lista de espera'; btnClass='btn-danger'; }
+    else if(full){ btnLabel='Completo · Unirme a espera'; btnClass='btn-ghost'; }
+    else { btnLabel='Apuntarme'; btnClass='btn-primary'; }
+
+    return `
+    <div class="card" id="tr-${tr.id}">
+      <div class="card-top">
+        <div>
+          <h3>${fmtDate(tr.date)}</h3>
+          <div class="meta">🕒 ${tr.time} &nbsp;·&nbsp; 📍 ${tr.location}</div>
+          ${tr.notes ? `<div class="meta">📝 ${tr.notes}</div>` : ''}
+        </div>
+        <div class="score-box"><div class="score">${(tr.attendees||[]).length}${capLabel}</div><div class="score-lbl">van</div></div>
+      </div>
+      ${names.length ? `<div class="attendees"><b>Van:</b> ${names.join(', ')}</div>` : ''}
+      ${waitNames.length ? `<div class="attendees">⏳ <b>Espera:</b> ${waitNames.join(', ')}</div>` : ''}
+      <button class="btn ${btnClass}" onclick="toggleTraining('${tr.id}')">${btnLabel}</button>
+      <button class="btn btn-ws" onclick="shareTrainingWS('${tr.id}')">📲 Compartir en WhatsApp</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleTraining(id){
+  const idn = requireIdentity(); if(!idn) return;
+  const key = ensurePlayer(idn.name, idn.phone);
+  const tr = data.trainings.find(t=>t.id===id);
+  if(!tr.attendees) tr.attendees = [];
+  if(!tr.waitlist) tr.waitlist = [];
+
+  const inAttendees = tr.attendees.indexOf(key);
+  const inWaitlist = tr.waitlist.indexOf(key);
+
+  if(inAttendees>=0){
+    tr.attendees.splice(inAttendees,1);
+    showToast('Te has quitado');
+    if(tr.waitlist.length>0){
+      const promoted = tr.waitlist.shift();
+      tr.attendees.push(promoted);
+    }
+  } else if(inWaitlist>=0){
+    tr.waitlist.splice(inWaitlist,1);
+    showToast('Has salido de la lista de espera');
+  } else {
+    const full = tr.capacity && tr.attendees.length >= tr.capacity;
+    if(full){ tr.waitlist.push(key); showToast('Añadido a la lista de espera'); }
+    else { tr.attendees.push(key); showToast('¡Apuntado!'); }
+  }
+  saveData();
+}
+
+function renderTournaments(){
+  const el = document.getElementById('tournamentsList');
+  const list = [...data.tournaments].sort((a,b)=> a.date.localeCompare(b.date));
+  if(list.length===0){ el.innerHTML = '<div class="empty">No hay torneos publicados.</div>'; return; }
+  
+  el.innerHTML = list.map(t=>{
+    const {name, phone} = getIdentity();
+    const key = name && phone ? playerKey(name, phone) : null;
+    const total = t.categories.reduce((s,c)=>s+(c.participants||[]).length,0);
+    const catsHtml = t.categories.map(c=>{
+      if(!c.participants) c.participants = [];
+      const names = c.participants.map(k=> data.players[k] ? data.players[k].name : '').filter(Boolean);
+      const going = key && c.participants.includes(key);
+      return `<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);">
+        <div style="font-size:13.5px;font-weight:700;">${c.name} <span style="color:var(--muted);font-weight:500;">(${c.participants.length})</span></div>
+        ${names.length ? `<div class="attendees">${names.join(', ')}</div>` : ''}
+        <button class="btn ${going?'btn-danger':'btn-primary'}" style="margin-top:8px;" onclick="toggleTournament('${t.id}','${c.id}')">${going? 'Cancelar inscripción' : 'Inscribirme en ' + c.name}</button>
+      </div>`;
+    }).join('');
+
+    return `
+    <div class="card" id="to-${t.id}">
+      <div class="card-top">
+        <div>
+          <h3>${t.name}</h3>
+          <div class="meta">📆 ${fmtDate(t.date)} &nbsp;·&nbsp; 📍 ${t.location}</div>
+        </div>
+        <div class="score-box"><div class="score">${total}</div><div class="score-lbl">inscritos</div></div>
+      </div>
+      ${catsHtml}
+      <button class="btn btn-ws" onclick="shareTournamentWS('${t.id}')">📲 Compartir Torneo en WhatsApp</button>
+    </div>`;
+  }).join('');
+}
+
+function toggleTournament(id, catId){
+  const idn = requireIdentity(); if(!idn) return;
+  const key = ensurePlayer(idn.name, idn.phone);
+  const t = data.tournaments.find(x=>x.id===id);
+  const targetCat = t.categories.find(c=>c.id===catId);
+  const alreadyIn = targetCat.participants.includes(key);
+
+  t.categories.forEach(c=>{
+    if(!c.participants) c.participants = [];
+    const idx = c.participants.indexOf(key);
+    if(idx>=0) c.participants.splice(idx,1);
+  });
+
+  if(!alreadyIn){ targetCat.participants.push(key); showToast(`¡Inscrito en ${targetCat.name}!`); }
+  else { showToast('Inscripción cancelada'); }
+  saveData();
+}
+
+function renderMyCard(){
+  const el = document.getElementById('myCardArea');
+  const {name, phone} = getIdentity();
+  if(!name || !phone){
+    el.innerHTML = '<div class="empty">Escribe tu nombre y teléfono arriba para ver tu tarjeta.</div>';
+    return;
+  }
+  const key = playerKey(name, phone);
+  const p = data.players[key];
+  const used = p ? p.used : 0;
+  const completed = p ? p.completed : 0;
+  const dots = Array.from({length:10}, (_,i)=> `<div class="pass-dot ${i<used?'used':''}"></div>`).join('');
+  
+  el.innerHTML = `
+    <div class="card mycard-big">
+      ${completed>0? `<span class="badge">${completed} tarjeta${completed>1?'s':''} completada${completed>1?'s':''}</span>` : ''}
+      <div class="score" style="margin-top:10px;">${10-used}/10</div>
+      <div class="meta">pases disponibles</div>
+      <div class="pass-track" style="justify-content:center;margin-top:16px;">${dots}</div>
+      <div class="meta" style="margin-top:14px;">La tarjeta la gestionan los monitores al final de cada clase.</div>
+    </div>`;
+}
+
+function renderMonitor(){
+  const el = document.getElementById('monitorArea');
+  if(!unlocked){
+    el.innerHTML = `
+      <div class="lock-screen">
+        <div class="ic">🔒</div>
+        <h2>Zona de monitores</h2>
+        <p>Introduce el PIN para gestionar entrenamientos, torneos y tarjetas.</p>
+        <input type="password" id="pinInput" placeholder="PIN" style="text-align:center;margin-bottom:10px;">
+        <button class="btn btn-primary" onclick="tryUnlock()">Entrar</button>
+      </div>`;
+    return;
+  }
+  el.innerHTML = `
+    <div class="subtabs">
+      <button class="msub active" data-msub="tr">Entrenamientos</button>
+      <button class="msub" data-msub="to">Torneos</button>
+      <button class="msub" data-msub="ca">Tarjetas</button>
+    </div>
+    <div class="subtab-content active" id="msub-tr"></div>
+    <div class="subtab-content" id="msub-to"></div>
+    <div class="subtab-content" id="msub-ca"></div>
+  `;
+  document.querySelectorAll('.msub').forEach(b=>{
+    b.onclick = ()=>{
+      document.querySelectorAll('.msub').forEach(x=>x.classList.remove('active'));
+      document.querySelectorAll('.subtab-content').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('msub-'+b.dataset.msub).classList.add('active');
+    };
+  });
+  renderMonitorTrainings();
+  renderMonitorTournaments();
+  renderMonitorCards();
+}
+
+function tryUnlock(){
+  if(document.getElementById('pinInput').value === MONITOR_PIN){ 
+    unlocked = true; showToast('Acceso concedido'); renderMonitor(); 
+  } else { showToast('PIN incorrecto'); }
+}
+
+function renderMonitorTrainings(){
+  const el = document.getElementById('msub-tr');
+  const list = [...data.trainings].sort((a,b)=> (a.date+a.time).localeCompare(b.date+b.time));
+  el.innerHTML = `
+    <div class="card">
+      <div class="lbl" style="font-size:11px;color:var(--muted);margin-bottom:8px;">NUEVO ENTRENAMIENTO</div>
+      <div class="form-grid">
+        <input type="date" id="trDate">
+        <input type="text" id="trTime" placeholder="Hora (ej. 19:00)">
+        <input type="text" id="trLoc" placeholder="Lugar">
+        <input type="number" id="trCap" placeholder="Aforo máximo (opcional)" min="1">
+        <input type="text" id="trNotes" placeholder="Notas (ej. traer pelotas)">
+      </div>
+      <button class="btn btn-primary" onclick="addTraining()">Publicar entrenamiento</button>
+    </div>
+    ${list.map(tr=>{
+      return `<div class="card">
+        <h3>${fmtDate(tr.date)} - ${tr.time}</h3>
+        <button class="btn btn-danger" onclick="deleteTraining('${tr.id}')">Eliminar entrenamiento</button>
+      </div>`;
+    }).join('')}
+  `;
+}
+
+function addTraining(){
+  const date = document.getElementById('trDate').value;
+  const time = document.getElementById('trTime').value.trim();
+  const loc = document.getElementById('trLoc').value.trim();
+  const capRaw = document.getElementById('trCap').value.trim();
+  const notes = document.getElementById('trNotes').value.trim();
+  if(!date || !time || !loc){ showToast('Rellena fecha, hora y lugar'); return; }
+  
+  data.trainings.push({
+    id:uid(), date, time, location:loc, 
+    capacity: capRaw ? parseInt(capRaw,10) : null, 
+    notes, attendees:[], waitlist:[]
+  });
+  saveData(); showToast('Entrenamiento publicado');
+}
+
+function deleteTraining(id){
+  data.trainings = data.trainings.filter(t=>t.id!==id);
+  saveData();
+}
+
+function renderMonitorTournaments(){
+  const el = document.getElementById('msub-to');
+  el.innerHTML = `
+    <div class="card">
+      <div class="lbl" style="font-size:11px;color:var(--muted);margin-bottom:8px;">NUEVO TORNEO</div>
+      <div class="form-grid">
+        <input type="text" id="toName" placeholder="Nombre del torneo">
+        <input type="date" id="toDate">
+        <input type="text" id="toLoc" placeholder="Lugar">
+        <input type="text" id="toCats" placeholder="Categorías por coma (ej. Nivel 3.0, Mixto)">
+      </div>
+      <button class="btn btn-primary" onclick="addTournament()">Publicar torneo</button>
+    </div>`;
+}
+
+function addTournament(){
+  const name = document.getElementById('toName').value.trim();
+  const date = document.getElementById('toDate').value;
+  const loc = document.getElementById('toLoc').value.trim();
+  const catsRaw = document.getElementById('toCats').value.trim();
+  if(!name || !date || !loc){ showToast('Rellena los campos obligatorios'); return; }
+  
+  const categories = catsRaw 
+    ? catsRaw.split(',').map(s=>({id:uid(), name:s.trim(), participants:[]}))
+    : [{id:'general', name:'General', participants:[]}];
+
+  data.tournaments.push({id:uid(), name, date, location:loc, categories});
+  saveData(); showToast('Torneo publicado');
+}
+
+function renderMonitorCards(){
+  const el = document.getElementById('msub-ca');
+  const players = Object.values(data.players || {}).sort((a,b)=> a.name.localeCompare(b.name));
+  el.innerHTML = `
+    <div class="card">
+      ${players.map(p=>{
+        const key = playerKey(p.name, p.phone);
+        return `<div class="player-row">
+          <div><b>${p.name}</b> (${p.phone})</div>
+          <div>
+            <button class="small-btn" onclick="adjustPass('${key}',-1)">-</button>
+            <button class="small-btn" onclick="adjustPass('${key}',1)">+1 pase</button>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function adjustPass(key, delta){
+  const p = data.players[key];
+  if(!p) return;
+  p.used += delta;
+  if(p.used >= 10){ p.used = 0; p.completed = (p.completed||0) + 1; }
+  if(p.used < 0) p.used = 0;
+  saveData();
+}
+
+function renderAll(){
+  renderTrainings();
+  renderTournaments();
+  renderMyCard();
+  if(document.getElementById('tab-monitor').classList.contains('active')) renderMonitor();
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.onclick = ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    if(btn.dataset.tab==='monitor') renderMonitor();
+    if(btn.dataset.tab==='mycard') renderMyCard();
+  };
+});
+
+document.getElementById('pName').addEventListener('input', renderAll);
+document.getElementById('pPhone').addEventListener('input', renderAll);
+</script>
+</body>
+</html>
