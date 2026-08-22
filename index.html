@@ -6,16 +6,18 @@
   <title>El Escorial Pickleball</title>
   <style>
     :root {
-      --green-primary: #12723c;
-      --green-light: #2da15a;
-      --accent: #fbc02d;
-      --bg: #f4f7f5;
+      --primary: #0f5c32;
+      --primary-light: #1e824c;
+      --accent: #f59e0b;
+      --bg: #f8fafc;
       --card-bg: #ffffff;
-      --text: #2c3e50;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
       padding: 0;
       background-color: var(--bg);
@@ -23,108 +25,133 @@
     }
 
     header {
-      background-color: var(--green-primary);
+      background-color: var(--primary);
       color: white;
       text-align: center;
       padding: 20px 15px 15px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 8px;
     }
 
     .logo-container img {
-      width: 120px;
+      max-width: 140px;
       height: auto;
-      margin-bottom: 5px;
+      object-fit: contain;
     }
 
     h1 {
-      margin: 5px 0 0;
-      font-size: 22px;
-      font-weight: 800;
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
     }
 
     nav {
       display: flex;
-      overflow-x: auto;
-      background: #0e5a2f;
-      padding: 5px 10px;
-      gap: 10px;
+      background: #093b1f;
+      padding: 6px;
+      gap: 6px;
     }
 
     nav button {
+      flex: 1;
       background: transparent;
       border: none;
-      color: #e0e0e0;
-      padding: 8px 14px;
+      color: #94a3b8;
+      padding: 10px 8px;
       font-weight: 600;
-      font-size: 14px;
-      white-space: nowrap;
-      border-radius: 15px;
+      font-size: 13px;
+      border-radius: 8px;
       cursor: pointer;
+      transition: all 0.2s;
     }
 
     nav button.active {
-      background-color: var(--green-light);
+      background-color: var(--primary-light);
       color: white;
     }
 
     .container {
-      max-width: 500px;
+      max-width: 480px;
       margin: 0 auto;
-      padding: 15px;
+      padding: 16px;
     }
 
     .card {
       background: var(--card-bg);
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 15px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
 
-    .card h2 {
+    .card-title {
       margin-top: 0;
-      color: var(--green-primary);
-      font-size: 18px;
+      margin-bottom: 12px;
+      color: var(--primary);
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .alert-box {
-      background-color: #ffebee;
-      color: #c62828;
+    .info-box {
+      background-color: #f1f5f9;
+      border-left: 4px solid var(--primary-light);
       padding: 10px 12px;
-      border-radius: 10px;
+      border-radius: 6px;
       font-size: 14px;
-      font-weight: bold;
       margin-bottom: 12px;
-      border-left: 4px solid #c62828;
+      font-weight: 500;
     }
 
     .info-row {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 8px;
-      font-size: 15px;
-      border-bottom: 1px dashed #eee;
-      padding-bottom: 6px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+    }
+
+    .label {
+      color: var(--text-muted);
+    }
+
+    .value {
+      font-weight: 600;
     }
 
     .badge {
-      background: #e8f5e9;
-      color: var(--green-primary);
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-weight: bold;
-      font-size: 13px;
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 12px;
     }
 
     .btn-action {
       width: 100%;
-      background-color: var(--green-primary);
+      background-color: var(--primary-light);
       color: white;
       border: none;
       padding: 12px;
-      border-radius: 10px;
-      font-size: 15px;
-      font-weight: bold;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
     }
@@ -132,14 +159,15 @@
     ul.attendees-list {
       list-style: none;
       padding: 0;
-      margin: 10px 0 0;
+      margin: 8px 0 0;
     }
 
     ul.attendees-list li {
       padding: 10px;
-      background: #f9f9f9;
+      background: #f8fafc;
       margin-bottom: 6px;
-      border-radius: 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -147,11 +175,11 @@
     }
 
     .btn-del {
-      background: #d32f2f;
+      background: #ef4444;
       color: white;
       border: none;
       padding: 4px 8px;
-      border-radius: 6px;
+      border-radius: 4px;
       font-size: 12px;
       cursor: pointer;
     }
@@ -160,34 +188,36 @@
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 8px;
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .punch-slot {
       aspect-ratio: 1;
-      border: 2px dashed var(--green-light);
-      border-radius: 10px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      color: #888;
-      background: #fafafa;
+      font-weight: 700;
+      color: #94a3b8;
+      background: #f8fafc;
     }
 
     .punch-slot.used {
-      background: var(--green-primary);
+      background: var(--primary);
       color: white;
       border-style: solid;
+      border-color: var(--primary);
     }
 
     input, select {
       width: 100%;
       padding: 10px;
       margin: 6px 0 12px;
-      border: 1px solid #ccc;
+      border: 1px solid #cbd5e1;
       border-radius: 8px;
       box-sizing: border-box;
+      font-size: 14px;
     }
 
     .tab-content {
@@ -203,112 +233,111 @@
 
   <header>
     <div class="logo-container">
-      <img src="https://raw.githubusercontent.com/Natxmad-boop/pickleball/main/logo.png" alt="El Escorial Pickleball" onerror="this.style.display='none'">
+      <img src="logo.png" alt="Logo Pickleball" onerror="this.style.display='none'">
     </div>
     <h1>El Escorial Pickleball</h1>
   </header>
 
   <nav>
-    <button class="active" onclick="switchTab('entrenamiento')">Entrenamientos</button>
-    <button onclick="switchTab('tarjeta')">Mi Tarjeta</button>
-    <button onclick="switchTab('admin')">🔒 Monitores</button>
+    <button class="active" onclick="switchTab('entrenamiento', this)">Entrenamientos</button>
+    <button onclick="switchTab('tarjeta', this)">Mi Tarjeta</button>
+    <button onclick="switchTab('admin', this)">🔒 Monitores</button>
   </nav>
 
   <div class="container">
 
-    <!-- ZONA JUGADORES: CONSULTA ENTRENAMIENTOS -->
     <div id="entrenamiento" class="tab-content active">
       <div class="card">
-        <h2>Próximo Entrenamiento</h2>
-        <div class="alert-box" id="disp-location">
-          Ubicación: Polideportivo Municipal Navaarmado
+        <h2 class="card-title">📍 Próximo Entrenamiento</h2>
+        <div class="info-box" id="disp-location">
+          Ubicación: Por determinar
         </div>
         <div class="info-row">
-          <span><strong>Horario:</strong></span>
-          <span id="disp-time">10:00 - 11:30</span>
+          <span class="label">Horario:</span>
+          <span class="value" id="disp-time">Sin definir</span>
         </div>
         <div class="info-row">
-          <span><strong>Monitores:</strong></span>
-          <span id="disp-coaches">Diego López & Carlos</span>
+          <span class="label">Monitores:</span>
+          <span class="value" id="disp-coaches">Sin asignar</span>
         </div>
       </div>
 
       <div class="card">
-        <h2>Jugadores Apuntados (<span id="attendee-count">0</span>)</h2>
-        <p style="font-size: 13px; color: #666;">La lista de asistencia es gestionada por los monitores.</p>
+        <h2 class="card-title">👥 Jugadores Apuntados (<span id="attendee-count">0</span>)</h2>
         <ul class="attendees-list" id="attendees-list-user"></ul>
       </div>
     </div>
 
-    <!-- ZONA JUGADORES: CONSULTA DE TARJETA -->
     <div id="tarjeta" class="tab-content">
       <div class="card">
-        <h2>Consulta tu Bono de 10</h2>
-        <label>Elige tu nombre:</label>
+        <h2 class="card-title">🎴 Consulta tu Bono</h2>
+        <label class="label">Selecciona tu nombre:</label>
         <select id="userSelect" onchange="renderUserCard()">
-          <option value="">-- Seleccionar --</option>
+          <option value="">-- Elige un alumno --</option>
         </select>
         
         <div id="cardDisplay" style="display:none; margin-top:15px;">
-          <p>Jugador/a: <strong id="cardName">--</strong></p>
-          <p style="font-size: 13px; color: #666;">Sesiones consumidas: <strong id="used-count">0</strong>/10</p>
+          <div class="info-row">
+            <span class="label">Jugador/a:</span>
+            <span class="value" id="cardName">--</span>
+          </div>
+          <div class="info-row">
+            <span class="label">Sesiones consumidas:</span>
+            <span class="value"><span id="used-count">0</span> de 10</span>
+          </div>
           <div class="card-punch" id="punchCard"></div>
         </div>
       </div>
     </div>
 
-    <!-- ZONA DE EXCLUSIVA ADMINISTRACIÓN PARA MONITORES -->
     <div id="admin" class="tab-content">
-      <div class="card" id="loginCard" style="border: 2px solid var(--accent);">
-        <h2>Acceso exclusivo Monitores</h2>
-        <label>PIN de Acceso:</label>
-        <input type="password" id="pinInput" placeholder="Clave de monitor (1234)">
-        <button class="btn-action" style="background-color: var(--accent); color:#333;" onclick="loginAdmin()">Entrar al Panel</button>
+      <div class="card" id="loginCard">
+        <h2 class="card-title">🔒 Acceso Monitores</h2>
+        <label class="label">PIN de acceso:</label>
+        <input type="password" id="pinInput" placeholder="Introduce el PIN">
+        <button class="btn-action" style="background-color: var(--accent); color: #000;" onclick="loginAdmin()">Acceder</button>
       </div>
 
       <div id="adminPanel" style="display: none;">
         
-        <!-- EDICIÓN DE ENTRENAMIENTO -->
         <div class="card">
-          <h2>1. Ajustes del Entrenamiento</h2>
-          <label>Lugar / Ubicación:</label>
-          <input type="text" id="editLocation" value="Polideportivo Municipal Navaarmado">
-          <label>Horarios:</label>
-          <input type="text" id="editTime" value="10:00 - 11:30">
-          <label>Monitores del día:</label>
-          <input type="text" id="editCoaches" value="Diego López & Carlos">
-          <button class="btn-action" onclick="saveTrainingInfo()">Actualizar Información</button>
+          <h2 class="card-title">⚙️ Configurar Entrenamiento</h2>
+          <label class="label">Ubicación:</label>
+          <input type="text" id="editLocation" placeholder="Ej. Polideportivo Municipal">
+          <label class="label">Horario:</label>
+          <input type="text" id="editTime" placeholder="Ej. 10:00 - 11:30">
+          <label class="label">Monitores:</label>
+          <input type="text" id="editCoaches" placeholder="Ej. Juan y Pedro">
+          <button class="btn-action" onclick="saveTrainingInfo()">Guardar Cambios</button>
         </div>
 
-        <!-- LISTA DE ASISTENCIA (APUNTAR / DESAPUNTAR) -->
         <div class="card">
-          <h2>2. Lista de Asistencia de Hoy</h2>
-          <label>Inscribir jugador a la sesión:</label>
+          <h2 class="card-title">📝 Gestión de Lista de Asistencia</h2>
+          <label class="label">Apuntar jugador a la sesión:</label>
           <select id="addAttendeeSelect">
             <option value="">-- Seleccionar alumno --</option>
           </select>
-          <button class="btn-action" style="background-color: var(--green-light);" onclick="addAttendeeByCoach()">+ Apuntar al Entrenamiento</button>
+          <button class="btn-action" style="background-color: var(--primary-light);" onclick="addAttendeeByCoach()">+ Apuntar a Sesión</button>
 
-          <h3>Asistentes Actuales:</h3>
+          <h3 style="font-size: 14px; margin-top: 15px; color: var(--text-muted);">Inscritos actual:</h3>
           <ul class="attendees-list" id="attendees-list-admin"></ul>
         </div>
 
-        <!-- GESTIÓN DE BONOS DE 10 Y FICHAS -->
         <div class="card">
-          <h2>3. Alta de Alumnos y Bonos</h2>
-          <label>Dar de alta nuevo jugador:</label>
-          <input type="text" id="newPlayerName" placeholder="Nombre completo del alumno">
-          <button class="btn-action" style="background-color: var(--green-primary);" onclick="createNewPlayer()">Crear Ficha con Bono de 10</button>
+          <h2 class="card-title">💳 Alta de Alumnos y Bonos</h2>
+          <label class="label">Nuevo Jugador:</label>
+          <input type="text" id="newPlayerName" placeholder="Nombre y Apellidos">
+          <button class="btn-action" onclick="createNewPlayer()">Dar de alta nuevo alumno</button>
 
-          <hr style="margin: 20px 0; border: 0; border-top: 1px solid #ccc;">
+          <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
 
-          <label>Seleccionar Jugador para Ficha/Bono:</label>
+          <label class="label">Seleccionar Jugador:</label>
           <select id="adminPlayerSelect">
             <option value="">-- Seleccionar alumno --</option>
           </select>
 
-          <button class="btn-action" onclick="punchPlayerCard()">✓ Consumir / Tachar 1 Día</button>
-          <button class="btn-action" style="background-color: #d32f2f; margin-top:8px;" onclick="renewPlayerCard()">♻️ Renovar (Dar Bono Nuevo de 10)</button>
+          <button class="btn-action" style="background-color: var(--primary);" onclick="punchPlayerCard()">✓ Tachar 1 Sesión</button>
+          <button class="btn-action" style="background-color: #ef4444;" onclick="renewPlayerCard()">♻️ Renovar Bono (10 Sesiones)</button>
         </div>
 
       </div>
@@ -317,19 +346,15 @@
   </div>
 
   <script>
-    let players = {
-      "Pedro Martínez": 3,
-      "María Gómez": 5
-    };
+    let players = {};
+    let attendees = [];
 
-    let attendees = ["Pedro Martínez"];
-
-    function switchTab(tabId) {
+    function switchTab(tabId, btn) {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
       
       document.getElementById(tabId).classList.add('active');
-      event.target.classList.add('active');
+      btn.classList.add('active');
       updateSelects();
       renderAttendees();
     }
@@ -339,7 +364,7 @@
       const aSelect = document.getElementById('adminPlayerSelect');
       const attSelect = document.getElementById('addAttendeeSelect');
       
-      uSelect.innerHTML = '<option value="">-- Seleccionar --</option>';
+      uSelect.innerHTML = '<option value="">-- Elige un alumno --</option>';
       aSelect.innerHTML = '<option value="">-- Seleccionar alumno --</option>';
       attSelect.innerHTML = '<option value="">-- Seleccionar alumno --</option>';
 
@@ -359,8 +384,12 @@
       aList.innerHTML = '';
       count.innerText = attendees.length;
 
+      if(attendees.length === 0) {
+        uList.innerHTML = '<li style="color:#94a3b8; justify-content:center;">No hay alumnos apuntados.</li>';
+      }
+
       attendees.forEach((name, index) => {
-        uList.innerHTML += `<li><span>${name}</span> <span class="badge">Confirmado</span></li>`;
+        uList.innerHTML += `<li><span>${name}</span> <span class="badge">Inscrito</span></li>`;
         aList.innerHTML += `<li><span>${name}</span> <button class="btn-del" onclick="removeAttendee(${index})">Quitar</button></li>`;
       });
     }
@@ -394,15 +423,19 @@
         updateSelects();
         renderAttendees();
       } else {
-        alert("PIN incorrecto. Pide la clave a la directiva.");
+        alert("PIN incorrecto.");
       }
     }
 
     function saveTrainingInfo() {
-      document.getElementById('disp-location').innerText = "Ubicación: " + document.getElementById('editLocation').value;
-      document.getElementById('disp-time').innerText = document.getElementById('editTime').value;
-      document.getElementById('disp-coaches').innerText = document.getElementById('editCoaches').value;
-      alert("Información de entrenamiento actualizada.");
+      const loc = document.getElementById('editLocation').value || "Por determinar";
+      const time = document.getElementById('editTime').value || "Sin definir";
+      const coaches = document.getElementById('editCoaches').value || "Sin asignar";
+
+      document.getElementById('disp-location').innerText = "Ubicación: " + loc;
+      document.getElementById('disp-time').innerText = time;
+      document.getElementById('disp-coaches').innerText = coaches;
+      alert("Información guardada.");
     }
 
     function createNewPlayer() {
@@ -411,7 +444,7 @@
         players[name] = 0;
         document.getElementById('newPlayerName').value = "";
         updateSelects();
-        alert("Jugador/a " + name + " registrado con un bono de 10 sesiones.");
+        alert("Alumno registrado: " + name);
       }
     }
 
@@ -422,9 +455,8 @@
       if (!attendees.includes(name)) {
         attendees.push(name);
         renderAttendees();
-        alert(name + " apuntado/a al entrenamiento.");
       } else {
-        alert("Este jugador ya está en la lista.");
+        alert("Ya está inscrito.");
       }
     }
 
@@ -439,10 +471,10 @@
       
       if (players[name] < 10) {
         players[name]++;
-        alert("Asistencia tachada a " + name + ". LLEVA: " + players[name] + "/10");
+        alert("Sesión marcada. Lleva " + players[name] + "/10");
         renderUserCard();
       } else {
-        alert("El bono de 10 ya está completado. Haz clic en Renovar Bono.");
+        alert("Bono completo. Por favor, renueva.");
       }
     }
 
@@ -451,7 +483,7 @@
       if (!name) return alert("Selecciona un alumno.");
       
       players[name] = 0;
-      alert("Bono renovado para " + name + ". Nueva tarjeta de 10 creada.");
+      alert("Bono renovado a 10 sesiones.");
       renderUserCard();
     }
 
