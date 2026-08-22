@@ -78,6 +78,11 @@
             <h3>📥 Solicitudes Pendientes de Socios</h3>
             <ul id="listaSolicitudes"></ul>
         </div>
+
+        <!-- Botón de seguridad -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="reiniciarTodo()" style="background: #95a5a6; font-size: 12px; padding: 6px;">⚠️ Borrar datos y reiniciar sistema</button>
+        </div>
     </div>
 
     <!-- PANEL DE SOCIO -->
@@ -100,9 +105,8 @@
 </div>
 
 <script>
-    // Inicializar datos locales si no existen
     function obtenerDatos() {
-        let datos = localStorage.getItem('pickleball_club');
+        let datos = localStorage.getItem('pickleball_club_v2');
         if (!datos) {
             let estructuraInicial = {
                 socios: [],
@@ -110,14 +114,18 @@
                 bonosGlobales: [],
                 solicitudes: []
             };
-            localStorage.setItem('pickleball_club', JSON.stringify(estructuraInicial));
+            localStorage.setItem('pickleball_club_v2', JSON.stringify(estructuraInicial));
             return estructuraInicial;
         }
-        return JSON.parse(datos);
+        try {
+            return JSON.parse(datos);
+        } catch(e) {
+            return { socios: [], eventos: [], bonosGlobales: [], solicitudes: [] };
+        }
     }
 
     function guardarDatos(datos) {
-        localStorage.setItem('pickleball_club', JSON.stringify(datos));
+        localStorage.setItem('pickleball_club_v2', JSON.stringify(datos));
     }
 
     let usuarioActual = null;
@@ -136,17 +144,17 @@
     }
 
     function mostrarLoginSocio() {
-        let nombre = prompt("Introduce tu nombre de socio:");
-        if(!nombre) return;
-        let clave = prompt("Introduce tu contraseña personal:");
-        if(!clave) return;
+        let nombreInput = prompt("Introduce tu nombre de socio:");
+        if(!nombreInput) return;
+        let claveInput = prompt("Introduce tu contraseña personal:");
+        if(!claveInput) return;
         
         let datos = obtenerDatos();
-        let nombreIngresado = nombre.trim().toLowerCase();
-        let claveIngresada = clave.trim();
+        let nombreBuscado = nombreInput.trim().toLowerCase();
+        let claveBuscada = claveInput.trim();
 
         let socioEncontrado = datos.socios.find(s => 
-            s.nombre.trim().toLowerCase() === nombreIngresado && s.clave.trim() === claveIngresada
+            s.nombre.trim().toLowerCase() === nombreBuscado && s.clave.trim() === claveBuscada
         );
         
         if (socioEncontrado) {
@@ -157,7 +165,7 @@
             document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
             cargarPanelSocio(datos);
         } else {
-            alert("Nombre o contraseña incorrectos. Revisa que estén bien escritos.");
+            alert("Nombre o contraseña incorrectos. Comprueba en el panel de monitor cómo está escrito exactamente.");
         }
     }
 
@@ -174,7 +182,7 @@
         if(!nombre) return;
         
         let datos = obtenerDatos();
-        datos.solicitudes.push(`Clase de prueba solicitada por: ${nombre}`);
+        datos.solicitudes.push(`Clase de prueba solicitada por: ${nombre.trim()}`);
         guardarDatos(datos);
         alert("¡Solicitud enviada! Un monitor se pondrá en contacto contigo para tu día de prueba.");
     }
@@ -196,7 +204,7 @@
 
         document.getElementById('nuevoNombreSocio').value = "";
         document.getElementById('nuevaClaveSocio').value = "";
-        alert("¡Socio creado con éxito!");
+        alert("¡Socio creado y guardado con éxito!");
         cargarPanelMonitor();
     }
 
@@ -310,6 +318,14 @@
             guardarDatos(datos);
             alert("¡Te has apuntado con éxito!");
             cargarPanelSocio(datos);
+        }
+    }
+
+    function reiniciarTodo() {
+        if(confirm("¿Seguro que quieres borrar todos los datos locales y empezar de cero?")) {
+            localStorage.removeItem('pickleball_club_v2');
+            alert("Sistema reiniciado. Vuelve a entrar como monitor.");
+            location.reload();
         }
     }
 </script>
