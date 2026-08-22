@@ -105,7 +105,7 @@
                 <button onclick="switchView('mas')" class="text-xs bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Cerrar Sesión</button>
             </div>
 
-            <!-- CREAR NUEVO MONITOR (NUEVO) -->
+            <!-- CREAR NUEVO MONITOR -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3 border-emerald-200">
                 <h3 class="font-bold text-sm text-emerald-800">➕ Crear Nuevo Perfil de Monitor</h3>
                 <input type="text" id="nuevoNombreMonitor" placeholder="Nombre del monitor" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
@@ -164,11 +164,8 @@
     <script>
         let players = { "Juan Pérez": 4, "María Gómez": 2 };
         
-        // Empezamos con un monitor por defecto (PIN 1234) para que no te quedes fuera, 
-        // pero puedes borrarlo o crear los tuyos propios desde el panel.
-        let listaMonitores = [
-            { nombre: "Administrador Principal", pin: "1234" }
-        ];
+        // Cero monitores predefinidos (completamente vacío)
+        let listaMonitores = [];
 
         let listaEntrenamientos = [];
         let listaEventos = [];
@@ -231,6 +228,15 @@
 
         function validarPinPantalla() {
             const pinInput = document.getElementById('inputPinMonitor').value;
+
+            // EXCEPCIÓN DE PRIMER ACCESO: Si no hay ningún monitor creado todavía, permitimos entrar para crear el primero
+            if (listaMonitores.length === 0) {
+                document.getElementById('inputPinMonitor').value = '';
+                document.getElementById('titulo-panel-monitor').innerText = `🛠️ Panel de Configuración Inicial`;
+                switchView('admin');
+                return;
+            }
+
             const monitorEncontrado = listaMonitores.find(m => m.pin === pinInput);
 
             if (monitorEncontrado) {
@@ -238,7 +244,7 @@
                 document.getElementById('titulo-panel-monitor').innerText = `🛠️ Panel de: ${monitorEncontrado.nombre}`;
                 switchView('admin');
             } else {
-                alert("PIN incorrecto. Si es la primera vez, prueba con el PIN 1234.");
+                alert("PIN incorrecto. Introduce el PIN de un monitor registrado.");
             }
         }
 
@@ -288,10 +294,14 @@
             // Lista de Monitores en el panel
             const contMonitores = document.getElementById('lista-monitores-reg');
             if(contMonitores) {
-                contMonitores.innerHTML = '';
-                listaMonitores.forEach(m => {
-                    contMonitores.innerHTML += `<div class="p-2 bg-slate-50 rounded-lg flex justify-between items-center text-xs font-semibold"><span>👤 ${m.nombre}</span> <span class="text-slate-400">PIN: ****</span></div>`;
-                });
+                if(listaMonitores.length === 0) {
+                    contMonitores.innerHTML = '<p class="text-xs text-amber-600 py-1">No hay monitores creados. ¡Crea el primero arriba!</p>';
+                } else {
+                    contMonitores.innerHTML = '';
+                    listaMonitores.forEach(m => {
+                        contMonitores.innerHTML += `<div class="p-2 bg-slate-50 rounded-lg flex justify-between items-center text-xs font-semibold"><span>👤 ${m.nombre}</span> <span class="text-slate-400">PIN: ****</span></div>`;
+                    });
+                }
             }
 
             // Listado de Entrenamientos
