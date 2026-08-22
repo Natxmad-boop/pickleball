@@ -66,9 +66,9 @@
                 </button>
             </div>
             <div class="bg-white p-5 rounded-xl shadow-sm border text-center space-y-4">
-                <p class="text-slate-600 text-sm">Identifícate para ver tu bono exclusivo:</p>
-                <input type="text" id="loginBonoNombre" placeholder="Tu Nombre de Socio" class="w-full p-3 border rounded-xl text-sm bg-slate-50 font-bold">
-                <input type="password" id="loginBonoPin" placeholder="Tu Contraseña (4 dígitos)" class="w-full p-3 border rounded-xl text-sm bg-slate-50 text-center tracking-widest font-bold" maxlength="4">
+                <p class="text-slate-600 text-sm">Identifícate con tus datos personales para ver tu bono exclusivo:</p>
+                <input type="text" id="loginBonoNombre" placeholder="Tu Nombre y Apellidos exactos" class="w-full p-3 border rounded-xl text-sm bg-slate-50 font-bold">
+                <input type="password" id="loginBonoPin" placeholder="Contraseña de 4 dígitos" class="w-full p-3 border rounded-xl text-sm bg-slate-50 text-center tracking-widest font-bold" maxlength="4">
                 <button onclick="verMiBonoPrivado()" class="bg-blue-600 text-white px-4 py-3 rounded-xl font-bold text-sm w-full shadow">Consultar Mi Bono</button>
                 
                 <div id="cardDisplay" style="display:none;" class="py-2 space-y-3 border-t pt-4">
@@ -105,11 +105,10 @@
                 </button>
             </div>
             <div class="bg-white p-5 rounded-2xl shadow-sm border space-y-3">
-                <p class="text-sm text-slate-600">Regístrate como socio para poder apuntarte a clases, torneos y llevar el control de tu bono.</p>
+                <p class="text-sm text-slate-600">Regístrate para obtener tu contraseña automática y poder apuntarte a clases y torneos.</p>
                 <input type="text" id="nombreNuevoSocioPublico" placeholder="Tu Nombre y Apellidos" class="w-full p-3 border rounded-xl text-sm bg-slate-50 font-bold">
                 <input type="tel" id="telefonoNuevoSocioPublico" placeholder="Teléfono (ej: 600123456)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                <input type="password" id="pinNuevoSocioPublico" placeholder="Elige contraseña de 4 dígitos" class="w-full p-3 border rounded-xl text-sm bg-slate-50 tracking-widest text-center font-bold" maxlength="4">
-                <button onclick="registrarSocioPublico()" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm shadow">Registrarme como Socio</button>
+                <button onclick="registrarSocioPublico()" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm shadow">Registrarme y Obtener Contraseña</button>
             </div>
         </section>
 
@@ -144,13 +143,12 @@
             <!-- GESTIÓN DE SOCIOS Y BONOS -->
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3 border-blue-200">
                 <h3 class="font-bold text-sm text-blue-800">🎟️ Control de Socios y Bonos</h3>
-                <div class="space-y-2">
-                    <input type="text" id="nuevoNombreSocioAdmin" placeholder="Nombre del alumno/socio" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                    <input type="password" id="nuevoPinSocioAdmin" placeholder="Contraseña de 4 dígitos" class="w-full p-3 border rounded-xl text-sm bg-slate-50 tracking-widest font-bold" maxlength="4">
-                    <button onclick="crearSocioDesdeAdmin()" class="bg-blue-600 text-white px-4 py-3 rounded-xl font-bold text-sm w-full">Añadir Socio</button>
+                <div class="flex gap-2">
+                    <input type="text" id="nuevoNombreSocioAdmin" placeholder="Nombre del nuevo socio" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                    <button onclick="crearSocioDesdeAdmin()" class="bg-blue-600 text-white px-4 py-3 rounded-xl font-bold text-sm whitespace-nowrap">Añadir Socio</button>
                 </div>
                 <div class="pt-2 border-t">
-                    <p class="text-xs text-slate-500 mb-2 font-semibold">Listado de socios (Sellar sesiones o eliminar):</p>
+                    <p class="text-xs text-slate-500 mb-2 font-semibold">Listado de socios (Ver contraseña, sellar o eliminar):</p>
                     <div id="lista-socios-admin" class="space-y-2">
                         <!-- Se cargan dinámicamente -->
                     </div>
@@ -228,6 +226,11 @@
             renderizarTodo();
         }
 
+        // Generar PIN aleatorio de 4 dígitos
+        function generarPinAleatorio() {
+            return Math.floor(1000 + Math.random() * 9000).toString();
+        }
+
         function verMiBonoPrivado() {
             const name = document.getElementById('loginBonoNombre').value.trim();
             const pin = document.getElementById('loginBonoPin').value.trim();
@@ -259,46 +262,38 @@
         function registrarSocioPublico() {
             let nombre = document.getElementById('nombreNuevoSocioPublico').value.trim();
             const telefono = document.getElementById('telefonoNuevoSocioPublico').value.trim();
-            const pin = document.getElementById('pinNuevoSocioPublico').value.trim();
 
-            if(!nombre || !telefono || !pin) { 
-                alert("Por favor, rellena todos los campos incluyendo una contraseña de 4 dígitos."); 
+            if(!nombre || !telefono) { 
+                alert("Por favor, rellena tu nombre y teléfono."); 
                 return; 
             }
-            if(pin.length !== 4) {
-                alert("La contraseña debe tener exactamente 4 dígitos.");
-                return;
-            }
             
+            let pinGenerado = generarPinAleatorio();
             if(!socios[nombre]) {
-                socios[nombre] = { usadas: 0, pin: pin };
-            } else {
-                socios[nombre].pin = pin; // Actualiza contraseña si ya existía
+                socios[nombre] = { usadas: 0, pin: pinGenerado };
             }
 
-            listaPruebas.push({ nombre, telefono });
-            alert("✅ ¡Bienvenido a bordo, " + nombre + "! Ya estás registrado. Ya puedes consultar tu bono en la sección correspondiente.");
+            listaPruebas.push({ nombre, telefono, pin: pinGenerado });
+            alert("✅ ¡Bienvenido, " + nombre + "! Tu contraseña asignada automáticamente es: " + pinGenerado + "\n\nGuárdala bien, la necesitarás para ver tu bono y apuntarte a clases.");
             
             document.getElementById('nombreNuevoSocioPublico').value = '';
             document.getElementById('telefonoNuevoSocioPublico').value = '';
-            document.getElementById('pinNuevoSocioPublico').value = '';
             renderizarTodo();
             switchView('bono');
+            document.getElementById('loginBonoNombre').value = nombre;
+            document.getElementById('loginBonoPin').value = pinGenerado;
         }
 
         // --- GESTIÓN DE SOCIOS (ADMIN) ---
         function crearSocioDesdeAdmin() {
             let nombre = document.getElementById('nuevoNombreSocioAdmin').value.trim();
-            let pin = document.getElementById('nuevoPinSocioAdmin').value.trim();
-
-            if(!nombre || !pin) { alert("Escribe el nombre y una contraseña de 4 dígitos."); return; }
-            if(pin.length !== 4) { alert("La contraseña debe ser de 4 dígitos."); return; }
+            if(!nombre) { alert("Escribe el nombre del socio."); return; }
             if(socios[nombre]) { alert("Este socio ya existe."); return; }
 
-            socios[nombre] = { usadas: 0, pin: pin };
+            let pinGenerado = generarPinAleatorio();
+            socios[nombre] = { usadas: 0, pin: pinGenerado };
             document.getElementById('nuevoNombreSocioAdmin').value = '';
-            document.getElementById('nuevoPinSocioAdmin').value = '';
-            alert("✅ Socio " + nombre + " dado de alta con éxito.");
+            alert("✅ Socio " + nombre + " dado de alta con éxito.\nContraseña automática generada: " + pinGenerado);
             renderizarTodo();
         }
 
@@ -476,7 +471,7 @@
                     let badgeColor = socios[s].usadas === 10 ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700';
                     htmlSocios += '<div class="flex justify-between items-center bg-slate-50 p-2 rounded-lg text-xs gap-2">' +
                         '<div class="truncate">' +
-                            '<span class="font-bold">' + s + '</span> (🔑 ' + socios[s].pin + ') ' +
+                            '<span class="font-bold">' + s + '</span> <span class="text-purple-700 font-mono font-bold">(🔑 ' + socios[s].pin + ')</span> ' +
                             '<span class="px-1.5 py-0.5 rounded-full font-bold ' + badgeColor + '">' + socios[s].usadas + '/10</span>' +
                         '</div>' +
                         '<div class="flex gap-1 shrink-0">' +
@@ -490,7 +485,7 @@
                 contSociosAdmin.innerHTML = htmlSocios;
             }
 
-            // Entrenamientos públicos
+            // Entrenamientos públicos (Visible para todos los alumnos)
             const contEntreno = document.getElementById('lista-entrenamientos-publicos');
             if(contEntreno) {
                 contEntreno.innerHTML = listaEntrenamientos.length === 0 ? '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay entrenamientos programados todavía.</div>' : '';
@@ -516,7 +511,7 @@
                 });
             }
 
-            // Eventos públicos
+            // Eventos públicos (Visible para todos los alumnos)
             const contEventos = document.getElementById('lista-eventos-publicos');
             if(contEventos) {
                 contEventos.innerHTML = listaEventos.length === 0 ? '<div class="bg-white p-6 rounded-xl text-center text-slate-400 text-sm">No hay torneos o eventos publicados todavía.</div>' : '';
@@ -548,9 +543,9 @@
                     contenedorSolicitudes.innerHTML += '<div class="bg-slate-50 p-3 rounded-xl border flex justify-between items-center">' +
                         '<div>' +
                             '<p class="font-bold text-sm text-slate-800">' + item.nombre + '</p>' +
-                            '<p class="text-xs text-slate-500">📞 ' + item.telefono + '</p>' +
+                            '<p class="text-xs text-slate-500">📞 ' + item.telefono + ' | 🔑 <b>' + item.pin + '</b></p>' +
                         '</div>' +
-                        '<a href="https://wa.me/34' + item.telefono + '?text=Hola%20' + encodeURIComponent(item.nombre) + ',%20te%20escribimos%20desde%20el%20Club%20de%20Pickleball%20El%20Escorial." ' + 
+                        '<a href="https://wa.me/34' + item.telefono + '?text=Hola%20' + encodeURIComponent(item.nombre) + ',%20tu%20contrase%C3%B1a%20para%20la%20app%20es%20' + item.pin + '" ' + 
                            'target="_blank" ' + 
                            'class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-bold shadow">' +
                            '💬 WhatsApp' +
