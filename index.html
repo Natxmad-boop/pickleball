@@ -20,7 +20,7 @@
         .btn-danger:hover { background-color: #c0392b; }
         ul { list-style: none; padding: 0; }
         li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
-        .sync-status { text-align: center; font-size: 14px; color: #7f8c8d; margin-bottom: 15px; font-weight: bold; }
+        .sync-status { text-align: center; font-size: 14px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
         .panel { display: none; background: #fff8e1; padding: 15px; border-radius: 8px; border: 1px solid #ffe0b2; margin-bottom: 20px; }
         .card { background: #f9f9f9; border: 1px solid #ddd; padding: 10px; margin-top: 8px; border-radius: 6px; }
     </style>
@@ -29,7 +29,7 @@
 
 <div class="container">
     <h1>🏓 Club de Pickleball</h1>
-    <div id="status" class="sync-status">Sincronizado con la nube ☁️</div>
+    <div id="status" class="sync-status">Sistema Activo y Local ⚡</div>
 
     <!-- PANTALLA DE SELECCIÓN DE ACCESO -->
     <div id="menuPrincipal">
@@ -100,44 +100,28 @@
 </div>
 
 <script>
-    const API_URL = "https://api.npoint.io/0f1791108e7fe3f0fe30";
+    // Inicializar datos locales si no existen
+    function obtenerDatos() {
+        let datos = localStorage.getItem('pickleball_club');
+        if (!datos) {
+            let estructuraInicial = {
+                socios: [],
+                eventos: [],
+                bonosGlobales: [],
+                solicitudes: []
+            };
+            localStorage.setItem('pickleball_club', JSON.stringify(estructuraInicial));
+            return estructuraInicial;
+        }
+        return JSON.parse(datos);
+    }
+
+    function guardarDatos(datos) {
+        localStorage.setItem('pickleball_club', JSON.stringify(datos));
+    }
+
     let usuarioActual = null;
     let tipoUsuarioActual = null;
-
-    async function obtenerDatosNube() {
-        try {
-            let respuesta = await fetch(API_URL);
-            let datos = await respuesta.json();
-            return {
-                socios: Array.isArray(datos.socios) ? datos.socios : [],
-                eventos: Array.isArray(datos.eventos) ? datos.eventos : [],
-                bonosGlobales: Array.isArray(datos.bonosGlobales) ? datos.bonosGlobales : [],
-                solicitudes: Array.isArray(datos.solicitudes) ? datos.solicitudes : []
-            };
-        } catch (error) {
-            console.error("Error al obtener datos:", error);
-            return { socios: [], eventos: [], bonosGlobales: [], solicitudes: [] };
-        }
-    }
-
-    async function guardarDatosNube(datos) {
-        try {
-            document.getElementById('status').innerText = "Guardando en la nube...";
-            let respuesta = await fetch(API_URL, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datos)
-            });
-            if (respuesta.ok) {
-                document.getElementById('status').innerText = "Sincronizado con la nube ☁️";
-            } else {
-                document.getElementById('status').innerText = "Error al sincronizar ⚠️";
-            }
-        } catch (error) {
-            document.getElementById('status').innerText = "Error de conexión ⚠️";
-            console.error("Error al guardar:", error);
-        }
-    }
 
     function mostrarLoginMonitor() {
         let pass = prompt("Introduce la contraseña de monitor:");
@@ -157,26 +141,24 @@
         let clave = prompt("Introduce tu contraseña personal:");
         if(!clave) return;
         
-        obtenerDatosNube().then(datos => {
-            // Limpiamos espacios y pasamos a minúsculas para evitar fallos de escritura
-            let nombreIngresado = nombre.trim().toLowerCase();
-            let claveIngresada = clave.trim();
+        let datos = obtenerDatos();
+        let nombreIngresado = nombre.trim().toLowerCase();
+        let claveIngresada = clave.trim();
 
-            let socioEncontrado = datos.socios.find(s => 
-                s.nombre.trim().toLowerCase() === nombreIngresado && s.clave.trim() === claveIngresada
-            );
-            
-            if (socioEncontrado) {
-                usuarioActual = socioEncontrado;
-                tipoUsuarioActual = "socio";
-                document.getElementById('menuPrincipal').style.display = "none";
-                document.getElementById('panelSocio').style.display = "block";
-                document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
-                cargarPanelSocio(datos);
-            } else {
-                alert("Nombre o contraseña incorrectos. Revisa que estén bien escritos.");
-            }
-        });
+        let socioEncontrado = datos.socios.find(s => 
+            s.nombre.trim().toLowerCase() === nombreIngresado && s.clave.trim() === claveIngresada
+        );
+        
+        if (socioEncontrado) {
+            usuarioActual = socioEncontrado;
+            tipoUsuarioActual = "socio";
+            document.getElementById('menuPrincipal').style.display = "none";
+            document.getElementById('panelSocio').style.display = "block";
+            document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
+            cargarPanelSocio(datos);
+        } else {
+            alert("Nombre o contraseña incorrectos. Revisa que estén bien escritos.");
+        }
     }
 
     function cerrarSesion() {
@@ -187,22 +169,22 @@
         document.getElementById('menuPrincipal').style.display = "block";
     }
 
-    async function solicitarPrueba() {
+    function solicitarPrueba() {
         let nombre = prompt("Escribe tu nombre y teléfono para solicitar una clase de prueba:");
         if(!nombre) return;
         
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         datos.solicitudes.push(`Clase de prueba solicitada por: ${nombre}`);
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         alert("¡Solicitud enviada! Un monitor se pondrá en contacto contigo para tu día de prueba.");
     }
 
-    async function crearSocio() {
+    function crearSocio() {
         let nombre = document.getElementById('nuevoNombreSocio').value.trim();
         let clave = document.getElementById('nuevaClaveSocio').value.trim();
         if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
 
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         
         let existe = datos.socios.some(s => s.nombre.toLowerCase() === nombre.toLowerCase());
         if (existe) {
@@ -210,46 +192,45 @@
         }
 
         datos.socios.push({ nombre: nombre, clave: clave });
-        
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
+
         document.getElementById('nuevoNombreSocio').value = "";
         document.getElementById('nuevaClaveSocio').value = "";
-        alert("¡Socio creado con éxito y guardado en la nube!");
+        alert("¡Socio creado con éxito!");
         cargarPanelMonitor();
     }
 
-    async function crearEvento() {
+    function crearEvento() {
         let titulo = document.getElementById('eventoTitulo').value.trim();
         let fecha = document.getElementById('eventoFecha').value.trim();
         let lugar = document.getElementById('eventoLugar').value.trim();
         if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del evento.");
 
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         datos.eventos.push({ titulo, fecha, lugar, inscritos: [] });
+        guardarDatos(datos);
 
-        await guardarDatosNube(datos);
         document.getElementById('eventoTitulo').value = "";
         document.getElementById('eventoFecha').value = "";
         document.getElementById('eventoLugar').value = "";
         alert("Evento publicado correctamente.");
     }
 
-    async function asignarBono() {
+    function asignarBono() {
         let detalle = document.getElementById('bonoDetalles').value.trim();
         if(!detalle) return alert("Escribe los detalles del bono.");
 
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         datos.bonosGlobales.push(detalle);
+        guardarDatos(datos);
 
-        await guardarDatosNube(datos);
         document.getElementById('bonoDetalles').value = "";
-        alert("Bono registrado en la nube.");
+        alert("Bono registrado correctamente.");
     }
 
-    async function cargarPanelMonitor() {
-        let datos = await obtenerDatosNube();
+    function cargarPanelMonitor() {
+        let datos = obtenerDatos();
         
-        // Cargar listado de socios y total
         document.getElementById('contadorSociosTotal').innerText = datos.socios.length;
         let lSociosMonitor = document.getElementById('listaSociosMonitor');
         lSociosMonitor.innerHTML = "";
@@ -261,7 +242,6 @@
             });
         }
 
-        // Cargar solicitudes
         let lSolicitudes = document.getElementById('listaSolicitudes');
         lSolicitudes.innerHTML = "";
         if (datos.solicitudes.length === 0) {
@@ -273,14 +253,14 @@
         });
     }
 
-    async function borrarSolicitud(index) {
-        let datos = await obtenerDatosNube();
+    function borrarSolicitud(index) {
+        let datos = obtenerDatos();
         datos.solicitudes.splice(index, 1);
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         cargarPanelMonitor();
     }
 
-    async function cargarPanelSocio(datos) {
+    function cargarPanelSocio(datos) {
         let lMisBonos = document.getElementById('misBonos');
         lMisBonos.innerHTML = "";
         let misBonosEncontrados = datos.bonosGlobales.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
@@ -316,18 +296,18 @@
         });
     }
 
-    async function pedirBonoAlMonitor() {
-        let datos = await obtenerDatosNube();
+    function pedirBonoAlMonitor() {
+        let datos = obtenerDatos();
         datos.solicitudes.push(`El socio ${usuarioActual.nombre} solicita un nuevo bono o recarga.`);
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         alert("Solicitud de bono enviada al monitor.");
     }
 
-    async function apuntarseEvento(indexEvento) {
-        let datos = await obtenerDatosNube();
+    function apuntarseEvento(indexEvento) {
+        let datos = obtenerDatos();
         if(!datos.eventos[indexEvento].inscritos.includes(usuarioActual.nombre)) {
             datos.eventos[indexEvento].inscritos.push(usuarioActual.nombre);
-            await guardarDatosNube(datos);
+            guardarDatos(datos);
             alert("¡Te has apuntado con éxito!");
             cargarPanelSocio(datos);
         }
