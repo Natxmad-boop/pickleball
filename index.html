@@ -55,8 +55,14 @@
         </div>
 
         <div class="section">
+            <h3>📋 Listado de Socios Registrados y Contraseñas</h3>
+            <p style="font-size: 13px; color: #555;">Total de socios inscritos: <strong id="contadorSociosTotal">0</strong></p>
+            <ul id="listaSociosMonitor"></ul>
+        </div>
+
+        <div class="section">
             <h3>🏆 Crear Evento (Torneo / Entrenamiento)</h3>
-            <input type="text" id="eventoTitulo" placeholder="Título (Ej: Torneo Relámpago / Entrenamiento Avanzado)">
+            <input type="text" id="eventoTitulo" placeholder="Título (Ej: Torneo Relámpago / Entrenamiento)">
             <input type="text" id="eventoFecha" placeholder="Fecha y Hora (Ej: Viernes a las 18:00)">
             <input type="text" id="eventoLugar" placeholder="Lugar / Pista (Ej: Pista Central Club)">
             <button onclick="crearEvento()">Publicar Evento</button>
@@ -94,7 +100,6 @@
 </div>
 
 <script>
-    // Nuevo enlace conectado a tu nube limpia de Npoint
     const API_URL = "https://api.npoint.io/0f1791108e7fe3f0fe30";
     let usuarioActual = null;
     let tipoUsuarioActual = null;
@@ -153,7 +158,13 @@
         if(!clave) return;
         
         obtenerDatosNube().then(datos => {
-            let socioEncontrado = datos.socios.find(s => s.nombre.toLowerCase() === nombre.trim().toLowerCase() && s.clave === clave.trim());
+            // Limpiamos espacios y pasamos a minúsculas para evitar fallos de escritura
+            let nombreIngresado = nombre.trim().toLowerCase();
+            let claveIngresada = clave.trim();
+
+            let socioEncontrado = datos.socios.find(s => 
+                s.nombre.trim().toLowerCase() === nombreIngresado && s.clave.trim() === claveIngresada
+            );
             
             if (socioEncontrado) {
                 usuarioActual = socioEncontrado;
@@ -163,7 +174,7 @@
                 document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
                 cargarPanelSocio(datos);
             } else {
-                alert("Nombre o contraseña incorrectos.");
+                alert("Nombre o contraseña incorrectos. Revisa que estén bien escritos.");
             }
         });
     }
@@ -237,6 +248,20 @@
 
     async function cargarPanelMonitor() {
         let datos = await obtenerDatosNube();
+        
+        // Cargar listado de socios y total
+        document.getElementById('contadorSociosTotal').innerText = datos.socios.length;
+        let lSociosMonitor = document.getElementById('listaSociosMonitor');
+        lSociosMonitor.innerHTML = "";
+        if (datos.socios.length === 0) {
+            lSociosMonitor.innerHTML = "<li>No hay socios registrados todavía.</li>";
+        } else {
+            datos.socios.forEach(s => {
+                lSociosMonitor.innerHTML += `<li>👤 <strong>${s.nombre}</strong> <span style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 14px;">Clave: <code>${s.clave}</code></span></li>`;
+            });
+        }
+
+        // Cargar solicitudes
         let lSolicitudes = document.getElementById('listaSolicitudes');
         lSolicitudes.innerHTML = "";
         if (datos.solicitudes.length === 0) {
