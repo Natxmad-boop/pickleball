@@ -123,54 +123,44 @@
 </div>
 
 <script>
-    // Usamos una API en la nube gratuita para sincronizar entre dispositivos con un ID único para tu club
-    const BIN_URL = "https://api.jsonbin.io/v3/b/66184a5fe41b4d34e4e37527"; // Canal compartido público de prueba
-    // Nota: Como alternativa segura y totalmente independiente, guardamos una copia local como respaldo y sincronizamos mediante fetch.
-    
-    let datosMemoria = {
-        socios: [],
-        entrenamientos: [],
-        torneos: [],
-        bonosGlobales: [],
-        solicitudes: []
-    };
+    const CLOUD_URL = "https://json.extendsclass.com/bin/pickleball_club_v7_demo";
 
     async function obtenerDatosNube() {
         try {
-            let respuesta = await fetch("https://json.extendsclass.com/bin/pickleball_club_v6_demo", {method: 'GET'});
+            let respuesta = await fetch(CLOUD_URL, {method: 'GET', cache: 'no-store'});
             if(respuesta.ok) {
                 let json = await respuesta.json();
                 if(json && json.socios) {
-                    datosMemoria = json;
                     document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
-                    return datosMemoria;
+                    return json;
                 }
             }
         } catch(e) {
-            console.log("Usando modo local por red");
+            console.log("Error de red, usando respaldo local");
         }
-        let local = localStorage.getItem('pickleball_club_v6');
-        if(local) datosMemoria = JSON.parse(local);
-        return datosMemoria;
+        let local = localStorage.getItem('pickleball_club_v7');
+        if(local) {
+            document.getElementById('status').innerText = "Modo Local (Sin conexión a la nube) ⚠️";
+            return JSON.parse(local);
+        }
+        return { socios: [], entrenamientos: [], torneos: [], bonosGlobales: [], solicitudes: [] };
     }
 
     async function guardarDatosNube(datos) {
-        datosMemoria = datos;
-        localStorage.setItem('pickleball_club_v6', JSON.stringify(datos));
+        localStorage.setItem('pickleball_club_v7', JSON.stringify(datos));
         document.getElementById('status').innerText = "Guardando en la nube... 🔄";
         try {
-            await fetch("https://json.extendsclass.com/bin/pickleball_club_v6_demo", {
+            await fetch(CLOUD_URL, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos)
             });
             document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
         } catch(e) {
-            document.getElementById('status').innerText = "Modo Local (Sin conexión a internet) ⚠️";
+            document.getElementById('status').innerText = "Error al guardar en la nube ⚠️";
         }
     }
 
-    // Cargar datos iniciales al abrir la página
     window.onload = async function() {
         await obtenerDatosNube();
     };
@@ -212,7 +202,7 @@
             document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
             cargarPanelSocio(datos);
         } else {
-            alert("Nombre o contraseña incorrectos. Comprueba cómo está escrito en el panel.");
+            alert("Nombre o contraseña incorrectos.");
         }
     }
 
@@ -231,7 +221,7 @@
         let datos = await obtenerDatosNube();
         datos.solicitudes.push(`Clase de prueba solicitada por: ${nombre.trim()}`);
         await guardarDatosNube(datos);
-        alert("¡Solicitud enviada! Un monitor se pondrá en contacto contigo.");
+        alert("¡Solicitud enviada!");
     }
 
     async function crearSocio() {
