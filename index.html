@@ -94,7 +94,8 @@
 </div>
 
 <script>
-    const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
+    // Nuevo enlace conectado a tu nube limpia de Npoint
+    const API_URL = "https://api.npoint.io/0f1791108e7fe3f0fe30";
     let usuarioActual = null;
     let tipoUsuarioActual = null;
 
@@ -192,7 +193,6 @@
 
         let datos = await obtenerDatosNube();
         
-        // Comprobar si ya existe un socio con ese nombre
         let existe = datos.socios.some(s => s.nombre.toLowerCase() === nombre.toLowerCase());
         if (existe) {
             return alert("Ya existe un socio con ese nombre.");
