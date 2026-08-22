@@ -1,525 +1,168 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>El Escorial Pickleball</title>
-  <style>
-    :root {
-      --primary: #0f5c32;
-      --primary-light: #1e824c;
-      --accent: #f59e0b;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --text: #1e293b;
-      --text-muted: #64748b;
-      --border: #e2e8f0;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      background-color: var(--primary);
-      color: white;
-      text-align: center;
-      padding: 20px 15px 15px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-
-    .logo-container {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .logo-container img {
-      max-width: 140px;
-      height: auto;
-      object-fit: contain;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.3px;
-    }
-
-    nav {
-      display: flex;
-      background: #093b1f;
-      padding: 6px;
-      gap: 6px;
-    }
-
-    nav button {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      padding: 10px 8px;
-      font-weight: 600;
-      font-size: 13px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    nav button.active {
-      background-color: var(--primary-light);
-      color: white;
-    }
-
-    .container {
-      max-width: 480px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 16px;
-      border: 1px solid var(--border);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .card-title {
-      margin-top: 0;
-      margin-bottom: 12px;
-      color: var(--primary);
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .info-box {
-      background-color: #f1f5f9;
-      border-left: 4px solid var(--primary-light);
-      padding: 10px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      margin-bottom: 12px;
-      font-weight: 500;
-    }
-
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid #f1f5f9;
-      font-size: 14px;
-    }
-
-    .info-row:last-child {
-      border-bottom: none;
-    }
-
-    .label {
-      color: var(--text-muted);
-    }
-
-    .value {
-      font-weight: 600;
-    }
-
-    .badge {
-      background: #dcfce7;
-      color: #166534;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 12px;
-    }
-
-    .btn-action {
-      width: 100%;
-      background-color: var(--primary-light);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-
-    .btn-secondary {
-      background-color: #64748b;
-    }
-
-    ul.attendees-list {
-      list-style: none;
-      padding: 0;
-      margin: 12px 0 0;
-    }
-
-    ul.attendees-list li {
-      padding: 10px;
-      background: #f8fafc;
-      margin-bottom: 6px;
-      border-radius: 6px;
-      border: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 14px;
-    }
-
-    .btn-del {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      cursor: pointer;
-    }
-
-    .card-punch {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-      margin-top: 12px;
-    }
-
-    .punch-slot {
-      aspect-ratio: 1;
-      border: 2px dashed #cbd5e1;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      color: #94a3b8;
-      background: #f8fafc;
-    }
-
-    .punch-slot.used {
-      background: var(--primary);
-      color: white;
-      border-style: solid;
-      border-color: var(--primary);
-    }
-
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin: 6px 0 12px;
-      border: 1px solid #cbd5e1;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-size: 14px;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Club de Pickleball El Escorial</title>
+    <!-- Tailwind CSS para diseño moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body>
+<body class="bg-slate-100 font-sans pb-24">
 
-  <header>
-    <div class="logo-container">
-      <img src="https://i.ibb.co/3sS8M3Y/pickleball-logo.png" alt="El Escorial Pickleball Logo">
-    </div>
-    <h1>El Escorial Pickleball</h1>
-  </header>
-
-  <nav>
-    <button class="active" onclick="switchTab('entrenamiento', this)">Entrenamientos</button>
-    <button onclick="switchTab('tarjeta', this)">Mi Tarjeta</button>
-    <button onclick="switchTab('admin', this)">🔒 Monitores</button>
-  </nav>
-
-  <div class="container">
-
-    <!-- TAB ENTRENAMIENTO JUGADORES -->
-    <div id="entrenamiento" class="tab-content active">
-      <div class="card">
-        <h2 class="card-title">📍 Próximo Entrenamiento</h2>
-        <div class="info-box" id="disp-location">
-          Ubicación: Por determinar
+    <!-- CABECERA -->
+    <header class="bg-[#0f5c32] text-white p-4 text-center shadow-md">
+        <div class="flex justify-center items-center mb-2">
+            <img src="https://i.ibb.co/3sS8M3Y/pickleball-logo.png" alt="Logo" class="max-w-[110px] h-auto object-contain">
         </div>
-        <div class="info-row">
-          <span class="label">Horario:</span>
-          <span class="value" id="disp-time">Sin definir</span>
-        </div>
-        <div class="info-row">
-          <span class="label">Monitores:</span>
-          <span class="value" id="disp-coaches">Sin asignar</span>
-        </div>
-      </div>
+        <h1 class="text-xl font-bold tracking-tight">EL ESCORIAL PICKLEBALL</h1>
+    </header>
 
-      <!-- SECCIÓN PARA QUE EL ALUMNO SE APUNTE DIRECTAMENTE -->
-      <div class="card">
-        <h2 class="card-title">✋ Apuntarse a esta Clase</h2>
-        <label class="label">Selecciona tu nombre:</label>
-        <select id="selfAttendeeSelect">
-          <option value="">-- Elige tu nombre --</option>
-        </select>
-
-        <button class="btn-action" onclick="selfAddAttendee()">+ Apuntarme a la clase</button>
-        <button class="btn-action btn-secondary" onclick="selfRemoveAttendee()">- Borrarme de la clase</button>
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">👥 Jugadores Apuntados (<span id="attendee-count">0</span>)</h2>
-        <ul class="attendees-list" id="attendees-list-user"></ul>
-      </div>
-    </div>
-
-    <!-- TAB TARJETA JUGADORES -->
-    <div id="tarjeta" class="tab-content">
-      <div class="card">
-        <h2 class="card-title">🎴 Consulta tu Bono</h2>
-        <label class="label">Selecciona tu nombre:</label>
-        <select id="userSelect" onchange="renderUserCard()">
-          <option value="">-- Elige un alumno --</option>
-        </select>
+    <!-- CONTENEDOR PRINCIPAL DE VISTAS -->
+    <main class="max-w-md mx-auto p-4 space-y-4">
         
-        <div id="cardDisplay" style="display:none; margin-top:15px;">
-          <div class="info-row">
-            <span class="label">Jugador/a:</span>
-            <span class="value" id="cardName">--</span>
-          </div>
-          <div class="info-row">
-            <span class="label">Sesiones consumidas:</span>
-            <span class="value"><span id="used-count">0</span> de 10</span>
-          </div>
-          <div class="card-punch" id="punchCard"></div>
-        </div>
-      </div>
-    </div>
+        <!-- VISTA: INICIO -->
+        <section id="view-inicio" class="view-section space-y-4">
+            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                <h2 class="text-lg font-bold text-slate-800 mb-1">👋 ¡Hola!</h2>
+                <p class="text-slate-600 text-sm mb-4">Bienvenido a la aplicación oficial de nuestro club. Selecciona una opción para empezar.</p>
+                
+                <div class="bg-emerald-50 border-l-4 border-emerald-600 p-3 rounded-r-xl">
+                    <span class="block text-xs font-bold text-emerald-800 uppercase">Próximo Entrenamiento</span>
+                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Cargando información...</span>
+                </div>
+            </div>
 
-    <!-- TAB PANEL MONITORES -->
-    <div id="admin" class="tab-content">
-      <div class="card" id="loginCard">
-        <h2 class="card-title">🔒 Acceso Monitores</h2>
-        <label class="label">PIN de acceso:</label>
-        <input type="password" id="pinInput" placeholder="Introduce el PIN">
-        <button class="btn-action" style="background-color: var(--accent); color: #000;" onclick="loginAdmin()">Acceder</button>
-      </div>
+            <!-- BOTONES ACCESO RÁPIDO -->
+            <button onclick="switchView('entrenamientos')" class="w-full bg-[#0f5c32] hover:bg-[#1e824c] text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+                🏓 ENTRENAMIENTOS
+            </button>
+            <button onclick="switchView('bono')" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+                🎟️ MI BONO DE 10 SESIONES
+            </button>
+            <button onclick="switchView('eventos')" class="w-full bg-amber-600 hover:bg-amber-700 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+                🏆 TORNEOS Y EVENTOS
+            </button>
+            <button onclick="switchView('prueba')" class="w-full bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+                👋 PRIMER DÍA DE PRUEBA
+            </button>
+        </section>
 
-      <div id="adminPanel" style="display: none;">
-        
-        <div class="card">
-          <h2 class="card-title">⚙️ Configurar Entrenamiento</h2>
-          <label class="label">Ubicación / Estado:</label>
-          <input type="text" id="editLocation" placeholder="Ej. Polideportivo / SUSPENDIDO POR LLUVIA">
-          <label class="label">Horario:</label>
-          <input type="text" id="editTime" placeholder="Ej. 10:00 - 11:30">
-          <label class="label">Monitores:</label>
-          <input type="text" id="editCoaches" placeholder="Ej. Juan y Pedro">
-          <button class="btn-action" onclick="saveTrainingInfo()">Guardar Cambios</button>
-        </div>
+        <!-- VISTA: ENTRENAMIENTOS -->
+        <section id="view-entrenamientos" class="view-section hidden space-y-4">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">🏓 Entrenamientos</h2>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                <div class="bg-slate-100 p-3 rounded-lg text-sm font-medium text-slate-700" id="disp-location">📍 Ubicación: Polideportivo Municipal</div>
+                <div class="flex justify-between text-sm py-1 border-b">
+                    <span class="text-slate-500">Horario:</span>
+                    <span class="font-bold text-slate-800" id="disp-time">Miércoles 19:00 - 20:30</span>
+                </div>
+                <div class="flex justify-between text-sm py-1">
+                    <span class="text-slate-500">Monitores:</span>
+                    <span class="font-bold text-slate-800" id="disp-coaches">Equipo El Escorial</span>
+                </div>
+            </div>
 
-        <div class="card">
-          <h2 class="card-title">📝 Gestión de Lista de Asistencia</h2>
-          <h3 style="font-size: 14px; margin-top: 5px; color: var(--text-muted);">Inscritos actuales en la sesión:</h3>
-          <ul class="attendees-list" id="attendees-list-admin"></ul>
-        </div>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                <h3 class="font-bold text-slate-700 text-sm">Apuntarme a la clase</h3>
+                <select id="selfAttendeeSelect" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                    <option value="">-- Elige tu nombre --</option>
+                    <option value="Juan Pérez">Juan Pérez</option>
+                    <option value="María Gómez">María Gómez</option>
+                </select>
+                <button onclick="alert('Te has apuntado correctamente')" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm">✓ Apuntarme</button>
+            </div>
+        </section>
 
-        <div class="card">
-          <h2 class="card-title">💳 Alta de Alumnos y Bonos</h2>
-          <label class="label">Nuevo Jugador:</label>
-          <input type="text" id="newPlayerName" placeholder="Nombre y Apellidos">
-          <button class="btn-action" onclick="createNewPlayer()">Dar de alta nuevo alumno</button>
+        <!-- VISTA: BONO -->
+        <section id="view-bono" class="view-section hidden space-y-4">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">🎟️ Mi Bono</h2>
+            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-center space-y-3">
+                <p class="text-slate-600 text-sm">Selecciona tu nombre para ver tu tarjeta:</p>
+                <select id="userSelect" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                    <option value="">-- Elige un alumno --</option>
+                    <option value="Juan Pérez">Juan Pérez</option>
+                </select>
+                <div class="py-4">
+                    <span class="text-4xl font-extrabold text-[#0f5c32]">6 / 10</span>
+                    <p class="text-xs text-slate-500 mt-1">Sesiones consumidas</p>
+                </div>
+                <button onclick="alert('Solicitud de nuevo bono enviada a los monitores.')" class="bg-[#0f5c32] text-white px-4 py-3 rounded-xl font-bold text-sm w-full">Solicitar nuevo bono</button>
+            </div>
+        </section>
 
-          <hr style="margin: 15px 0; border: 0; border-top: 1px solid var(--border);">
+        <!-- VISTA: EVENTOS -->
+        <section id="view-eventos" class="view-section hidden space-y-4">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">🏆 Torneos y Eventos</h2>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center py-8 text-slate-500">
+                <p class="text-sm">Próximamente publicaremos los nuevos torneos y eventos especiales.</p>
+            </div>
+        </section>
 
-          <label class="label">Seleccionar Jugador:</label>
-          <select id="adminPlayerSelect">
-            <option value="">-- Seleccionar alumno --</option>
-          </select>
+        <!-- VISTA: PRUEBA -->
+        <section id="view-prueba" class="view-section hidden space-y-4">
+            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">👋 Primer Día de Prueba</h2>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+                <p class="text-sm text-slate-600">¿Quieres probar el pickleball? Rellena tus datos y nos pondremos en contacto contigo.</p>
+                <input type="text" placeholder="Tu Nombre y Apellidos" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <input type="tel" placeholder="Teléfono de contacto" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <button onclick="alert('Solicitud enviada con éxito. ¡Te contactaremos pronto!')" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm">Enviar Solicitud</button>
+            </div>
+        </section>
 
-          <button class="btn-action" style="background-color: var(--primary);" onclick="punchPlayerCard()">✓ Tachar 1 Sesión</button>
-          <button class="btn-action" style="background-color: #ef4444;" onclick="renewPlayerCard()">♻️ Renovar Bono (10 Sesiones)</button>
-        </div>
+        <!-- VISTA: MÁS / MENÚ -->
+        <section id="view-mas" class="view-section hidden space-y-4">
+            <h2 class="text-xl font-bold text-slate-800">☰ Menú y Ajustes</h2>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 divide-y">
+                <button onclick="alert('Sección de noticias en desarrollo')" class="w-full text-left p-4 font-semibold text-slate-700 flex justify-between items-center">📰 Noticias del Club <span>›</span></button>
+                <button onclick="openAdminLogin()" class="w-full text-left p-4 font-semibold text-emerald-800 flex justify-between items-center">🔒 Acceso Monitores <span>›</span></button>
+                <button onclick="alert('Para instalar en Android: pulsa los tres puntos de Chrome y selecciona Añadir a pantalla de inicio.\n\nPara iPhone: pulsa el botón Compartir en Safari y selecciona Añadir a pantalla de inicio.')" class="w-full text-left p-4 font-semibold text-slate-700 flex justify-between items-center">❓ Cómo instalar la App <span>›</span></button>
+            </div>
+        </section>
 
-      </div>
-    </div>
+    </main>
 
-  </div>
+    <!-- MENÚ INFERIOR FIJO (MÓVIL) -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-2 shadow-lg max-w-md mx-auto z-50">
+        <button onclick="switchView('inicio')" class="nav-btn flex flex-col items-center text-[#0f5c32] font-bold text-xs">
+            🏠 <span class="mt-1">Inicio</span>
+        </button>
+        <button onclick="switchView('entrenamientos')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+            🏓 <span class="mt-1">Entrenar</span>
+        </button>
+        <button onclick="switchView('eventos')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+            🏆 <span class="mt-1">Eventos</span>
+        </button>
+        <button onclick="switchView('bono')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+            🎟️ <span class="mt-1">Bono</span>
+        </button>
+        <button onclick="switchView('mas')" class="nav-btn flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
+            ☰ <span class="mt-1">Más</span>
+        </button>
+    </nav>
 
-  <script>
-    let players = {};
-    let attendees = [];
-
-    function switchTab(tabId, btn) {
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-      document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-      
-      document.getElementById(tabId).classList.add('active');
-      btn.classList.add('active');
-      updateSelects();
-      renderAttendees();
-    }
-
-    function updateSelects() {
-      const uSelect = document.getElementById('userSelect');
-      const aSelect = document.getElementById('adminPlayerSelect');
-      const selfSelect = document.getElementById('selfAttendeeSelect');
-      
-      uSelect.innerHTML = '<option value="">-- Elige un alumno --</option>';
-      aSelect.innerHTML = '<option value="">-- Seleccionar alumno --</option>';
-      selfSelect.innerHTML = '<option value="">-- Elige tu nombre --</option>';
-
-      for (let name in players) {
-        uSelect.innerHTML += `<option value="${name}">${name}</option>`;
-        aSelect.innerHTML += `<option value="${name}">${name}</option>`;
-        selfSelect.innerHTML += `<option value="${name}">${name}</option>`;
-      }
-    }
-
-    function renderAttendees() {
-      const uList = document.getElementById('attendees-list-user');
-      const aList = document.getElementById('attendees-list-admin');
-      const count = document.getElementById('attendee-count');
-
-      uList.innerHTML = '';
-      aList.innerHTML = '';
-      count.innerText = attendees.length;
-
-      if(attendees.length === 0) {
-        uList.innerHTML = '<li style="color:#94a3b8; justify-content:center;">No hay alumnos apuntados.</li>';
-        aList.innerHTML = '<li style="color:#94a3b8; justify-content:center;">No hay alumnos apuntados.</li>';
-      }
-
-      attendees.forEach((name, index) => {
-        uList.innerHTML += `<li><span>${name}</span> <span class="badge">Inscrito</span></li>`;
-        aList.innerHTML += `<li><span>${name}</span> <button class="btn-del" onclick="removeAttendee(${index})">Quitar</button></li>`;
-      });
-    }
-
-    function renderUserCard() {
-      const name = document.getElementById('userSelect').value;
-      const display = document.getElementById('cardDisplay');
-      if (!name) { display.style.display = 'none'; return; }
-
-      display.style.display = 'block';
-      document.getElementById('cardName').innerText = name;
-      const used = players[name];
-      document.getElementById('used-count').innerText = used;
-
-      const grid = document.getElementById('punchCard');
-      grid.innerHTML = '';
-      for (let i = 1; i <= 10; i++) {
-        if (i <= used) {
-          grid.innerHTML += `<div class="punch-slot used">✓</div>`;
-        } else {
-          grid.innerHTML += `<div class="punch-slot">${i}</div>`;
+    <!-- SCRIPT DE NAVEGACIÓN -->
+    <script>
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            const target = document.getElementById('view-' + viewId);
+            if (target) {
+                target.classList.remove('hidden');
+            }
+            window.scrollTo(0, 0);
         }
-      }
-    }
 
-    /* FUNCIONES DE AUTOGESTIÓN DE ALUMNOS */
-    function selfAddAttendee() {
-      const name = document.getElementById('selfAttendeeSelect').value;
-      if (!name) return alert("Por favor, selecciona tu nombre.");
-      
-      if (!attendees.includes(name)) {
-        attendees.push(name);
-        renderAttendees();
-        alert("Te has apuntado correctamente a la clase.");
-      } else {
-        alert("Ya estás apuntado/a a esta clase.");
-      }
-    }
-
-    function selfRemoveAttendee() {
-      const name = document.getElementById('selfAttendeeSelect').value;
-      if (!name) return alert("Por favor, selecciona tu nombre.");
-      
-      const index = attendees.indexOf(name);
-      if (index !== -1) {
-        attendees.splice(index, 1);
-        renderAttendees();
-        alert("Te has borrado de la clase.");
-      } else {
-        alert("No estás apuntado/a en esta clase.");
-      }
-    }
-
-    /* FUNCIONES DEL MONITOR */
-    function loginAdmin() {
-      const pin = document.getElementById('pinInput').value;
-      if (pin === "1234") {
-        document.getElementById('loginCard').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        updateSelects();
-        renderAttendees();
-      } else {
-        alert("PIN incorrecto.");
-      }
-    }
-
-    function saveTrainingInfo() {
-      const loc = document.getElementById('editLocation').value || "Por determinar";
-      const time = document.getElementById('editTime').value || "Sin definir";
-      const coaches = document.getElementById('editCoaches').value || "Sin asignar";
-
-      document.getElementById('disp-location').innerText = "Ubicación: " + loc;
-      document.getElementById('disp-time').innerText = time;
-      document.getElementById('disp-coaches').innerText = coaches;
-      alert("Información guardada.");
-    }
-
-    function createNewPlayer() {
-      const name = document.getElementById('newPlayerName').value.trim();
-      if (name) {
-        players[name] = 0;
-        document.getElementById('newPlayerName').value = "";
-        updateSelects();
-        alert("Alumno registrado: " + name);
-      }
-    }
-
-    function removeAttendee(index) {
-      attendees.splice(index, 1);
-      renderAttendees();
-    }
-
-    function punchPlayerCard() {
-      const name = document.getElementById('adminPlayerSelect').value;
-      if (!name) return alert("Selecciona un alumno.");
-      
-      if (players[name] < 10) {
-        players[name]++;
-        alert("Sesión marcada. Lleva " + players[name] + "/10");
-        renderUserCard();
-      } else {
-        alert("Bono completo. Por favor, renueva.");
-      }
-    }
-
-    function renewPlayerCard() {
-      const name = document.getElementById('adminPlayerSelect').value;
-      if (!name) return alert("Selecciona un alumno.");
-      
-      players[name] = 0;
-      alert("Bono renovado a 10 sesiones.");
-      renderUserCard();
-    }
-
-    updateSelects();
-    renderAttendees();
-  </script>
+        function openAdminLogin() {
+            let pin = prompt("Introduce el PIN de monitor:");
+            if (pin === "1234") {
+                alert("¡Acceso autorizado! (Panel de monitores en preparación para la siguiente fase).");
+            } else if (pin !== null) {
+                alert("PIN incorrecto.");
+            }
+        }
+    </script>
 </body>
 </html>
