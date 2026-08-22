@@ -102,29 +102,40 @@
         try {
             let respuesta = await fetch(API_URL);
             let datos = await respuesta.json();
-            // Aseguramos que la estructura básica exista siempre
             return {
-                socios: datos.socios || [],
-                eventos: datos.eventos || [],
-                bonosGlobales: datos.bonosGlobales || [],
-                solicitudes: datos.solicitudes || []
+                socios: Array.isArray(datos.socios) ? datos.socios : [],
+                eventos: Array.isArray(datos.eventos) ? datos.eventos : [],
+                bonosGlobales: Array.isArray(datos.bonosGlobales) ? datos.bonosGlobales : [],
+                solicitudes: Array.isArray(datos.solicitudes) ? datos.solicitudes : []
             };
         } catch (error) {
+            console.error("Error al obtener datos:", error);
             return { socios: [], eventos: [], bonosGlobales: [], solicitudes: [] };
         }
     }
 
     async function guardarDatosNube(datos) {
-        await fetch(API_URL, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datos)
-        });
+        try {
+            document.getElementById('status').innerText = "Guardando en la nube...";
+            let respuesta = await fetch(API_URL, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+            if (respuesta.ok) {
+                document.getElementById('status').innerText = "Sincronizado con la nube ☁️";
+            } else {
+                document.getElementById('status').innerText = "Error al sincronizar ⚠️";
+            }
+        } catch (error) {
+            document.getElementById('status').innerText = "Error de conexión ⚠️";
+            console.error("Error al guardar:", error);
+        }
     }
 
     function mostrarLoginMonitor() {
         let pass = prompt("Introduce la contraseña de monitor:");
-        if (pass === "monitor123") { // Contraseña de monitor por defecto
+        if (pass === "monitor123") {
             tipoUsuarioActual = "monitor";
             document.getElementById('menuPrincipal').style.display = "none";
             document.getElementById('panelMonitor').style.display = "block";
@@ -180,12 +191,20 @@
         if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
 
         let datos = await obtenerDatosNube();
-        datos.socios.push({ nombre, clave });
+        
+        // Comprobar si ya existe un socio con ese nombre
+        let existe = datos.socios.some(s => s.nombre.toLowerCase() === nombre.toLowerCase());
+        if (existe) {
+            return alert("Ya existe un socio con ese nombre.");
+        }
+
+        datos.socios.push({ nombre: nombre, clave: clave });
         
         await guardarDatosNube(datos);
         document.getElementById('nuevoNombreSocio').value = "";
         document.getElementById('nuevaClaveSocio').value = "";
-        alert("Socio creado con éxito. Ya puede iniciar sesión con su clave.");
+        alert("¡Socio creado con éxito y guardado en la nube!");
+        cargarPanelMonitor();
     }
 
     async function crearEvento() {
@@ -237,7 +256,6 @@
     }
 
     async function cargarPanelSocio(datos) {
-        // Cargar bonos
         let lMisBonos = document.getElementById('misBonos');
         lMisBonos.innerHTML = "";
         let misBonosEncontrados = datos.bonosGlobales.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
@@ -247,7 +265,6 @@
             lMisBonos.innerHTML = "<li>No tienes bonos activos asignados actualmente.</li>";
         }
 
-        // Cargar eventos con contador de inscritos
         let lEventos = document.getElementById('listaEventosSocio');
         lEventos.innerHTML = "";
         if (datos.eventos.length === 0) {
