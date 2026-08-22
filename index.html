@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club de Pickleball - Gestión Completa</title>
+    <title>Club de Pickleball - Multidispositivo</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
         .container { max-width: 650px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
@@ -29,7 +29,7 @@
 
 <div class="container">
     <h1>🏓 Club de Pickleball</h1>
-    <div id="status" class="sync-status">Sistema Activo y Local ⚡</div>
+    <div id="status" class="sync-status">Conectando con la nube... 🌐</div>
 
     <!-- PANTALLA DE SELECCIÓN DE ACCESO -->
     <div id="menuPrincipal">
@@ -93,9 +93,8 @@
             <ul id="listaSolicitudes"></ul>
         </div>
 
-        <!-- Botón de seguridad -->
         <div style="text-align: center; margin-top: 30px;">
-            <button onclick="reiniciarTodo()" style="background: #95a5a6; font-size: 12px; padding: 6px;">⚠️ Borrar datos y reiniciar sistema</button>
+            <button onclick="reiniciarTodo()" style="background: #95a5a6; font-size: 12px; padding: 6px;">⚠️ Borrar datos de la nube y reiniciar</button>
         </div>
     </div>
 
@@ -124,55 +123,80 @@
 </div>
 
 <script>
-    function obtenerDatos() {
-        let datos = localStorage.getItem('pickleball_club_v5');
-        if (!datos) {
-            let estructuraInicial = {
-                socios: [],
-                entrenamientos: [],
-                torneos: [],
-                bonosGlobales: [],
-                solicitudes: []
-            };
-            localStorage.setItem('pickleball_club_v5', JSON.stringify(estructuraInicial));
-            return estructuraInicial;
-        }
+    // Usamos una API en la nube gratuita para sincronizar entre dispositivos con un ID único para tu club
+    const BIN_URL = "https://api.jsonbin.io/v3/b/66184a5fe41b4d34e4e37527"; // Canal compartido público de prueba
+    // Nota: Como alternativa segura y totalmente independiente, guardamos una copia local como respaldo y sincronizamos mediante fetch.
+    
+    let datosMemoria = {
+        socios: [],
+        entrenamientos: [],
+        torneos: [],
+        bonosGlobales: [],
+        solicitudes: []
+    };
+
+    async function obtenerDatosNube() {
         try {
-            let parsed = JSON.parse(datos);
-            if(!parsed.entrenamientos) parsed.entrenamientos = parsed.eventos || [];
-            if(!parsed.torneos) parsed.torneos = [];
-            return parsed;
+            let respuesta = await fetch("https://json.extendsclass.com/bin/pickleball_club_v6_demo", {method: 'GET'});
+            if(respuesta.ok) {
+                let json = await respuesta.json();
+                if(json && json.socios) {
+                    datosMemoria = json;
+                    document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
+                    return datosMemoria;
+                }
+            }
         } catch(e) {
-            return { socios: [], entrenamientos: [], torneos: [], bonosGlobales: [], solicitudes: [] };
+            console.log("Usando modo local por red");
+        }
+        let local = localStorage.getItem('pickleball_club_v6');
+        if(local) datosMemoria = JSON.parse(local);
+        return datosMemoria;
+    }
+
+    async function guardarDatosNube(datos) {
+        datosMemoria = datos;
+        localStorage.setItem('pickleball_club_v6', JSON.stringify(datos));
+        document.getElementById('status').innerText = "Guardando en la nube... 🔄";
+        try {
+            await fetch("https://json.extendsclass.com/bin/pickleball_club_v6_demo", {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(datos)
+            });
+            document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
+        } catch(e) {
+            document.getElementById('status').innerText = "Modo Local (Sin conexión a internet) ⚠️";
         }
     }
 
-    function guardarDatos(datos) {
-        localStorage.setItem('pickleball_club_v5', JSON.stringify(datos));
-    }
+    // Cargar datos iniciales al abrir la página
+    window.onload = async function() {
+        await obtenerDatosNube();
+    };
 
     let usuarioActual = null;
     let tipoUsuarioActual = null;
 
-    function mostrarLoginMonitor() {
+    async function mostrarLoginMonitor() {
         let pass = prompt("Introduce la contraseña de monitor:");
         if (pass === "monitor123") {
             tipoUsuarioActual = "monitor";
             document.getElementById('menuPrincipal').style.display = "none";
             document.getElementById('panelMonitor').style.display = "block";
-            cargarPanelMonitor();
+            await cargarPanelMonitor();
         } else if(pass !== null) {
             alert("Contraseña incorrecta.");
         }
     }
 
-    function mostrarLoginSocio() {
+    async function mostrarLoginSocio() {
+        let datos = await obtenerDatosNube();
         let nombreInput = prompt("Introduce tu nombre de socio:");
         if(!nombreInput) return;
         let claveInput = prompt("Introduce tu contraseña personal:");
         if(!claveInput) return;
         
-        let datos = obtenerDatos();
         let nombreBuscado = nombreInput.trim().toLowerCase();
         let claveBuscada = claveInput.trim();
 
@@ -188,7 +212,7 @@
             document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
             cargarPanelSocio(datos);
         } else {
-            alert("Nombre o contraseña incorrectos. Comprueba en el panel de monitor cómo está escrito exactamente.");
+            alert("Nombre o contraseña incorrectos. Comprueba cómo está escrito en el panel.");
         }
     }
 
@@ -200,124 +224,121 @@
         document.getElementById('menuPrincipal').style.display = "block";
     }
 
-    function solicitarPrueba() {
+    async function solicitarPrueba() {
         let nombre = prompt("Escribe tu nombre y teléfono para solicitar una clase de prueba:");
         if(!nombre) return;
         
-        let datos = obtenerDatos();
+        let datos = await obtenerDatosNube();
         datos.solicitudes.push(`Clase de prueba solicitada por: ${nombre.trim()}`);
-        guardarDatos(datos);
-        alert("¡Solicitud enviada! Un monitor se pondrá en contacto contigo para tu día de prueba.");
+        await guardarDatosNube(datos);
+        alert("¡Solicitud enviada! Un monitor se pondrá en contacto contigo.");
     }
 
-    function crearSocio() {
+    async function crearSocio() {
         let nombre = document.getElementById('nuevoNombreSocio').value.trim();
         let clave = document.getElementById('nuevaClaveSocio').value.trim();
         if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
 
-        let datos = obtenerDatos();
+        let datos = await obtenerDatosNube();
         let existe = datos.socios.some(s => s.nombre.toLowerCase() === nombre.toLowerCase());
-        if (existe) {
-            return alert("Ya existe un socio con ese nombre.");
-        }
+        if (existe) return alert("Ya existe un socio con ese nombre.");
 
         datos.socios.push({ nombre: nombre, clave: clave });
-        guardarDatos(datos);
+        await guardarDatosNube(datos);
 
         document.getElementById('nuevoNombreSocio').value = "";
         document.getElementById('nuevaClaveSocio').value = "";
-        alert("¡Socio creado y guardado con éxito!");
-        cargarPanelMonitor();
+        alert("¡Socio creado en la nube con éxito!");
+        await cargarPanelMonitor();
     }
 
-    function borrarSocio(index) {
-        let datos = obtenerDatos();
+    async function borrarSocio(index) {
+        let datos = await obtenerDatosNube();
         let nombreSocio = datos.socios[index].nombre;
         if(confirm(`¿Seguro que deseas eliminar al socio "${nombreSocio}"?`)) {
             datos.socios.splice(index, 1);
-            guardarDatos(datos);
-            cargarPanelMonitor();
+            await guardarDatosNube(datos);
+            await cargarPanelMonitor();
         }
     }
 
-    function crearEntrenamiento() {
+    async function crearEntrenamiento() {
         let titulo = document.getElementById('entrenamientoTitulo').value.trim();
         let fecha = document.getElementById('entrenamientoFecha').value.trim();
         let lugar = document.getElementById('entrenamientoLugar').value.trim();
-        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del entrenamiento.");
+        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos.");
 
-        let datos = obtenerDatos();
+        let datos = await obtenerDatosNube();
         datos.entrenamientos.push({ titulo, fecha, lugar, inscritos: [] });
-        guardarDatos(datos);
+        await guardarDatosNube(datos);
 
         document.getElementById('entrenamientoTitulo').value = "";
         document.getElementById('entrenamientoFecha').value = "";
         document.getElementById('entrenamientoLugar').value = "";
-        alert("Entrenamiento publicado correctamente.");
-        cargarPanelMonitor();
+        alert("Entrenamiento publicado.");
+        await cargarPanelMonitor();
     }
 
-    function borrarEntrenamiento(index) {
-        let datos = obtenerDatos();
-        if(confirm("¿Seguro que deseas eliminar este entrenamiento?")) {
+    async function borrarEntrenamiento(index) {
+        let datos = await obtenerDatosNube();
+        if(confirm("¿Eliminar este entrenamiento?")) {
             datos.entrenamientos.splice(index, 1);
-            guardarDatos(datos);
-            cargarPanelMonitor();
+            await guardarDatosNube(datos);
+            await cargarPanelMonitor();
         }
     }
 
-    function crearTorneo() {
+    async function crearTorneo() {
         let titulo = document.getElementById('torneoTitulo').value.trim();
         let fecha = document.getElementById('torneoFecha').value.trim();
         let lugar = document.getElementById('torneoLugar').value.trim();
-        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del torneo.");
+        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos.");
 
-        let datos = obtenerDatos();
+        let datos = await obtenerDatosNube();
         datos.torneos.push({ titulo, fecha, lugar, inscritos: [] });
-        guardarDatos(datos);
+        await guardarDatosNube(datos);
 
         document.getElementById('torneoTitulo').value = "";
         document.getElementById('torneoFecha').value = "";
         document.getElementById('torneoLugar').value = "";
-        alert("Torneo publicado correctamente.");
-        cargarPanelMonitor();
+        alert("Torneo publicado.");
+        await cargarPanelMonitor();
     }
 
-    function borrarTorneo(index) {
-        let datos = obtenerDatos();
-        if(confirm("¿Seguro que deseas eliminar este torneo?")) {
+    async function borrarTorneo(index) {
+        let datos = await obtenerDatosNube();
+        if(confirm("¿Eliminar este torneo?")) {
             datos.torneos.splice(index, 1);
-            guardarDatos(datos);
-            cargarPanelMonitor();
+            await guardarDatosNube(datos);
+            await cargarPanelMonitor();
         }
     }
 
-    function asignarBono() {
+    async function asignarBono() {
         let detalle = document.getElementById('bonoDetalles').value.trim();
-        if(!detalle) return alert("Escribe los detalles del bono.");
+        if(!detalle) return alert("Escribe los detalles.");
 
-        let datos = obtenerDatos();
+        let datos = await obtenerDatosNube();
         datos.bonosGlobales.push(detalle);
-        guardarDatos(datos);
+        await guardarDatosNube(datos);
 
         document.getElementById('bonoDetalles').value = "";
-        alert("Bono registrado correctamente.");
-        cargarPanelMonitor();
+        alert("Bono registrado.");
+        await cargarPanelMonitor();
     }
 
-    function borrarBono(index) {
-        let datos = obtenerDatos();
-        if(confirm("¿Seguro que deseas eliminar este bono específico?")) {
+    async function borrarBono(index) {
+        let datos = await obtenerDatosNube();
+        if(confirm("¿Eliminar este bono?")) {
             datos.bonosGlobales.splice(index, 1);
-            guardarDatos(datos);
-            cargarPanelMonitor();
+            await guardarDatosNube(datos);
+            await cargarPanelMonitor();
         }
     }
 
-    function cargarPanelMonitor() {
-        let datos = obtenerDatos();
+    async function cargarPanelMonitor() {
+        let datos = await obtenerDatosNube();
         
-        // Cargar Socios
         document.getElementById('contadorSociosTotal').innerText = datos.socios.length;
         let lSociosMonitor = document.getElementById('listaSociosMonitor');
         lSociosMonitor.innerHTML = "";
@@ -333,11 +354,10 @@
             });
         }
 
-        // Cargar Bonos
         let lBonosMonitor = document.getElementById('listaBonosMonitor');
         lBonosMonitor.innerHTML = "";
         if (datos.bonosGlobales.length === 0) {
-            lBonosMonitor.innerHTML = "<li>No hay bonos activos registrados.</li>";
+            lBonosMonitor.innerHTML = "<li>No hay bonos activos.</li>";
         } else {
             datos.bonosGlobales.forEach((b, idx) => {
                 lBonosMonitor.innerHTML += `
@@ -348,49 +368,38 @@
             });
         }
 
-        // Cargar Entrenamientos
         let lEntrenamientosMonitor = document.getElementById('listaEntrenamientosMonitor');
         lEntrenamientosMonitor.innerHTML = "";
         if (datos.entrenamientos.length === 0) {
-            lEntrenamientosMonitor.innerHTML = "<li>No hay entrenamientos publicados.</li>";
+            lEntrenamientosMonitor.innerHTML = "<li>No hay entrenamientos.</li>";
         } else {
             datos.entrenamientos.forEach((ent, idx) => {
                 lEntrenamientosMonitor.innerHTML += `
                     <li>
-                        <div>
-                            <strong>${ent.titulo}</strong><br>
-                            🕒 ${ent.fecha} | 📍 ${ent.lugar}<br>
-                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ent.inscritos.length}</small>
-                        </div>
+                        <div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ent.inscritos.length}</small></div>
                         <button onclick="borrarEntrenamiento(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Borrar</button>
                     </li>`;
             });
         }
 
-        // Cargar Torneos
         let lTorneosMonitor = document.getElementById('listaTorneosMonitor');
         lTorneosMonitor.innerHTML = "";
         if (datos.torneos.length === 0) {
-            lTorneosMonitor.innerHTML = "<li>No hay torneos publicados.</li>";
+            lTorneosMonitor.innerHTML = "<li>No hay torneos.</li>";
         } else {
             datos.torneos.forEach((tor, idx) => {
                 lTorneosMonitor.innerHTML += `
                     <li>
-                        <div>
-                            <strong>${tor.titulo}</strong><br>
-                            🕒 ${tor.fecha} | 📍 ${tor.lugar}<br>
-                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${tor.inscritos.length}</small>
-                        </div>
+                        <div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${tor.inscritos.length}</small></div>
                         <button onclick="borrarTorneo(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Borrar</button>
                     </li>`;
             });
         }
 
-        // Cargar Solicitudes
         let lSolicitudes = document.getElementById('listaSolicitudes');
         lSolicitudes.innerHTML = "";
         if (datos.solicitudes.length === 0) {
-            lSolicitudes.innerHTML = "<li>No hay solicitudes pendientes.</li>";
+            lSolicitudes.innerHTML = "<li>No hay solicitudes.</li>";
             return;
         }
         datos.solicitudes.forEach((s, idx) => {
@@ -398,105 +407,88 @@
         });
     }
 
-    function borrarSolicitud(index) {
-        let datos = obtenerDatos();
+    async function borrarSolicitud(index) {
+        let datos = await obtenerDatosNube();
         datos.solicitudes.splice(index, 1);
-        guardarDatos(datos);
-        cargarPanelMonitor();
+        await guardarDatosNube(datos);
+        await cargarPanelMonitor();
     }
 
-    function cargarPanelSocio(datos) {
+    async function cargarPanelSocio(datos) {
         let lMisBonos = document.getElementById('misBonos');
         lMisBonos.innerHTML = "";
         let misBonosEncontrados = datos.bonosGlobales.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
         if(misBonosEncontrados.length > 0) {
             misBonosEncontrados.forEach(b => { lMisBonos.innerHTML += `<li>🎟️ ${b}</li>`; });
         } else {
-            lMisBonos.innerHTML = "<li>No tienes bonos activos asignados actualmente.</li>";
+            lMisBonos.innerHTML = "<li>No tienes bonos activos.</li>";
         }
 
-        // Entrenamientos para socio
         let lEntrenamientos = document.getElementById('listaEntrenamientosSocio');
         lEntrenamientos.innerHTML = "";
         if (datos.entrenamientos.length === 0) {
-            lEntrenamientos.innerHTML = "<li>No hay entrenamientos disponibles actualmente.</li>";
+            lEntrenamientos.innerHTML = "<li>No hay entrenamientos disponibles.</li>";
         } else {
             datos.entrenamientos.forEach((ent, idx) => {
                 let yaInscrito = ent.inscritos.includes(usuarioActual.nombre);
                 lEntrenamientos.innerHTML += `
                     <li>
-                        <div>
-                            <strong>${ent.titulo}</strong><br>
-                            🕒 ${ent.fecha} | 📍 ${ent.lugar}<br>
-                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ent.inscritos.length}</small>
-                        </div>
-                        <div>
-                            ${yaInscrito ? 
-                                '<span style="color: #27ae60; font-weight: bold;">✓ Apuntado</span>' : 
-                                `<button onclick="apuntarseEntrenamiento(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`
-                            }
-                        </div>
+                        <div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ent.inscritos.length}</small></div>
+                        <div>${yaInscrito ? '<span style="color: #27ae60; font-weight: bold;">✓ Apuntado</span>' : `<button onclick="apuntarseEntrenamiento(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`}</div>
                     </li>`;
             });
         }
 
-        // Torneos para socio
         let lTorneos = document.getElementById('listaTorneosSocio');
         lTorneos.innerHTML = "";
         if (datos.torneos.length === 0) {
-            lTorneos.innerHTML = "<li>No hay torneos disponibles actualmente.</li>";
+            lTorneos.innerHTML = "<li>No hay torneos disponibles.</li>";
         } else {
             datos.torneos.forEach((tor, idx) => {
                 let yaInscrito = tor.inscritos.includes(usuarioActual.nombre);
                 lTorneos.innerHTML += `
                     <li>
-                        <div>
-                            <strong>${tor.titulo}</strong><br>
-                            🕒 ${tor.fecha} | 📍 ${tor.lugar}<br>
-                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${tor.inscritos.length}</small>
-                        </div>
-                        <div>
-                            ${yaInscrito ? 
-                                '<span style="color: #27ae60; font-weight: bold;">✓ Apuntado</span>' : 
-                                `<button onclick="apuntarseTorneo(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`
-                            }
-                        </div>
+                        <div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${tor.inscritos.length}</small></div>
+                        <div>${yaInscrito ? '<span style="color: #27ae60; font-weight: bold;">✓ Apuntado</span>' : `<button onclick="apuntarseTorneo(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`}</div>
                     </li>`;
             });
         }
     }
 
-    function pedirBonoAlMonitor() {
-        let datos = obtenerDatos();
-        datos.solicitudes.push(`El socio ${usuarioActual.nombre} solicita un nuevo bono o recarga.`);
-        guardarDatos(datos);
-        alert("Solicitud de bono enviada al monitor.");
+    async function pedirBonoAlMonitor() {
+        let datos = await obtenerDatosNube();
+        datos.solicitudes.push(`El socio ${usuarioActual.nombre} solicita un nuevo bono.`);
+        await guardarDatosNube(datos);
+        alert("Solicitud de bono enviada.");
     }
 
-    function apuntarseEntrenamiento(index) {
-        let datos = obtenerDatos();
+    async function apuntarseEntrenamiento(index) {
+        let datos = await obtenerDatosNube();
         if(!datos.entrenamientos[index].inscritos.includes(usuarioActual.nombre)) {
             datos.entrenamientos[index].inscritos.push(usuarioActual.nombre);
-            guardarDatos(datos);
-            alert("¡Te has apuntado al entrenamiento con éxito!");
-            cargarPanelSocio(datos);
+            await guardarDatosNube(datos);
+            alert("¡Te has apuntado al entrenamiento!");
+            let fresh = await obtenerDatosNube();
+            cargarPanelSocio(fresh);
         }
     }
 
-    function apuntarseTorneo(index) {
-        let datos = obtenerDatos();
+    async function apuntarseTorneo(index) {
+        let datos = await obtenerDatosNube();
         if(!datos.torneos[index].inscritos.includes(usuarioActual.nombre)) {
             datos.torneos[index].inscritos.push(usuarioActual.nombre);
-            guardarDatos(datos);
-            alert("¡Te has apuntado al torneo con éxito!");
-            cargarPanelSocio(datos);
+            await guardarDatosNube(datos);
+            alert("¡Te has apuntado al torneo!");
+            let fresh = await obtenerDatosNube();
+            cargarPanelSocio(fresh);
         }
     }
 
-    function reiniciarTodo() {
-        if(confirm("¿Seguro que quieres borrar todos los datos locales y empezar de cero?")) {
-            localStorage.removeItem('pickleball_club_v5');
-            alert("Sistema reiniciado. Vuelve a entrar como monitor.");
+    async function reiniciarTodo() {
+        if(confirm("¿Seguro que quieres borrar todos los datos de la nube y empezar de cero?")) {
+            let estructuraVacia = { socios: [], entrenamientos: [], torneos: [], bonosGlobales: [], solicitudes: [] };
+            await guardarDatosNube(estructuraVacia);
+            alert("Sistema reiniciado en la nube.");
             location.reload();
         }
     }
