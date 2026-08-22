@@ -100,27 +100,34 @@
             </div>
         </section>
 
-        <!-- VISTA: MÁS -->
+        <!-- VISTA: MÁS (ACCESO A LOGIN DE MONITORES SIN BLOQUEOS) -->
         <section id="view-mas" class="view-section hidden space-y-4">
             <h2 class="text-xl font-bold text-slate-800">☰ Menú y Ajustes</h2>
-            <div class="bg-white rounded-xl shadow-sm border divide-y">
-                <button onclick="openAdminPanel()" class="w-full text-left p-4 font-semibold text-emerald-800 flex justify-between items-center">
-                    🔒 Panel de Monitores 
-                    <span id="monitor-badge-count" class="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs hidden">0</span>
-                </button>
+            
+            <!-- TARJETA ACCESO MONITORES EN PANTALLA -->
+            <div class="bg-white p-5 rounded-xl shadow-sm border space-y-3">
+                <h3 class="font-bold text-sm text-emerald-800 flex items-center gap-2">🔒 Acceso Exclusivo Monitores</h3>
+                <p class="text-xs text-slate-500">Introduce el PIN (1234) para acceder a la gestión de solicitudes:</p>
+                <input type="password" id="inputPinMonitor" placeholder="PIN de acceso" class="w-full p-3 border rounded-xl text-sm bg-slate-50 tracking-widest text-center font-bold" maxlength="4">
+                <button onclick="validarPinPantalla()" class="w-full bg-[#0f5c32] text-white p-3 rounded-xl font-bold text-sm shadow">Entrar al Panel</button>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border p-4 text-xs text-slate-500 space-y-2">
+                <p class="font-bold text-slate-700">Ayuda de instalación:</p>
+                <p>Para añadir la app a la pantalla de tu móvil y que funcione como una aplicación normal, pulsa en los ajustes de tu navegador y selecciona "Añadir a la pantalla de inicio".</p>
             </div>
         </section>
 
-        <!-- VISTA: PANEL DE MONITORES (Oculta hasta meter el PIN) -->
+        <!-- VISTA: PANEL DE MONITORES REAL -->
         <section id="view-admin" class="view-section hidden space-y-4">
             <div class="flex justify-between items-center">
                 <h2 class="text-xl font-bold text-emerald-900">🔒 Panel de Monitores</h2>
-                <button onclick="switchView('inicio')" class="text-xs bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Salir</button>
+                <button onclick="switchView('mas')" class="text-xs bg-slate-200 px-3 py-1.5 rounded-lg font-bold">Cerrar Sesión</button>
             </div>
             <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
                 <h3 class="font-bold text-sm text-slate-700">Solicitudes de Primer Día de Prueba:</h3>
                 <div id="lista-solicitudes" class="space-y-2">
-                    <!-- Aquí aparecerán los alumnos que se apunten -->
+                    <!-- Aquí se cargan dinámicamente -->
                 </div>
             </div>
         </section>
@@ -142,8 +149,6 @@
     <script>
         let players = { "Juan Pérez": 4, "María Gómez": 2 };
         let attendees = [];
-        
-        // Lista de solicitudes de prueba simulada (con datos de ejemplo para que veas cómo queda)
         let listaPruebas = [
             { nombre: "Carlos Martínez", telefono: "600111222" },
             { nombre: "Lucía Fernández", telefono: "600333444" }
@@ -216,20 +221,16 @@
 
         function actualizarAvisosMonitor() {
             const badge = document.getElementById('badge-aviso');
-            const menuBadge = document.getElementById('monitor-badge-count');
             const contenedor = document.getElementById('lista-solicitudes');
             
-            if(!badge || !menuBadge) return;
+            if(!badge) return;
 
             let count = listaPruebas.length;
             if (count > 0) {
                 badge.classList.remove('hidden');
                 badge.innerText = count;
-                menuBadge.classList.remove('hidden');
-                menuBadge.innerText = count;
             } else {
                 badge.classList.add('hidden');
-                menuBadge.classList.add('hidden');
             }
 
             if(contenedor) {
@@ -244,7 +245,7 @@
                                     <p class="font-bold text-sm text-slate-800">${item.nombre}</p>
                                     <p class="text-xs text-slate-500">📞 ${item.telefono}</p>
                                 </div>
-                                <a href="https://wa.me/35$ {item.telefono}?text=Hola%20${item.nombre},%20te%20escribimos%20desde%20el%20Club%20de%20Pickleball%20El%20Escorial%20sobre%20tu%20clase%20de%20prueba." 
+                                <a href="https://wa.me/34${item.telefono}?text=Hola%20${item.nombre},%20te%20escribimos%20desde%20el%20Club%20de%20Pickleball%20El%20Escorial." 
                                    target="_blank" 
                                    class="bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs font-bold shadow">
                                    💬 WhatsApp
@@ -256,13 +257,15 @@
             }
         }
 
-        function openAdminPanel() {
-            let pin = prompt("Introduce el PIN de monitor:");
-            if (pin === "1234") {
+        // Validación limpia directamente en pantalla (sin ventanas bloqueadas)
+        function validarPinPantalla() {
+            const pinInput = document.getElementById('inputPinMonitor').value;
+            if (pinInput === "1234") {
+                document.getElementById('inputPinMonitor').value = ''; // Limpiar campo
                 actualizarAvisosMonitor();
-                switchView('admin'); // Abre la pantalla de gestión del monitor directamente
-            } else if (pin !== null) {
-                alert("PIN incorrecto.");
+                switchView('admin'); // Abre la pantalla de gestión
+            } else {
+                alert("PIN incorrecto. Prueba con 1234");
             }
         }
 
