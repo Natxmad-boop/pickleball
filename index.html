@@ -4,12 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club de Pickleball El Escorial</title>
-    <!-- Tailwind CSS para diseño moderno -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase Client para base de datos y tiempo real -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-slate-100 font-sans pb-24">
+<body class="bg-slate-100 font-sans pb-32">
 
     <!-- CABECERA -->
     <header class="bg-[#0f5c32] text-white p-4 text-center shadow-md">
@@ -30,41 +28,36 @@
                 
                 <div class="bg-emerald-50 border-l-4 border-emerald-600 p-3 rounded-r-xl">
                     <span class="block text-xs font-bold text-emerald-800 uppercase">Próximo Entrenamiento</span>
-                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Cargando información...</span>
+                    <span class="text-sm font-semibold text-slate-700" id="home-next-training">Miércoles 19:00 - Polideportivo</span>
                 </div>
             </div>
 
-            <!-- BOTONES ACCESO RÁPIDO -->
-            <button onclick="switchView('entrenamientos')" class="w-full bg-[#0f5c32] hover:bg-[#1e824c] text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+            <button onclick="switchView('entrenamientos')" class="w-full bg-[#0f5c32] text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3">
                 🏓 ENTRENAMIENTOS
             </button>
-            <button onclick="switchView('bono')" class="w-full bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+            <button onclick="switchView('bono')" class="w-full bg-blue-600 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3">
                 🎟️ MI BONO DE 10 SESIONES
             </button>
-            <button onclick="switchView('eventos')" class="w-full bg-amber-600 hover:bg-amber-700 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+            <button onclick="switchView('eventos')" class="w-full bg-amber-600 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3">
                 🏆 TORNEOS Y EVENTOS
             </button>
-            <button onclick="switchView('prueba')" class="w-full bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3 transition">
+            <button onclick="switchView('prueba')" class="w-full bg-purple-600 text-white p-4 rounded-xl font-bold text-lg shadow flex items-center justify-center gap-3">
                 👋 PRIMER DÍA DE PRUEBA
             </button>
         </section>
 
         <!-- VISTA: ENTRENAMIENTOS -->
         <section id="view-entrenamientos" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">🏓 Entrenamientos</h2>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
-                <div class="bg-slate-100 p-3 rounded-lg text-sm font-medium text-slate-700" id="disp-location">📍 Ubicación: Polideportivo Municipal</div>
+            <h2 class="text-xl font-bold text-slate-800">🏓 Entrenamientos</h2>
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
+                <div class="bg-slate-100 p-3 rounded-lg text-sm text-slate-700">📍 Ubicación: Polideportivo Municipal</div>
                 <div class="flex justify-between text-sm py-1 border-b">
                     <span class="text-slate-500">Horario:</span>
-                    <span class="font-bold text-slate-800" id="disp-time">Miércoles 19:00 - 20:30</span>
-                </div>
-                <div class="flex justify-between text-sm py-1">
-                    <span class="text-slate-500">Monitores:</span>
-                    <span class="font-bold text-slate-800" id="disp-coaches">Equipo El Escorial</span>
+                    <span class="font-bold">Miércoles 19:00 - 20:30</span>
                 </div>
             </div>
 
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 space-y-3">
+            <div class="bg-white p-4 rounded-xl shadow-sm border space-y-3">
                 <h3 class="font-bold text-slate-700 text-sm">Apuntarme a la clase</h3>
                 <select id="selfAttendeeSelect" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                     <option value="">-- Elige tu nombre --</option>
@@ -76,9 +69,9 @@
 
         <!-- VISTA: BONO -->
         <section id="view-bono" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">🎟️ Mi Bono</h2>
-            <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 text-center space-y-3">
-                <p class="text-slate-600 text-sm">Selecciona tu nombre para ver tu tarjeta:</p>
+            <h2 class="text-xl font-bold text-slate-800">🎟️ Mi Bono</h2>
+            <div class="bg-white p-5 rounded-xl shadow-sm border text-center space-y-3">
+                <p class="text-slate-600 text-sm">Selecciona tu nombre:</p>
                 <select id="userSelect" onchange="renderUserCard()" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
                     <option value="">-- Elige un alumno --</option>
                 </select>
@@ -92,81 +85,64 @@
 
         <!-- VISTA: EVENTOS -->
         <section id="view-eventos" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">🏆 Torneos y Eventos</h2>
-            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 text-center py-8 text-slate-500">
-                <p class="text-sm">Próximamente publicaremos los nuevos torneos y eventos especiales.</p>
+            <h2 class="text-xl font-bold text-slate-800">🏆 Torneos y Eventos</h2>
+            <div class="bg-white p-4 rounded-xl shadow-sm border text-center py-8 text-slate-500">
+                <p class="text-sm">Próximamente publicaremos nuevos eventos.</p>
             </div>
         </section>
 
-        <!-- VISTA: PRUEBA (CHAT / SOLICITUD) -->
+        <!-- VISTA: PRUEBA -->
         <section id="view-prueba" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-bold text-slate-800 flex items-center gap-2">👋 Primer Día de Prueba</h2>
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 space-y-3">
-                <p class="text-sm text-slate-600">¿Quieres probar el pickleball? Rellena tus datos y los monitores recibirán el aviso al instante para contactarte.</p>
+            <h2 class="text-xl font-bold text-slate-800">👋 Primer Día de Prueba</h2>
+            <div class="bg-white p-5 rounded-2xl shadow-sm border space-y-3">
                 <input type="text" id="nombrePrueba" placeholder="Tu Nombre y Apellidos" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                <input type="tel" id="telefonoPrueba" placeholder="Teléfono (para WhatsApp)" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
-                <textarea id="mensajePrueba" placeholder="¿Tienes experiencia previa?" class="w-full p-3 border rounded-xl text-sm bg-slate-50 h-20"></textarea>
-                <button onclick="enviarSolicitudPrueba()" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm">Enviar Solicitud a Monitores</button>
+                <input type="tel" id="telefonoPrueba" placeholder="Teléfono" class="w-full p-3 border rounded-xl text-sm bg-slate-50">
+                <button onclick="enviarSolicitudPrueba()" class="w-full bg-purple-600 text-white p-3 rounded-xl font-bold text-sm">Enviar Solicitud</button>
             </div>
         </section>
 
-        <!-- VISTA: MÁS / MENÚ Y PANEL DE MONITORES -->
+        <!-- VISTA: MÁS -->
         <section id="view-mas" class="view-section hidden space-y-4">
-            <h2 class="text-xl font-bold text-slate-800">☰ Menú y Ajustes</h2>
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 divide-y">
-                <button onclick="alert('Sección de noticias en desarrollo')" class="w-full text-left p-4 font-semibold text-slate-700 flex justify-between items-center">📰 Noticias del Club <span>›</span></button>
-                <button onclick="openAdminPanel()" class="w-full text-left p-4 font-semibold text-emerald-800 flex justify-between items-center">🔒 Panel de Monitores (Avisos y Gestión) <span id="monitor-badge-count" class="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs hidden">0</span><span>›</span></button>
-                <button onclick="alert('Para instalar en Android: pulsa los tres puntos de Chrome y selecciona Añadir a pantalla de inicio.\n\nPara iPhone: pulsa el botón Compartir en Safari y selecciona Añadir a pantalla de inicio.')" class="w-full text-left p-4 font-semibold text-slate-700 flex justify-between items-center">❓ Cómo instalar la PWA <span>›</span></button>
+            <h2 class="text-xl font-bold text-slate-800">☰ Menú</h2>
+            <div class="bg-white rounded-xl shadow-sm border divide-y">
+                <button onclick="openAdminPanel()" class="w-full text-left p-4 font-semibold text-emerald-800 flex justify-between items-center">
+                    🔒 Panel de Monitores <span id="monitor-badge-count" class="bg-red-600 text-white px-2 py-0.5 rounded-full text-xs hidden">0</span>
+                </button>
             </div>
         </section>
 
     </main>
 
-    <!-- MENÚ INFERIOR FIJO (MÓVIL) CON GLOBO DE AVISO -->
-    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-2 shadow-lg max-w-md mx-auto z-50">
-        <button onclick="switchView('inicio')" class="flex flex-col items-center text-[#0f5c32] font-bold text-xs">
-            🏠 <span class="mt-1">Inicio</span>
-        </button>
-        <button onclick="switchView('entrenamientos')" class="flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
-            🏓 <span class="mt-1">Entrenar</span>
-        </button>
-        <button onclick="switchView('eventos')" class="flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
-            🏆 <span class="mt-1">Eventos</span>
-        </button>
-        <button onclick="switchView('bono')" class="flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
-            🎟️ <span class="mt-1">Bono</span>
-        </button>
-        <button onclick="switchView('mas')" class="relative flex flex-col items-center text-slate-400 hover:text-[#0f5c32] font-bold text-xs">
-            <!-- Globo de aviso flotante para monitores -->
-            <span id="badge-aviso" class="hidden absolute -top-1 right-2 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">!</span>
-            ☰ <span class="mt-1">Más</span>
+    <!-- MENÚ INFERIOR FIJO -->
+    <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 flex justify-around p-3 shadow-2xl max-w-md mx-auto z-50">
+        <button onclick="switchView('inicio')" class="flex flex-col items-center text-[#0f5c32] font-bold text-xs">🏠 Inicio</button>
+        <button onclick="switchView('entrenamientos')" class="flex flex-col items-center text-slate-500 font-bold text-xs">🏓 Entrenar</button>
+        <button onclick="switchView('eventos')" class="flex flex-col items-center text-slate-500 font-bold text-xs">🏆 Eventos</button>
+        <button onclick="switchView('bono')" class="flex flex-col items-center text-slate-500 font-bold text-xs">🎟️ Bono</button>
+        <button onclick="switchView('mas')" class="relative flex flex-col items-center text-slate-500 font-bold text-xs">
+            <span id="badge-aviso" class="hidden absolute -top-1 right-1 bg-red-600 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">!</span>
+            ☰ Más
         </button>
     </nav>
 
-    <!-- SCRIPT GENERAL DE LA APLICACIÓN -->
     <script>
         let players = { "Juan Pérez": 4, "María Gómez": 2 };
         let attendees = [];
         let solicitudesPendientes = 2;
 
         function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(section => {
-                section.classList.add('hidden');
-            });
+            document.querySelectorAll('.view-section').forEach(s => s.classList.add('hidden'));
             const target = document.getElementById('view-' + viewId);
-            if (target) {
-                target.classList.remove('hidden');
-            }
+            if (target) target.classList.remove('hidden');
             window.scrollTo(0, 0);
         }
 
         function updateSelects() {
             const uSelect = document.getElementById('userSelect');
             const selfSelect = document.getElementById('selfAttendeeSelect');
-            
+            if(!uSelect || !selfSelect) return;
             uSelect.innerHTML = '<option value="">-- Elige un alumno --</option>';
             selfSelect.innerHTML = '<option value="">-- Elige tu nombre --</option>';
-
             for (let name in players) {
                 uSelect.innerHTML += `<option value="${name}">${name}</option>`;
                 selfSelect.innerHTML += `<option value="${name}">${name}</option>`;
@@ -175,24 +151,24 @@
 
         function selfAddAttendee() {
             const name = document.getElementById('selfAttendeeSelect').value;
-            if (!name) return alert("Por favor, selecciona tu nombre.");
+            if (!name) return alert("Selecciona tu nombre.");
             if (!attendees.includes(name)) {
                 attendees.push(name);
-                alert("✅ Te has apuntado correctamente a la clase.");
+                alert("✅ Te has apuntado.");
             } else {
-                alert("Ya estás apuntado/a a esta clase.");
+                alert("Ya estás apuntado.");
             }
         }
 
         function selfRemoveAttendee() {
             const name = document.getElementById('selfAttendeeSelect').value;
-            if (!name) return alert("Por favor, selecciona tu nombre.");
+            if (!name) return alert("Selecciona tu nombre.");
             const index = attendees.indexOf(name);
             if (index !== -1) {
                 attendees.splice(index, 1);
                 alert("Te has borrado de la clase.");
             } else {
-                alert("No estás apuntado/a en esta clase.");
+                alert("No estás apuntado.");
             }
         }
 
@@ -204,14 +180,12 @@
             document.getElementById('used-count').innerText = players[name];
         }
 
-        function solicitarBono() {
-            alert("📩 Solicitud de nuevo bono enviada a los monitores.");
-        }
+        function solicitarBono() { alert("📩 Solicitud enviada."); }
 
         function enviarSolicitudPrueba() {
             const name = document.getElementById('nombrePrueba').value;
-            if(!name) { alert("Por favor, escribe tu nombre."); return; }
-            alert("✅ ¡Solicitud enviada! Los monitores han recibido tu aviso.");
+            if(!name) { alert("Escribe tu nombre."); return; }
+            alert("✅ ¡Solicitud enviada!");
             solicitudesPendientes++;
             actualizarAvisosMonitor();
             switchView('inicio');
@@ -220,6 +194,7 @@
         function actualizarAvisosMonitor() {
             const badge = document.getElementById('badge-aviso');
             const menuBadge = document.getElementById('monitor-badge-count');
+            if(!badge || !menuBadge) return;
             if (solicitudesPendientes > 0) {
                 badge.classList.remove('hidden');
                 badge.innerText = solicitudesPendientes;
@@ -234,17 +209,15 @@
         function openAdminPanel() {
             let pin = prompt("Introduce el PIN de monitor:");
             if (pin === "1234") {
-                alert(`🔒 PANEL DE MONITORES\n\nTienes ${solicitudesPendientes} solicitudes de primer día de prueba pendientes de contacto.`);
+                alert(`🔒 Tienes ${solicitudesPendientes} solicitudes pendientes.`);
             } else if (pin !== null) {
                 alert("PIN incorrecto.");
             }
         }
 
-        // Inicialización al cargar la página
         window.onload = () => {
             updateSelects();
             actualizarAvisosMonitor();
-            document.getElementById('home-next-training').innerText = "Miércoles 19:00 - Polideportivo Municipal";
         };
     </script>
 </body>
