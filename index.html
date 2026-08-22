@@ -9,12 +9,13 @@
         .container { max-width: 650px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         h1, h2, h3 { color: #2c3e50; text-align: center; }
         .section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        input, select, button { width: 100%; padding: 12px; margin-top: 6px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        input, select, textarea, button { width: 100%; padding: 12px; margin-top: 6px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
         button { background-color: #3498db; color: white; border: none; font-weight: bold; cursor: pointer; }
         button:hover { background-color: #2980b9; }
         .btn-monitor { background-color: #e67e22; }
         .btn-socio { background-color: #27ae60; }
         .btn-danger { background-color: #e74c3c; }
+        .btn-sync { background-color: #8e44ad; }
         ul { list-style: none; padding: 0; }
         li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .sync-status { text-align: center; font-size: 14px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
@@ -26,7 +27,7 @@
 
 <div class="container">
     <h1>🏓 Club de Pickleball</h1>
-    <div id="status" class="sync-status">Conectado a la Nube ☁️</div>
+    <div id="status" class="sync-status">Sistema Local Estable ⚡</div>
 
     <!-- MENÚ PRINCIPAL -->
     <div id="menuPrincipal">
@@ -44,6 +45,13 @@
         <h2>🛠️ Panel de Control - Monitor</h2>
         <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
         
+        <div class="section" style="background: #f4ecf7; padding: 10px; border-radius: 6px;">
+            <h3 style="color: #8e44ad; margin-top:0;">🔄 Sincronización Rápida entre Móviles</h3>
+            <p style="font-size: 13px; color: #555;">Usa estos botones para pasar los datos al otro móvil o actualizar cambios:</p>
+            <button class="btn-sync" onclick="exportarDatos()">📤 Copiar Datos del Club</button>
+            <button class="btn-sync" onclick="importarDatos()">📥 Pegar Datos Actualizados</button>
+        </div>
+
         <div class="section">
             <h3>👥 Registrar Nuevo Alumno / Socio</h3>
             <input type="text" id="nuevoNombreSocio" placeholder="Nombre y Apellidos">
@@ -112,60 +120,35 @@
 </div>
 
 <script>
-    // Usamos un servicio de almacenamiento compartido optimizado
-    const BIN_URL = "https://api.npoint.io/40778c43093b13783a30";
+    const STORAGE_KEY = 'pickleball_club_v11';
 
-    async function obtenerDatosNube() {
-        try {
-            let res = await fetch(BIN_URL + "?t=" + new Date().getTime());
-            if(res.ok) {
-                let json = await res.json();
-                if(json && json.socios) {
-                    localStorage.setItem('pickleball_club_v10', JSON.stringify(json));
-                    return json;
-                }
-            }
-        } catch(e) {}
-        
-        let local = localStorage.getItem('pickleball_club_v10');
-        if(local) return JSON.parse(local);
+    function obtenerDatos() {
+        let local = localStorage.getItem(STORAGE_KEY);
+        if(local) {
+            return JSON.parse(local);
+        }
         return { socios: [], entrenamientos: [], torneos: [], bonosGlobales: [], solicitudes: [] };
     }
 
-    async function guardarDatosNube(datos) {
-        localStorage.setItem('pickleball_club_v10', JSON.stringify(datos));
-        document.getElementById('status').innerText = "Sincronizando cambios... 🔄";
-        try {
-            let res = await fetch(BIN_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(datos)
-            });
-            if(res.ok) {
-                document.getElementById('status').innerText = "Sincronizado con la Nube ☁️";
-            } else {
-                document.getElementById('status').innerText = "Guardado localmente (Error de red) ⚠️";
-            }
-        } catch(e) {
-            document.getElementById('status').innerText = "Guardado localmente (Sin internet) ⚠️";
-        }
+    function guardarDatos(datos) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
     }
 
     let usuarioActual = null;
 
-    async function mostrarLoginMonitor() {
+    function mostrarLoginMonitor() {
         let pass = prompt("Introduce la contraseña de monitor:");
         if (pass === "monitor123") {
             document.getElementById('menuPrincipal').style.display = "none";
             document.getElementById('panelMonitor').style.display = "block";
-            await cargarPanelMonitor();
+            cargarPanelMonitor();
         } else if(pass !== null) {
             alert("Contraseña incorrecta.");
         }
     }
 
-    async function mostrarLoginSocio() {
-        let datos = await obtenerDatosNube();
+    function mostrarLoginSocio() {
+        let datos = obtenerDatos();
         let nombreInput = prompt("Introduce tu nombre:");
         if(!nombreInput) return;
         let claveInput = prompt("Introduce tu contraseña:");
@@ -193,115 +176,141 @@
         document.getElementById('menuPrincipal').style.display = "block";
     }
 
-    async function solicitarPrueba() {
+    function exportarDatos() {
+        let datosStr = localStorage.getItem(STORAGE_KEY) || "{}";
+        navigator.clipboard.writeText(datosStr).then(() => {
+            alert("¡Datos copiados al portapapeles! Pégaselos al otro móvil (por WhatsApp o bloc de notas).");
+        }).catch(err => {
+            prompt("Copia este texto manualmente:", datosStr);
+        });
+    }
+
+    function importarDatos() {
+        let datosStr = prompt("Pega aquí los datos copiados del otro móvil:");
+        if(!datosStr) return;
+        try {
+            let parsed = JSON.parse(datosStr);
+            if(parsed && parsed.socios) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
+                alert("¡Datos actualizados correctamente!");
+                cargarPanelMonitor();
+            } else {
+                alert("El formato no es válido.");
+            }
+        } catch(e) {
+            alert("Error al leer los datos. Asegúrate de pegar el texto completo.");
+        }
+    }
+
+    function solicitarPrueba() {
         let nombre = prompt("Escribe tu nombre y teléfono:");
         if(!nombre) return;
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         datos.solicitudes.push(`Clase de prueba: ${nombre.trim()}`);
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         alert("¡Solicitud enviada al monitor!");
     }
 
-    async function crearSocio() {
+    function crearSocio() {
         let nombre = document.getElementById('nuevoNombreSocio').value.trim();
         let clave = document.getElementById('nuevaClaveSocio').value.trim();
         if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
 
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         if (datos.socios.some(s => s.nombre.toLowerCase() === nombre.toLowerCase())) {
             return alert("Ya existe un alumno con ese nombre.");
         }
 
         datos.socios.push({ nombre: nombre, clave: clave });
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         document.getElementById('nuevoNombreSocio').value = "";
         document.getElementById('nuevaClaveSocio').value = "";
         alert("¡Alumno creado!");
-        await cargarPanelMonitor();
+        cargarPanelMonitor();
     }
 
-    async function borrarSocio(index) {
-        let datos = await obtenerDatosNube();
+    function borrarSocio(index) {
+        let datos = obtenerDatos();
         if(confirm("¿Eliminar este alumno?")) {
             datos.socios.splice(index, 1);
-            await guardarDatosNube(datos);
-            await cargarPanelMonitor();
+            guardarDatos(datos);
+            cargarPanelMonitor();
         }
     }
 
-    async function crearEntrenamiento() {
+    function crearEntrenamiento() {
         let titulo = document.getElementById('entrenamientoTitulo').value.trim();
         let fecha = document.getElementById('entrenamientoFecha').value.trim();
         let lugar = document.getElementById('entrenamientoLugar').value.trim();
         if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos.");
 
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         datos.entrenamientos.push({ titulo, fecha, lugar, inscritos: [] });
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         document.getElementById('entrenamientoTitulo').value = "";
         document.getElementById('entrenamientoFecha').value = "";
         document.getElementById('entrenamientoLugar').value = "";
         alert("Entrenamiento publicado.");
-        await cargarPanelMonitor();
+        cargarPanelMonitor();
     }
 
-    async function borrarEntrenamiento(index) {
-        let datos = await obtenerDatosNube();
+    function borrarEntrenamiento(index) {
+        let datos = obtenerDatos();
         datos.entrenamientos.splice(index, 1);
-        await guardarDatosNube(datos);
-        await cargarPanelMonitor();
+        guardarDatos(datos);
+        cargarPanelMonitor();
     }
 
-    async function crearTorneo() {
+    function crearTorneo() {
         let titulo = document.getElementById('torneoTitulo').value.trim();
         let fecha = document.getElementById('torneoFecha').value.trim();
         let lugar = document.getElementById('torneoLugar').value.trim();
         if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos.");
 
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         datos.torneos.push({ titulo, fecha, lugar, inscritos: [] });
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         document.getElementById('torneoTitulo').value = "";
         document.getElementById('torneoFecha').value = "";
         document.getElementById('torneoLugar').value = "";
         alert("Torneo publicado.");
-        await cargarPanelMonitor();
+        cargarPanelMonitor();
     }
 
-    async function borrarTorneo(index) {
-        let datos = await obtenerDatosNube();
+    function borrarTorneo(index) {
+        let datos = obtenerDatos();
         datos.torneos.splice(index, 1);
-        await guardarDatosNube(datos);
-        await cargarPanelMonitor();
+        guardarDatos(datos);
+        cargarPanelMonitor();
     }
 
-    async function asignarBono() {
+    function asignarBono() {
         let detalle = document.getElementById('bonoDetalles').value.trim();
         if(!detalle) return alert("Escribe los detalles.");
-        let datos = await obtenerDatosNube();
+        let datos = obtenerDatos();
         datos.bonosGlobales.push(detalle);
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         document.getElementById('bonoDetalles').value = "";
         alert("Bono registrado.");
-        await cargarPanelMonitor();
+        cargarPanelMonitor();
     }
 
-    async function borrarBono(index) {
-        let datos = await obtenerDatosNube();
+    function borrarBono(index) {
+        let datos = obtenerDatos();
         datos.bonosGlobales.splice(index, 1);
-        await guardarDatosNube(datos);
-        await cargarPanelMonitor();
+        guardarDatos(datos);
+        cargarPanelMonitor();
     }
 
-    async function borrarSolicitud(index) {
-        let datos = await obtenerDatosNube();
+    function borrarSolicitud(index) {
+        let datos = obtenerDatos();
         datos.solicitudes.splice(index, 1);
-        await guardarDatosNube(datos);
-        await cargarPanelMonitor();
+        guardarDatos(datos);
+        cargarPanelMonitor();
     }
 
-    async function cargarPanelMonitor() {
-        let datos = await obtenerDatosNube();
+    function cargarPanelMonitor() {
+        let datos = obtenerDatos();
         document.getElementById('contadorSociosTotal').innerText = datos.socios.length;
         
         let lSocios = document.getElementById('listaSociosMonitor');
@@ -335,7 +344,7 @@
         });
     }
 
-    async function cargarPanelSocio(datos) {
+    function cargarPanelSocio(datos) {
         let lMisBonos = document.getElementById('misBonos');
         lMisBonos.innerHTML = "";
         let misBonos = datos.bonosGlobales.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
@@ -356,30 +365,30 @@
         });
     }
 
-    async function pedirBonoAlMonitor() {
-        let datos = await obtenerDatosNube();
+    function pedirBonoAlMonitor() {
+        let datos = obtenerDatos();
         datos.solicitudes.push(`El alumno ${usuarioActual.nombre} solicita un bono.`);
-        await guardarDatosNube(datos);
+        guardarDatos(datos);
         alert("Solicitud enviada.");
     }
 
-    async function apuntarseEntrenamiento(index) {
-        let datos = await obtenerDatosNube();
+    function apuntarseEntrenamiento(index) {
+        let datos = obtenerDatos();
         if(!datos.entrenamientos[index].inscritos.includes(usuarioActual.nombre)) {
             datos.entrenamientos[index].inscritos.push(usuarioActual.nombre);
-            await guardarDatosNube(datos);
+            guardarDatos(datos);
             alert("¡Te has apuntado!");
-            cargarPanelSocio(await obtenerDatosNube());
+            cargarPanelSocio(obtenerDatos());
         }
     }
 
-    async function apuntarseTorneo(index) {
-        let datos = await obtenerDatosNube();
+    function apuntarseTorneo(index) {
+        let datos = obtenerDatos();
         if(!datos.torneos[index].inscritos.includes(usuarioActual.nombre)) {
             datos.torneos[index].inscritos.push(usuarioActual.nombre);
-            await guardarDatosNube(datos);
+            guardarDatos(datos);
             alert("¡Te has apuntado!");
-            cargarPanelSocio(await obtenerDatosNube());
+            cargarPanelSocio(obtenerDatos());
         }
     }
 </script>
