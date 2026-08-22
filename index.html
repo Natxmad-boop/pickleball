@@ -19,7 +19,7 @@
         .btn-danger { background-color: #e74c3c; }
         .btn-danger:hover { background-color: #c0392b; }
         ul { list-style: none; padding: 0; }
-        li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .sync-status { text-align: center; font-size: 14px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
         .panel { display: none; background: #fff8e1; padding: 15px; border-radius: 8px; border: 1px solid #ffe0b2; margin-bottom: 20px; }
         .card { background: #f9f9f9; border: 1px solid #ddd; padding: 10px; margin-top: 8px; border-radius: 6px; }
@@ -61,17 +61,31 @@
         </div>
 
         <div class="section">
-            <h3>🏆 Crear Evento (Torneo / Entrenamiento)</h3>
-            <input type="text" id="eventoTitulo" placeholder="Título (Ej: Torneo Relámpago / Entrenamiento)">
-            <input type="text" id="eventoFecha" placeholder="Fecha y Hora (Ej: Viernes a las 18:00)">
-            <input type="text" id="eventoLugar" placeholder="Lugar / Pista (Ej: Pista Central Club)">
-            <button onclick="crearEvento()">Publicar Evento</button>
+            <h3>🎟️ Gestión de Bonos Activos</h3>
+            <input type="text" id="bonoDetalles" placeholder="Socio y sesiones (Ej: Juan - Bono 10 sesiones)">
+            <button onclick="asignarBono()">Enviar Bono</button>
+            <h4 style="margin: 15px 0 5px 0; font-size: 14px; color: #555;">Bonos en el sistema:</h4>
+            <ul id="listaBonosMonitor"></ul>
         </div>
 
         <div class="section">
-            <h3>🎟️ Asignar Bono a Socio</h3>
-            <input type="text" id="bonoDetalles" placeholder="Socio y sesiones (Ej: Juan - Bono 10 sesiones)">
-            <button onclick="asignarBono()">Enviar Bono</button>
+            <h3>📅 Gestión de Entrenamientos</h3>
+            <input type="text" id="entrenamientoTitulo" placeholder="Título (Ej: Entrenamiento Avanzado)">
+            <input type="text" id="entrenamientoFecha" placeholder="Fecha y Hora (Ej: Martes a las 19:00)">
+            <input type="text" id="entrenamientoLugar" placeholder="Lugar / Pista">
+            <button onclick="crearEntrenamiento()">Publicar Entrenamiento</button>
+            <h4 style="margin: 15px 0 5px 0; font-size: 14px; color: #555;">Entrenamientos publicados:</h4>
+            <ul id="listaEntrenamientosMonitor"></ul>
+        </div>
+
+        <div class="section">
+            <h3>🏆 Gestión de Torneos</h3>
+            <input type="text" id="torneoTitulo" placeholder="Título (Ej: Torneo Relámpago Fin de Semana)">
+            <input type="text" id="torneoFecha" placeholder="Fecha y Hora (Ej: Sábado a las 10:00)">
+            <input type="text" id="torneoLugar" placeholder="Lugar / Pista">
+            <button onclick="crearTorneo()">Publicar Torneo</button>
+            <h4 style="margin: 15px 0 5px 0; font-size: 14px; color: #555;">Torneos publicados:</h4>
+            <ul id="listaTorneosMonitor"></ul>
         </div>
 
         <div class="section">
@@ -97,8 +111,13 @@
         </div>
 
         <div class="section">
-            <h3>📅 Eventos Disponibles (Apúntate y ve inscritos)</h3>
-            <ul id="listaEventosSocio"></ul>
+            <h3>📅 Entrenamientos Disponibles</h3>
+            <ul id="listaEntrenamientosSocio"></ul>
+        </div>
+
+        <div class="section">
+            <h3>🏆 Torneos Disponibles</h3>
+            <ul id="listaTorneosSocio"></ul>
         </div>
     </div>
 
@@ -106,26 +125,30 @@
 
 <script>
     function obtenerDatos() {
-        let datos = localStorage.getItem('pickleball_club_v2');
+        let datos = localStorage.getItem('pickleball_club_v5');
         if (!datos) {
             let estructuraInicial = {
                 socios: [],
-                eventos: [],
+                entrenamientos: [],
+                torneos: [],
                 bonosGlobales: [],
                 solicitudes: []
             };
-            localStorage.setItem('pickleball_club_v2', JSON.stringify(estructuraInicial));
+            localStorage.setItem('pickleball_club_v5', JSON.stringify(estructuraInicial));
             return estructuraInicial;
         }
         try {
-            return JSON.parse(datos);
+            let parsed = JSON.parse(datos);
+            if(!parsed.entrenamientos) parsed.entrenamientos = parsed.eventos || [];
+            if(!parsed.torneos) parsed.torneos = [];
+            return parsed;
         } catch(e) {
-            return { socios: [], eventos: [], bonosGlobales: [], solicitudes: [] };
+            return { socios: [], entrenamientos: [], torneos: [], bonosGlobales: [], solicitudes: [] };
         }
     }
 
     function guardarDatos(datos) {
-        localStorage.setItem('pickleball_club_v2', JSON.stringify(datos));
+        localStorage.setItem('pickleball_club_v5', JSON.stringify(datos));
     }
 
     let usuarioActual = null;
@@ -193,7 +216,6 @@
         if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
 
         let datos = obtenerDatos();
-        
         let existe = datos.socios.some(s => s.nombre.toLowerCase() === nombre.toLowerCase());
         if (existe) {
             return alert("Ya existe un socio con ese nombre.");
@@ -208,20 +230,66 @@
         cargarPanelMonitor();
     }
 
-    function crearEvento() {
-        let titulo = document.getElementById('eventoTitulo').value.trim();
-        let fecha = document.getElementById('eventoFecha').value.trim();
-        let lugar = document.getElementById('eventoLugar').value.trim();
-        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del evento.");
+    function borrarSocio(index) {
+        let datos = obtenerDatos();
+        let nombreSocio = datos.socios[index].nombre;
+        if(confirm(`¿Seguro que deseas eliminar al socio "${nombreSocio}"?`)) {
+            datos.socios.splice(index, 1);
+            guardarDatos(datos);
+            cargarPanelMonitor();
+        }
+    }
+
+    function crearEntrenamiento() {
+        let titulo = document.getElementById('entrenamientoTitulo').value.trim();
+        let fecha = document.getElementById('entrenamientoFecha').value.trim();
+        let lugar = document.getElementById('entrenamientoLugar').value.trim();
+        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del entrenamiento.");
 
         let datos = obtenerDatos();
-        datos.eventos.push({ titulo, fecha, lugar, inscritos: [] });
+        datos.entrenamientos.push({ titulo, fecha, lugar, inscritos: [] });
         guardarDatos(datos);
 
-        document.getElementById('eventoTitulo').value = "";
-        document.getElementById('eventoFecha').value = "";
-        document.getElementById('eventoLugar').value = "";
-        alert("Evento publicado correctamente.");
+        document.getElementById('entrenamientoTitulo').value = "";
+        document.getElementById('entrenamientoFecha').value = "";
+        document.getElementById('entrenamientoLugar').value = "";
+        alert("Entrenamiento publicado correctamente.");
+        cargarPanelMonitor();
+    }
+
+    function borrarEntrenamiento(index) {
+        let datos = obtenerDatos();
+        if(confirm("¿Seguro que deseas eliminar este entrenamiento?")) {
+            datos.entrenamientos.splice(index, 1);
+            guardarDatos(datos);
+            cargarPanelMonitor();
+        }
+    }
+
+    function crearTorneo() {
+        let titulo = document.getElementById('torneoTitulo').value.trim();
+        let fecha = document.getElementById('torneoFecha').value.trim();
+        let lugar = document.getElementById('torneoLugar').value.trim();
+        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos del torneo.");
+
+        let datos = obtenerDatos();
+        datos.torneos.push({ titulo, fecha, lugar, inscritos: [] });
+        guardarDatos(datos);
+
+        document.getElementById('torneoTitulo').value = "";
+        document.getElementById('torneoFecha').value = "";
+        document.getElementById('torneoLugar').value = "";
+        alert("Torneo publicado correctamente.");
+        cargarPanelMonitor();
+    }
+
+    function borrarTorneo(index) {
+        let datos = obtenerDatos();
+        if(confirm("¿Seguro que deseas eliminar este torneo?")) {
+            datos.torneos.splice(index, 1);
+            guardarDatos(datos);
+            cargarPanelMonitor();
+        }
     }
 
     function asignarBono() {
@@ -234,22 +302,91 @@
 
         document.getElementById('bonoDetalles').value = "";
         alert("Bono registrado correctamente.");
+        cargarPanelMonitor();
+    }
+
+    function borrarBono(index) {
+        let datos = obtenerDatos();
+        if(confirm("¿Seguro que deseas eliminar este bono específico?")) {
+            datos.bonosGlobales.splice(index, 1);
+            guardarDatos(datos);
+            cargarPanelMonitor();
+        }
     }
 
     function cargarPanelMonitor() {
         let datos = obtenerDatos();
         
+        // Cargar Socios
         document.getElementById('contadorSociosTotal').innerText = datos.socios.length;
         let lSociosMonitor = document.getElementById('listaSociosMonitor');
         lSociosMonitor.innerHTML = "";
         if (datos.socios.length === 0) {
             lSociosMonitor.innerHTML = "<li>No hay socios registrados todavía.</li>";
         } else {
-            datos.socios.forEach(s => {
-                lSociosMonitor.innerHTML += `<li>👤 <strong>${s.nombre}</strong> <span style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 14px;">Clave: <code>${s.clave}</code></span></li>`;
+            datos.socios.forEach((s, idx) => {
+                lSociosMonitor.innerHTML += `
+                    <li>
+                        <span>👤 <strong>${s.nombre}</strong> <span style="background: #e2e8f0; padding: 4px 8px; border-radius: 4px; font-size: 14px;">Clave: <code>${s.clave}</code></span></span>
+                        <button onclick="borrarSocio(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Borrar Socio</button>
+                    </li>`;
             });
         }
 
+        // Cargar Bonos
+        let lBonosMonitor = document.getElementById('listaBonosMonitor');
+        lBonosMonitor.innerHTML = "";
+        if (datos.bonosGlobales.length === 0) {
+            lBonosMonitor.innerHTML = "<li>No hay bonos activos registrados.</li>";
+        } else {
+            datos.bonosGlobales.forEach((b, idx) => {
+                lBonosMonitor.innerHTML += `
+                    <li>
+                        <span>🎟️ ${b}</span>
+                        <button onclick="borrarBono(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Eliminar</button>
+                    </li>`;
+            });
+        }
+
+        // Cargar Entrenamientos
+        let lEntrenamientosMonitor = document.getElementById('listaEntrenamientosMonitor');
+        lEntrenamientosMonitor.innerHTML = "";
+        if (datos.entrenamientos.length === 0) {
+            lEntrenamientosMonitor.innerHTML = "<li>No hay entrenamientos publicados.</li>";
+        } else {
+            datos.entrenamientos.forEach((ent, idx) => {
+                lEntrenamientosMonitor.innerHTML += `
+                    <li>
+                        <div>
+                            <strong>${ent.titulo}</strong><br>
+                            🕒 ${ent.fecha} | 📍 ${ent.lugar}<br>
+                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ent.inscritos.length}</small>
+                        </div>
+                        <button onclick="borrarEntrenamiento(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Borrar</button>
+                    </li>`;
+            });
+        }
+
+        // Cargar Torneos
+        let lTorneosMonitor = document.getElementById('listaTorneosMonitor');
+        lTorneosMonitor.innerHTML = "";
+        if (datos.torneos.length === 0) {
+            lTorneosMonitor.innerHTML = "<li>No hay torneos publicados.</li>";
+        } else {
+            datos.torneos.forEach((tor, idx) => {
+                lTorneosMonitor.innerHTML += `
+                    <li>
+                        <div>
+                            <strong>${tor.titulo}</strong><br>
+                            🕒 ${tor.fecha} | 📍 ${tor.lugar}<br>
+                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${tor.inscritos.length}</small>
+                        </div>
+                        <button onclick="borrarTorneo(${idx})" style="width:auto; padding:5px 10px; background:#e74c3c;">Borrar</button>
+                    </li>`;
+            });
+        }
+
+        // Cargar Solicitudes
         let lSolicitudes = document.getElementById('listaSolicitudes');
         lSolicitudes.innerHTML = "";
         if (datos.solicitudes.length === 0) {
@@ -278,30 +415,55 @@
             lMisBonos.innerHTML = "<li>No tienes bonos activos asignados actualmente.</li>";
         }
 
-        let lEventos = document.getElementById('listaEventosSocio');
-        lEventos.innerHTML = "";
-        if (datos.eventos.length === 0) {
-            lEventos.innerHTML = "<li>No hay eventos o entrenamientos publicados todavía.</li>";
-            return;
+        // Entrenamientos para socio
+        let lEntrenamientos = document.getElementById('listaEntrenamientosSocio');
+        lEntrenamientos.innerHTML = "";
+        if (datos.entrenamientos.length === 0) {
+            lEntrenamientos.innerHTML = "<li>No hay entrenamientos disponibles actualmente.</li>";
+        } else {
+            datos.entrenamientos.forEach((ent, idx) => {
+                let yaInscrito = ent.inscritos.includes(usuarioActual.nombre);
+                lEntrenamientos.innerHTML += `
+                    <li>
+                        <div>
+                            <strong>${ent.titulo}</strong><br>
+                            🕒 ${ent.fecha} | 📍 ${ent.lugar}<br>
+                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ent.inscritos.length}</small>
+                        </div>
+                        <div>
+                            ${yaInscrito ? 
+                                '<span style="color: #27ae60; font-weight: bold;">✓ Apuntado</span>' : 
+                                `<button onclick="apuntarseEntrenamiento(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`
+                            }
+                        </div>
+                    </li>`;
+            });
         }
-        
-        datos.eventos.forEach((ev, idx) => {
-            let yaInscrito = ev.inscritos.includes(usuarioActual.nombre);
-            lEventos.innerHTML += `
-                <li>
-                    <div>
-                        <strong>${ev.titulo}</strong><br>
-                        🕒 ${ev.fecha} | 📍 ${ev.lugar}<br>
-                        <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${ev.inscritos.length} personas</small>
-                    </div>
-                    <div>
-                        ${yaInscrito ? 
-                            '<span style="color: #27ae60; font-weight: bold;">✓ Ya apuntado</span>' : 
-                            `<button onclick="apuntarseEvento(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`
-                        }
-                    </div>
-                </li>`;
-        });
+
+        // Torneos para socio
+        let lTorneos = document.getElementById('listaTorneosSocio');
+        lTorneos.innerHTML = "";
+        if (datos.torneos.length === 0) {
+            lTorneos.innerHTML = "<li>No hay torneos disponibles actualmente.</li>";
+        } else {
+            datos.torneos.forEach((tor, idx) => {
+                let yaInscrito = tor.inscritos.includes(usuarioActual.nombre);
+                lTorneos.innerHTML += `
+                    <li>
+                        <div>
+                            <strong>${tor.titulo}</strong><br>
+                            🕒 ${tor.fecha} | 📍 ${tor.lugar}<br>
+                            <small style="color: #27ae60; font-weight: bold;">👥 Inscritos: ${tor.inscritos.length}</small>
+                        </div>
+                        <div>
+                            ${yaInscrito ? 
+                                '<span style="color: #27ae60; font-weight: bold;">✓ Apuntado</span>' : 
+                                `<button onclick="apuntarseTorneo(${idx})" style="width:auto; padding:8px 12px;">Apuntarse</button>`
+                            }
+                        </div>
+                    </li>`;
+            });
+        }
     }
 
     function pedirBonoAlMonitor() {
@@ -311,19 +473,29 @@
         alert("Solicitud de bono enviada al monitor.");
     }
 
-    function apuntarseEvento(indexEvento) {
+    function apuntarseEntrenamiento(index) {
         let datos = obtenerDatos();
-        if(!datos.eventos[indexEvento].inscritos.includes(usuarioActual.nombre)) {
-            datos.eventos[indexEvento].inscritos.push(usuarioActual.nombre);
+        if(!datos.entrenamientos[index].inscritos.includes(usuarioActual.nombre)) {
+            datos.entrenamientos[index].inscritos.push(usuarioActual.nombre);
             guardarDatos(datos);
-            alert("¡Te has apuntado con éxito!");
+            alert("¡Te has apuntado al entrenamiento con éxito!");
+            cargarPanelSocio(datos);
+        }
+    }
+
+    function apuntarseTorneo(index) {
+        let datos = obtenerDatos();
+        if(!datos.torneos[index].inscritos.includes(usuarioActual.nombre)) {
+            datos.torneos[index].inscritos.push(usuarioActual.nombre);
+            guardarDatos(datos);
+            alert("¡Te has apuntado al torneo con éxito!");
             cargarPanelSocio(datos);
         }
     }
 
     function reiniciarTodo() {
         if(confirm("¿Seguro que quieres borrar todos los datos locales y empezar de cero?")) {
-            localStorage.removeItem('pickleball_club_v2');
+            localStorage.removeItem('pickleball_club_v5');
             alert("Sistema reiniciado. Vuelve a entrar como monitor.");
             location.reload();
         }
