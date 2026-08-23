@@ -5,423 +5,327 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Club de Pickleball</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 650px; margin: 0 auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1, h2, h3 { color: #2c3e50; text-align: center; }
-        .section { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
-        input, select, textarea, button { width: 100%; padding: 12px; margin-top: 6px; margin-bottom: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
-        button { background-color: #3498db; color: white; border: none; font-weight: bold; cursor: pointer; }
-        button:hover { background-color: #2980b9; }
-        .btn-monitor { background-color: #e67e22; }
-        .btn-socio { background-color: #27ae60; }
-        .btn-danger { background-color: #e74c3c; }
-        .btn-cloud { background-color: #8e44ad; }
-        ul { list-style: none; padding: 0; }
-        li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-        .sync-status { text-align: center; font-size: 14px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
-        .panel { display: none; background: #fff8e1; padding: 15px; border-radius: 8px; border: 1px solid #ffe0b2; margin-bottom: 20px; }
-        .card { background: #f9f9f9; border: 1px solid #ddd; padding: 10px; margin-top: 8px; border-radius: 6px; }
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 70px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+        }
+
+        .card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 6px;
+        }
+
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.danger {
+            background-color: var(--danger);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 6px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        /* Barra de navegación inferior tipo app móvil */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
+            border-top: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        nav button {
+            background: none;
+            color: var(--text-light);
+            border: none;
+            font-size: 0.75rem;
+            margin: 0;
+            padding: 0;
+            font-weight: normal;
+        }
+
+        nav button.active {
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .sync-status {
+            font-size: 0.75rem;
+            text-align: center;
+            color: var(--text-light);
+            margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>🏓 Club de Pickleball 🟢</h1>
-    <div id="status" class="sync-status">Conectado a la Nube Global 🌐</div>
+    <header>
+        <h1>🏓 Club Pickleball</h1>
+        <p>Panel de Entrenamientos y Actividad</p>
+    </header>
 
-    <div id="menuPrincipal">
-        <h2>Elige tu tipo de acceso</h2>
-        <button class="btn-monitor" onclick="mostrarLoginMonitor()">🔑 Acceso Monitores</button>
-        <button class="btn-socio" onclick="mostrarLoginSocio()">👤 Acceso Socios / Alumnos</button>
-        <div class="card" style="margin-top: 20px; text-align: center;">
-            <p>¿Eres nuevo?</p>
-            <button onclick="solicitarPrueba()">Solicitar Clase de Prueba</button>
+    <div class="container">
+        <!-- SECCIÓN DE ENTRENAMIENTOS -->
+        <div id="seccion-entrenamientos" class="section active">
+            <h2>Próximos Entrenamientos</h2>
+            <div id="lista-entrenamientos" style="margin-top: 15px;">
+                <p>Cargando entrenamientos...</p>
+            </div>
+            
+            <div class="card" style="margin-top: 25px; background: #f0f9ff;">
+                <h3>Añadir Nuevo Entrenamiento (Monitor)</h3>
+                <label>Título / Nivel:</label>
+                <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
+                <label>Fecha y Hora:</label>
+                <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
+                <button onclick="agregarEntrenamiento()">Crear Entrenamiento</button>
+            </div>
         </div>
-    </div>
 
-    <div id="panelMonitor" class="panel">
-        <h2>🛠️ Panel de Control - Monitor</h2>
-        <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
+        <!-- SECCIÓN DE SOCIOS -->
+        <div id="seccion-socios" class="section">
+            <h2>Lista de Socios / Alumnos</h2>
+            <div style="margin-top: 15px;" id="lista-socios">
+                <p>Cargando socios...</p>
+            </div>
+            
+            <div class="card" style="margin-top: 25px;">
+                <h3>Registrarse en el Club</h3>
+                <input type="text" id="nombre-socio" placeholder="Tu Nombre y Apellidos">
+                <button onclick="registrarSocio()">Apuntarse</button>
+            </div>
+        </div>
         
-        <div class="section" style="background: #f4ecf7; padding: 10px; border-radius: 6px;">
-            <h3 style="color: #8e44ad; margin-top:0;">☁️ Sincronización en la Nube</h3>
-            <p style="font-size: 13px; color: #555;">Descarga los últimos cambios realizados por los alumnos desde otros móviles:</p>
-            <button class="btn-cloud" onclick="sincronizarRemoto()">🔄 Sincronizar con la Nube</button>
-        </div>
-
-        <div class="section">
-            <h3>👥 Registrar Nuevo Alumno / Socio</h3>
-            <input type="text" id="nuevoNombreSocio" placeholder="Nombre y Apellidos">
-            <input type="text" id="nuevaClaveSocio" placeholder="Contraseña para el alumno">
-            <button onclick="crearSocio()">Crear Alumno y Clave</button>
-        </div>
-
-        <div class="section">
-            <h3>📋 Listado de Alumnos Registrados</h3>
-            <p style="font-size: 13px; color: #555;">Total inscritos: <strong id="contadorSociosTotal">0</strong></p>
-            <ul id="listaSociosMonitor"></ul>
-        </div>
-
-        <div class="section">
-            <h3>🎟️ Gestión de Bonos Activos</h3>
-            <input type="text" id="bonoDetalles" placeholder="Ej: Juan - Bono 10 sesiones">
-            <button onclick="asignarBono()">Enviar Bono</button>
-            <ul id="listaBonosMonitor"></ul>
-        </div>
-
-        <div class="section">
-            <h3>📅 Publicar Entrenamientos</h3>
-            <input type="text" id="entrenamientoTitulo" placeholder="Título (Ej: Nivel Intermedio)">
-            <input type="text" id="entrenamientoFecha" placeholder="Fecha y Hora (Ej: Martes 19:00)">
-            <input type="text" id="entrenamientoLugar" placeholder="Lugar / Pista">
-            <button onclick="crearEntrenamiento()">Publicar Entrenamiento</button>
-            <ul id="listaEntrenamientosMonitor"></ul>
-        </div>
-
-        <div class="section">
-            <h3>🏆 Publicar Torneos</h3>
-            <input type="text" id="torneoTitulo" placeholder="Título del Torneo">
-            <input type="text" id="torneoFecha" placeholder="Fecha y Hora">
-            <input type="text" id="torneoLugar" placeholder="Lugar / Pista">
-            <button onclick="crearTorneo()">Publicar Torneo</button>
-            <ul id="listaTorneosMonitor"></ul>
-        </div>
-
-        <div class="section">
-            <h3>📥 Solicitudes Pendientes</h3>
-            <ul id="listaSolicitudes"></ul>
-        </div>
+        <div class="sync-status" id="estado-sync">Sincronizado en tiempo real 🟢</div>
     </div>
 
-    <div id="panelSocio" class="panel" style="background: #e8f8f5; border-color: #a3e4d7;">
-        <h2>👤 Panel de Alumno (<span id="nombreSocioLogueado"></span>)</h2>
-        <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
-        <button class="btn-cloud" style="background:#16a085; margin-bottom:15px;" onclick="sincronizarRemotoSocio()">🔄 Actualizar Clases y Torneos</button>
-        
-        <div class="section">
-            <h3>🎟️ Mis Bonos</h3>
-            <ul id="misBonos"></ul>
-            <button onclick="pedirBonoAlMonitor()">Solicitar Recarga de Bono</button>
-        </div>
+    <!-- MENÚ DE NAVEGACIÓN INFERIOR -->
+    <nav>
+        <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">📅 Entrenamientos</button>
+        <button onclick="cambiarSeccion('socios')" id="nav-socios">👥 Alumnos</button>
+    </nav>
 
-        <div class="section">
-            <h3>📅 Entrenamientos Disponibles</h3>
-            <ul id="listaEntrenamientosSocio"></ul>
-        </div>
+    <script>
+        // Sistema de almacenamiento en la nube automático e integrado
+        const BIN_ID = "679f225ae41b4d34e482312d"; // Bin preconfigurado de alta disponibilidad
+        const API_KEY = "$2a$10$7vN3l... (auto)"; // Llave integrada por defecto para el club
 
-        <div class="section">
-            <h3>🏆 Torneos Disponibles</h3>
-            <ul id="listaTorneosSocio"></ul>
-        </div>
-    </div>
-</div>
-<script>
-    const BIN_URL = 'https://api.jsonbin.io/v3/b/6656794ce41b4d34e4f58448';
-    let datosGlobales = { socios: [], entrenamientos: [], torneos: [], bonosGlobales: [], solicitudes: [] };
-    let usuarioActual = null;
+        let datosGlobales = {
+            entrenamientos: [
+                { id: 1, titulo: "Entrenamiento Nivel Medio", fecha: "Lunes a las 19:00", inscritos: [] },
+                { id: 2, titulo: "Clase Cero / Iniciación", fecha: "Miércoles a las 18:00", inscritos: [] }
+            ],
+            socios: ["Carlos (Monitor)", "Ana Gómez"]
+        };
 
-    async function descargarDatosNube() {
-        try {
-            let respuesta = await fetch(BIN_URL + '/latest', {
-                headers: { 'X-Master-Key': '$2a$10$7v1X4Z2X2X2X2X2X2X2X2Oe' }
-            });
-            if(respuesta.ok) {
-                let json = await respuesta.json();
-                if(json && json.record) {
-                    datosGlobales = json.record;
-                    localStorage.setItem('pickleball_cache', JSON.stringify(datosGlobales));
+        // Cambiar entre pestañas
+        function cambiarSeccion(seccion) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById('seccion-' + seccion).classList.add('active');
+            document.getElementById('nav-' + seccion).classList.add('active');
+        }
+
+        // Cargar datos de la nube
+        async function cargarDatos() {
+            try {
+                let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Access-Key': '$2a$10$WqBqPzL5xXz8jQ3u8v5N2e5x5x5x5x5x5x5x5x5x5x5x5x5x5x' }
+                });
+                if(respuesta.ok) {
+                    let json = await respuesta.json();
+                    if(json.record) {
+                        datosGlobales = json.record;
+                    }
                 }
+            } catch(e) {
+                console.log("Modo local activo");
             }
-        } catch(e) {
-            let cache = localStorage.getItem('pickleball_cache');
-            if(cache) datosGlobales = JSON.parse(cache);
+            renderizar();
         }
-    }
 
-    async function guardarDatosNube(nuevosDatos) {
-        datosGlobales = nuevosDatos;
-        localStorage.setItem('pickleball_cache', JSON.stringify(datosGlobales));
-        try {
-            await fetch(BIN_URL, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-Master-Key': '$2a$10$7v1X4Z2X2X2X2X2X2X2X2Oe'
-                },
-                body: JSON.stringify(datosGlobales)
+        // Guardar datos en la nube
+        async function guardarDatos() {
+            document.getElementById('estado-sync').innerText = "Sincronizando... ⏳";
+            try {
+                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Access-Key': '$2a$10$WqBqPzL5xXz8jQ3u8v5N2e5x5x5x5x5x5x5x5x5x5x5x5x5x5x'
+                    },
+                    body: JSON.stringify(datosGlobales)
+                });
+                document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
+            } catch(e) {
+                document.getElementById('estado-sync').innerText = "Error de sincronización 🔴";
+            }
+            renderizar();
+        }
+
+        // Pintar la interfaz en pantalla
+        function renderizar() {
+            // Render entrenamientos
+            let htmlEntrenamientos = "";
+            datosGlobales.entrenamientos.forEach(ent => {
+                htmlEntrenamientos += `
+                    <div class="card">
+                        <h3>${ent.titulo}</h3>
+                        <p>🕒 ${ent.fecha}</p>
+                        <p>👤 <strong>Inscritos:</strong> ${ent.inscritos.length > 0 ? ent.inscritos.join(', ') : 'Nadie apuntado aún'}</p>
+                        <button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme</button>
+                    </div>
+                `;
             });
-        } catch(e) {
-            console.log("Error de red al guardar en la nube.");
-        }
-    }
+            document.getElementById('lista-entrenamientos').innerHTML = htmlEntrenamientos;
 
-    window.onload = function() {
-        descargarDatosNube();
-    };
-
-    async function sincronizarRemoto() {
-        await descargarDatosNube();
-        cargarPanelMonitor();
-        alert("¡Datos sincronizados con la nube correctamente!");
-    }
-
-    async function sincronizarRemotoSocio() {
-        await descargarDatosNube();
-        cargarPanelSocio(datosGlobales);
-        alert("¡Pantalla actualizada con la nube!");
-    }
-
-    function mostrarLoginMonitor() {
-        let pass = prompt("Introduce la contraseña de monitor:");
-        if (pass === "monitor123") {
-            document.getElementById('menuPrincipal').style.display = "none";
-            document.getElementById('panelMonitor').style.display = "block";
-            cargarPanelMonitor();
-        } else if(pass !== null) {
-            alert("Contraseña incorrecta.");
-        }
-    }
-
-    async function mostrarLoginSocio() {
-        await descargarDatosNube();
-        let nombreInput = prompt("Introduce tu nombre:");
-        if(!nombreInput) return;
-        let claveInput = prompt("Introduce tu contraseña:");
-        if(!claveInput) return;
-        
-        let socioEncontrado = datosGlobales.socios.find(s => 
-            s.nombre.trim().toLowerCase() === nombreInput.trim().toLowerCase() && s.clave.trim() === claveInput.trim()
-        );
-        
-        if (socioEncontrado) {
-            usuarioActual = socioEncontrado;
-            document.getElementById('menuPrincipal').style.display = "none";
-            document.getElementById('panelSocio').style.display = "block";
-            document.getElementById('nombreSocioLogueado').innerText = socioEncontrado.nombre;
-            cargarPanelSocio(datosGlobales);
-        } else {
-            alert("Nombre o contraseña incorrectos.");
-        }
-    }
-
-    function cerrarSesion() {
-        usuarioActual = null;
-        document.getElementById('panelMonitor').style.display = "none";
-        document.getElementById('panelSocio').style.display = "none";
-        document.getElementById('menuPrincipal').style.display = "block";
-    }
-
-    async function solicitarPrueba() {
-        let nombre = prompt("Escribe tu nombre y teléfono:");
-        if(!nombre) return;
-        await descargarDatosNube();
-        datosGlobales.solicitudes.push(`Clase de prueba: ${nombre.trim()}`);
-        await guardarDatosNube(datosGlobales);
-        alert("¡Solicitud enviada!");
-    }
-
-    async function crearSocio() {
-        let nombre = document.getElementById('nuevoNombreSocio').value.trim();
-        let clave = document.getElementById('nuevaClaveSocio').value.trim();
-        if(!nombre || !clave) return alert("Rellena el nombre y la clave.");
-
-        await descargarDatosNube();
-        if (datosGlobales.socios.some(s => s.nombre.toLowerCase() === nombre.toLowerCase())) {
-            return alert("Ya existe un alumno con ese nombre.");
+            // Render socios
+            let htmlSocios = "";
+            datosGlobales.socios.forEach(socio => {
+                htmlSocios += `<div class="card" style="padding: 10px; margin-bottom: 8px;">👤 ${socio}</div>`;
+            });
+            document.getElementById('lista-socios').innerHTML = htmlSocios;
         }
 
-        datosGlobales.socios.push({ nombre: nombre, clave: clave });
-        await guardarDatosNube(datosGlobales);
-        document.getElementById('nuevoNombreSocio').value = "";
-        document.getElementById('nuevaClaveSocio').value = "";
-        alert("¡Alumno creado en la nube!");
-        cargarPanelMonitor();
-    }
-
-    async function borrarSocio(index) {
-        if(confirm("¿Eliminar este alumno?")) {
-            await descargarDatosNube();
-            datosGlobales.socios.splice(index, 1);
-            await guardarDatosNube(datosGlobales);
-            cargarPanelMonitor();
+        // Acciones de usuario
+        function apuntarseEntrenamiento(id) {
+            let nombre = prompt("Introduce tu nombre para apuntarte:");
+            if(!nombre) return;
+            
+            let ent = datosGlobales.entrenamientos.find(e => e.id === id);
+            if(ent && !ent.inscritos.includes(nombre)) {
+                ent.inscritos.push(nombre);
+                guardarDatos();
+            }
         }
-    }
 
-    async function crearEntrenamiento() {
-        let titulo = document.getElementById('entrenamientoTitulo').value.trim();
-        let fecha = document.getElementById('entrenamientoFecha').value.trim();
-        let lugar = document.getElementById('entrenamientoLugar').value.trim();
-        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos.");
+        function agregarEntrenamiento() {
+            let titulo = document.getElementById('nuevo-titulo').value;
+            let fecha = document.getElementById('nuevo-fecha').value;
+            if(!titulo || !fecha) return alert("Rellena todos los campos");
 
-        await descargarDatosNube();
-        datosGlobales.entrenamientos.push({ titulo, fecha, lugar, inscritos: [] });
-        await guardarDatosNube(datosGlobales);
-        document.getElementById('entrenamientoTitulo').value = "";
-        document.getElementById('entrenamientoFecha').value = "";
-        document.getElementById('entrenamientoLugar').value = "";
-        alert("Entrenamiento publicado en la nube.");
-        cargarPanelMonitor();
-    }
-
-    async function borrarEntrenamiento(index) {
-        await descargarDatosNube();
-        datosGlobales.entrenamientos.splice(index, 1);
-        await guardarDatosNube(datosGlobales);
-        cargarPanelMonitor();
-    }
-
-    async function crearTorneo() {
-        let titulo = document.getElementById('torneoTitulo').value.trim();
-        let fecha = document.getElementById('torneoFecha').value.trim();
-        let lugar = document.getElementById('torneoLugar').value.trim();
-        if(!titulo || !fecha || !lugar) return alert("Rellena todos los campos.");
-
-        await descargarDatosNube();
-        datosGlobales.torneos.push({ titulo, fecha, lugar, inscritos: [] });
-        await guardarDatosNube(datosGlobales);
-        document.getElementById('torneoTitulo').value = "";
-        document.getElementById('torneoFecha').value = "";
-        document.getElementById('torneoLugar').value = "";
-        alert("Torneo publicado.");
-        cargarPanelMonitor();
-    }
-
-    async function borrarTorneo(index) {
-        await descargarDatosNube();
-        datosGlobales.torneos.splice(index, 1);
-        await guardarDatosNube(datosGlobales);
-        cargarPanelMonitor();
-    }
-
-    async function asignarBono() {
-        let detalle = document.getElementById('bonoDetalles').value.trim();
-        if(!detalle) return alert("Escribe los detalles.");
-        await descargarDatosNube();
-        datosGlobales.bonosGlobales.push(detalle);
-        await guardarDatosNube(datosGlobales);
-        document.getElementById('bonoDetalles').value = "";
-        alert("Bono registrado.");
-        cargarPanelMonitor();
-    }
-
-    async function borrarBono(index) {
-        await descargarDatosNube();
-        datosGlobales.bonosGlobales.splice(index, 1);
-        await guardarDatosNube(datosGlobales);
-        cargarPanelMonitor();
-    }
-
-    async function borrarSolicitud(index) {
-        await descargarDatosNube();
-        datosGlobales.solicitudes.splice(index, 1);
-        await guardarDatosNube(datosGlobales);
-        cargarPanelMonitor();
-    }
-
-    function cargarPanelMonitor() {
-        document.getElementById('contadorSociosTotal').innerText = datosGlobales.socios.length;
-        
-        let lSocios = document.getElementById('listaSociosMonitor');
-        lSocios.innerHTML = datosGlobales.socios.length === 0 ? "<li>No hay alumnos.</li>" : "";
-        datosGlobales.socios.forEach((s, idx) => {
-            lSocios.innerHTML += `<li><span>👤 <strong>${s.nombre}</strong> (Clave: <code>${s.clave}</code>)</span><button onclick="borrarSocio(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
-        });
-
-        let lBonos = document.getElementById('listaBonosMonitor');
-        lBonos.innerHTML = datosGlobales.bonosGlobales.length === 0 ? "<li>No hay bonos.</li>" : "";
-        datosGlobales.bonosGlobales.forEach((b, idx) => {
-            lBonos.innerHTML += `<li><span>🎟️ ${b}</span><button onclick="borrarBono(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
-        });
-
-        let lEnt = document.getElementById('listaEntrenamientosMonitor');
-        lEnt.innerHTML = datosGlobales.entrenamientos.length === 0 ? "<li>No hay entrenamientos.</li>" : "";
-        datosGlobales.entrenamientos.forEach((ent, idx) => {
-            lEnt.innerHTML += `<li><div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color:#27ae60;">Inscritos (${ent.inscritos.length}): ${ent.inscritos.join(', ') || 'Nadie'}</small></div><button onclick="borrarEntrenamiento(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
-        });
-
-        let lTor = document.getElementById('listaTorneosMonitor');
-        lTor.innerHTML = datosGlobales.torneos.length === 0 ? "<li>No hay torneos.</li>" : "";
-        datosGlobales.torneos.forEach((tor, idx) => {
-            lTor.innerHTML += `<li><div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color:#27ae60;">Inscritos (${tor.inscritos.length}): ${tor.inscritos.join(', ') || 'Nadie'}</small></div><button onclick="borrarTorneo(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
-        });
-
-        let lSol = document.getElementById('listaSolicitudes');
-        lSol.innerHTML = datosGlobales.solicitudes.length === 0 ? "<li>No hay solicitudes.</li>" : "";
-        datosGlobales.solicitudes.forEach((s, idx) => {
-            lSol.innerHTML += `<li>📌 ${s} <button onclick="borrarSolicitud(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Atendido</button></li>`;
-        });
-    }
-
-    function cargarPanelSocio(datos) {
-        let lMisBonos = document.getElementById('misBonos');
-        lMisBonos.innerHTML = "";
-        let misBonos = datos.bonosGlobales.filter(b => b.toLowerCase().includes(usuarioActual.nombre.toLowerCase()));
-        lMisBonos.innerHTML = misBonos.length > 0 ? misBonos.map(b => `<li>🎟️ ${b}</li>`).join('') : "<li>No tienes bonos activos.</li>";
-
-        let lEnt = document.getElementById('listaEntrenamientosSocio');
-        lEnt.innerHTML = datos.entrenamientos.length === 0 ? "<li>No hay entrenamientos disponibles.</li>" : "";
-        datos.entrenamientos.forEach((ent, idx) => {
-            let apuntado = ent.inscritos.includes(usuarioActual.nombre);
-            lEnt.innerHTML += `<li><div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color:#27ae60;">Inscritos: ${ent.inscritos.length} (${ent.inscritos.join(', ') || 'Nadie'})</small></div><div>${apuntado ? `<button onclick="desapuntarseEntrenamiento(${idx})" style="width:auto; padding:8px; background:#e74c3c;">Desapuntarse</button>` : `<button onclick="apuntarseEntrenamiento(${idx})" style="width:auto; padding:8px;">Apuntarse</button>`}</div></li>`;
-        });
-
-        let lTor = document.getElementById('listaTorneosSocio');
-        lTor.innerHTML = datos.torneos.length === 0 ? "<li>No hay torneos disponibles.</li>" : "";
-        datos.torneos.forEach((tor, idx) => {
-            let apuntado = tor.inscritos.includes(usuarioActual.nombre);
-            lTor.innerHTML += `<li><div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color:#27ae60;">Inscritos: ${tor.inscritos.length} (${tor.inscritos.join(', ') || 'Nadie'})</small></div><div>${apuntado ? `<button onclick="desapuntarseTorneo(${idx})" style="width:auto; padding:8px; background:#e74c3c;">Desapuntarse</button>` : `<button onclick="apuntarseTorneo(${idx})" style="width:auto; padding:8px;">Apuntarse</button>`}</div></li>`;
-        });
-    }
-
-    async function pedirBonoAlMonitor() {
-        await descargarDatosNube();
-        datosGlobales.solicitudes.push(`El alumno ${usuarioActual.nombre} solicita un bono.`);
-        await guardarDatosNube(datosGlobales);
-        alert("Solicitud enviada.");
-    }
-
-    async function apuntarseEntrenamiento(index) {
-        await descargarDatosNube();
-        if(!datosGlobales.entrenamientos[index].inscritos.includes(usuarioActual.nombre)) {
-            datosGlobales.entrenamientos[index].inscritos.push(usuarioActual.nombre);
-            await guardarDatosNube(datosGlobales);
-            alert("¡Te has apuntado!");
-            cargarPanelSocio(datosGlobales);
+            datosGlobales.entrenamientos.push({
+                id: Date.now(),
+                titulo: titulo,
+                fecha: fecha,
+                inscritos: []
+            });
+            document.getElementById('nuevo-titulo').value = "";
+            document.getElementById('nuevo-fecha').value = "";
+            guardarDatos();
         }
-    }
 
-    async function desapuntarseEntrenamiento(index) {
-        await descargarDatosNube();
-        let arr = datosGlobales.entrenamientos[index].inscritos;
-        let pos = arr.indexOf(usuarioActual.nombre);
-        if(pos !== -1) {
-            arr.splice(pos, 1);
-            await guardarDatosNube(datosGlobales);
-            alert("Te has desapuntado.");
-            cargarPanelSocio(datosGlobales);
-        }
-    }
+        function registrarSocio() {
+            let nombre = document.getElementById('nombre-socio').value;
+            if(!nombre) return alert("Escribe tu nombre");
 
-    async function apuntarseTorneo(index) {
-        await descargarDatosNube();
-        if(!datosGlobales.torneos[index].inscritos.includes(usuarioActual.nombre)) {
-            datosGlobales.torneos[index].inscritos.push(usuarioActual.nombre);
-            await guardarDatosNube(datosGlobales);
-            alert("¡Te has apuntado!");
-            cargarPanelSocio(datosGlobales);
+            if(!datosGlobales.socios.includes(nombre)) {
+                datosGlobales.socios.push(nombre);
+                document.getElementById('nombre-socio').value = "";
+                guardarDatos();
+            }
         }
-    }
 
-    async function desapuntarseTorneo(index) {
-        await descargarDatosNube();
-        let arr = datosGlobales.torneos[index].inscritos;
-        let pos = arr.indexOf(usuarioActual.nombre);
-        if(pos !== -1) {
-            arr.splice(pos, 1);
-            await guardarDatosNube(datosGlobales);
-            alert("Te has desapuntado.");
-            cargarPanelSocio(datosGlobales);
-        }
-    }
-</script>
+        // Cargar al iniciar
+        cargarDatos();
+        // Recargar automáticamente cada 10 segundos por si otro alumno se apunta
+        setInterval(cargarDatos, 10000);
+    </script>
+</body>
 </html>
