@@ -27,7 +27,7 @@
 <body>
 
 <div class="container">
-    <h1>🏓 Club de Pickleball</h1>
+    <h1><span style="font-size: 32px;">🥏</span> Club de Pickleball <span style="font-size: 24px;">🟢</span></h1>
     <div id="status" class="sync-status">Sistema Seguro con Copias de Respaldo 🛡️</div>
 
     <!-- MENÚ PRINCIPAL -->
@@ -187,7 +187,6 @@
         });
     }
 
-    // Fusión inteligente: Añade lo nuevo sin borrar lo que ya existía
     function importarDatos() {
         let datosStr = prompt("Pega aquí los datos copiados del otro móvil:");
         if(!datosStr) return;
@@ -197,34 +196,29 @@
 
             let actual = obtenerDatos();
 
-            // Combinar socios evitando duplicados por nombre
             externo.socios.forEach(sExt => {
                 if(!actual.socios.some(sAct => sAct.nombre.toLowerCase() === sExt.nombre.toLowerCase())) {
                     actual.socios.push(sExt);
                 }
             });
 
-            // Combinar bonos evitando duplicados exactos
             externo.bonosGlobales.forEach(bExt => {
                 if(!actual.bonosGlobales.includes(bExt)) {
                     actual.bonosGlobales.push(bExt);
                 }
             });
 
-            // Combinar entrenamientos básicos
             externo.entrenamientos.forEach(eExt => {
                 let encontrado = actual.entrenamientos.find(eAct => eAct.titulo === eExt.titulo && eAct.fecha === eExt.fecha);
                 if(!encontrado) {
                     actual.entrenamientos.push(eExt);
                 } else {
-                    // Si existe, fusionar inscritos sin perder a nadie
                     eExt.inscritos.forEach(ins => {
                         if(!encontrado.inscritos.includes(ins)) encontrado.inscritos.push(ins);
                     });
                 }
             });
 
-            // Combinar torneos
             externo.torneos.forEach(tExt => {
                 let encontrado = actual.torneos.find(tAct => tAct.titulo === tExt.titulo && tAct.fecha === tExt.fecha);
                 if(!encontrado) {
@@ -236,7 +230,6 @@
                 }
             });
 
-            // Combinar solicitudes
             externo.solicitudes.forEach(sExt => {
                 if(!actual.solicitudes.includes(sExt)) {
                     actual.solicitudes.push(sExt);
