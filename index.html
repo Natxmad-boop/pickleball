@@ -8,15 +8,19 @@
         :root {
             --primary: #0284c7;
             --primary-dark: #0369a1;
-            --bg: #f1f5f9;
+            --primary-light: #e0f2fe;
+            --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #0f172a;
-            --text-light: #475569;
-            --border: #cbd5e1;
+            --text-light: #64748b;
+            --border: #e2e8f0;
             --success: #16a34a;
+            --success-bg: #f0fdf4;
             --danger: #dc2626;
+            --danger-bg: #fef2f2;
             --warning: #d97706;
-            --radius: 14px;
+            --warning-bg: #fffbeb;
+            --radius: 16px;
         }
 
         * {
@@ -29,78 +33,95 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 90px;
+            padding-bottom: 110px; /* Espacio para la barra inferior fija */
+            -webkit-tap-highlight-color: transparent;
         }
 
         header {
             background: linear-gradient(135deg, #0284c7, #0f172a);
             color: white;
-            padding: 25px 15px;
+            padding: 30px 20px;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            border-bottom-left-radius: 20px;
-            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.2);
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
         }
 
         header h1 {
-            font-size: 1.6rem;
-            margin-bottom: 5px;
+            font-size: 1.8rem;
+            margin-bottom: 6px;
             letter-spacing: -0.5px;
+            font-weight: 800;
         }
 
         header p {
-            font-size: 0.9rem;
-            opacity: 0.85;
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 400;
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px 15px;
+            padding: 20px 16px;
+        }
+
+        h2 {
+            font-size: 1.4rem;
+            color: var(--text);
+            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
         }
 
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 22px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease;
         }
 
         .card h3 {
             color: var(--primary-dark);
-            margin-bottom: 10px;
-            font-size: 1.2rem;
+            margin-bottom: 12px;
+            font-size: 1.25rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            font-weight: 700;
         }
 
         .card p {
             font-size: 0.95rem;
             color: var(--text-light);
-            margin-bottom: 8px;
-            line-height: 1.4;
+            margin-bottom: 10px;
+            line-height: 1.5;
         }
 
         button {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 0.95rem;
+            padding: 14px 18px;
+            border-radius: 12px;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 10px;
+            margin-top: 12px;
             width: 100%;
-            box-shadow: 0 2px 4px rgba(2, 132, 199, 0.2);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         button:hover {
-            opacity: 0.95;
+            filter: brightness(1.05);
             transform: translateY(-1px);
         }
 
@@ -110,38 +131,39 @@
 
         button.danger {
             background-color: var(--danger);
-            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
         }
 
         button.warning {
             background-color: var(--warning);
-            box-shadow: 0 2px 4px rgba(217, 119, 6, 0.2);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
         }
 
         button.success {
             background-color: var(--success);
-            box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
         }
 
         input, select {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             margin-top: 6px;
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            margin-bottom: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
             font-size: 1rem;
             background: #fff;
             color: var(--text);
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s;
         }
 
         input:focus, select:focus {
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
         }
 
+        /* NAVEGACIÓN INFERIOR GRANDE Y MODERNA */
         nav {
             position: fixed;
             bottom: 0;
@@ -150,9 +172,9 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 10px 2px;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
-            border-top: 1px solid #e2e8f0;
+            padding: 8px 10px 16px 10px;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.06);
+            border-top: 1px solid var(--border);
             z-index: 1000;
         }
 
@@ -160,21 +182,32 @@
             background: none;
             color: var(--text-light);
             border: none;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             margin: 0;
-            padding: 6px 2px;
-            font-weight: 500;
-            width: auto;
+            padding: 8px 4px;
+            font-weight: 600;
+            width: 20%;
             box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
+            gap: 4px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+        }
+
+        nav button span.icon {
+            font-size: 1.5rem;
+            transition: transform 0.2s;
         }
 
         nav button.active {
             color: var(--primary);
-            font-weight: 700;
+            background-color: var(--primary-light);
+        }
+
+        nav button.active span.icon {
+            transform: scale(1.1);
         }
 
         .section {
@@ -183,31 +216,46 @@
 
         .section.active {
             display: block;
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .sync-status {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-align: center;
             color: var(--text-light);
-            margin: 15px 0;
-            font-weight: 500;
+            margin: 20px 0;
+            font-weight: 600;
+            background: white;
+            padding: 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            display: inline-block;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
         
         .badge {
             display: inline-block;
-            background: #e0f2fe;
+            background: var(--primary-light);
             color: var(--primary-dark);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-size: 0.9rem;
             font-weight: 600;
-            margin-bottom: 8px;
+            color: var(--text);
+            display: block;
+            margin-top: 4px;
         }
     </style>
 </head>
@@ -215,7 +263,7 @@
 
     <header>
         <h1>🏓 Club de Pickleball</h1>
-        <p>Sistema oficial de entrenamientos y bonos</p>
+        <p>Gestión inteligente de entrenamientos y bonos</p>
     </header>
 
     <div class="container">
@@ -260,20 +308,19 @@
 
         <!-- 3. DÍA DE PRUEBA -->
         <div id="seccion-prueba" class="section">
-            <h2>🎁 Solicitar Día de Prueba</h2>
+            <h2>🎁 Día de Prueba</h2>
             <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
                 <h3 style="color: #15803d;">🏓 ¡Ven a probar sin compromiso!</h3>
-                <p style="color: #166534; margin-bottom: 15px;">¿Quieres iniciarte en el Pickleball? Solicita tu primera clase totalmente gratis **sin necesidad de registrarte ni crear cuentas**.</p>
+                <p style="color: #166534; margin-bottom: 15px;">¿Quieres iniciarte en el Pickleball? Solicita tu primera clase totalmente gratis sin necesidad de registrarte.</p>
                 
-                <label style="color: #166534; font-weight: 600;">Tu Nombre y Apellidos:</label>
+                <label style="color: #166534;">Tu Nombre y Apellidos:</label>
                 <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
                 
-                <label style="color: #166534; font-weight: 600;">Teléfono de contacto (Opcional):</label>
+                <label style="color: #166534;">Teléfono de contacto (Opcional):</label>
                 <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
 
                 <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 Enviar Solicitud al Monitor</button>
             </div>
-            <p style="text-align: center; font-size: 0.85rem; color: var(--text-light); margin-top: 10px;">Al enviar la solicitud, el aviso aparecerá instantáneamente en el panel del monitor.</p>
         </div>
 
         <!-- 4. MI PERFIL (ALUMNO) -->
@@ -281,11 +328,11 @@
             <h2>👤 Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
                 <h3>🔒 Iniciar Sesión</h3>
-                <p>Si ya estás registrado, selecciona tu nombre e introduce tu PIN personal.</p>
+                <p>Selecciona tu nombre e introduce tu PIN personal para ver tu bono.</p>
                 
                 <label>Selecciona tu Nombre:</label>
                 <select id="login-select-nombre">
-                    <option value="">-- El monitor debe crearte primero --</option>
+                    <option value="">-- Esperando lista de alumnos --</option>
                 </select>
 
                 <label>PIN Personal:</label>
@@ -293,30 +340,29 @@
                 <button onclick="iniciarSesionAlumno()">Acceder a mi Cuenta</button>
             </div>
 
-            <div id="panel-identificado" class="card" style="display:none; background: #f0fdf4; border-color: #bbf7d0;">
+            <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #bbf7d0;">
                 <span class="badge">Sesión Activa</span>
                 <h3 id="saludo-alumno" style="color: #15803d;">¡Hola!</h3>
-                <p id="info-bono-personal" style="font-size: 1.05rem; color: #166534; margin: 10px 0;">🎟️ <strong>Clases disponibles:</strong> 0</p>
+                <p id="info-bono-personal" style="font-size: 1.1rem; color: #166534; margin: 12px 0; font-weight: 600;">🎟️ Clases disponibles: 0</p>
                 
                 <div style="margin-top: 20px; border-top: 1px solid #dcfce7; padding-top: 15px;">
-                    <p style="font-size: 0.85rem; font-weight: 600; color: #166534; margin-bottom: 8px;">Gestión de Bonos:</p>
                     <button class="success" onclick="solicitarRecargaBono()">🎟️ Solicitar Recarga de Bono (10 clases)</button>
                 </div>
 
-                <button class="danger" style="margin-top: 20px;" onclick="cerrarSesionAlumno()">Cerrar Sesión</button>
+                <button class="danger" style="margin-top: 16px;" onclick="cerrarSesionAlumno()">Cerrar Sesión</button>
             </div>
         </div>
 
         <!-- 5. MONITOR -->
         <div id="seccion-monitor" class="section">
-            <h2>🔑 Panel de Control (Monitor)</h2>
+            <h2>🔑 Panel de Control</h2>
             <div class="card" style="margin-top: 15px;">
-                <p id="estado-modo-monitor">Estado actual: <strong>Modo Alumno / Público</strong></p>
+                <p id="estado-modo-monitor" style="margin-bottom: 12px;">Estado actual: <strong>Modo Alumno / Público</strong></p>
                 <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor</button>
             </div>
 
-            <div class="card" id="panel-opciones-admin" style="display:none; background: #fffbeb; border-color: #fde68a;">
-                <h3 style="color: #b45309;">🚨 Solicitudes y Avisos de Alumnos</h3>
+            <div class="card" id="panel-opciones-admin" style="display:none; background: var(--warning-bg); border-color: #fde68a;">
+                <h3 style="color: #b45309;">🚨 Solicitudes de Alumnos</h3>
                 <div id="lista-avisos-monitor" style="margin-bottom: 25px;">
                     <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
                 </div>
@@ -328,7 +374,7 @@
                 <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
                 <label>Clases iniciales en el Bono:</label>
                 <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
-                <button onclick="registrarNuevoAlumno()">Crear Alumno (Bono de 10 por defecto)</button>
+                <button onclick="registrarNuevoAlumno()" class="warning" style="background-color: var(--warning);">Crear Alumno</button>
 
                 <h3 style="margin-top:30px; color: var(--primary-dark);">👥 Alumnos Registrados</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
@@ -337,30 +383,36 @@
             </div>
         </div>
         
-        <div class="sync-status" id="estado-sync">Conectando en tiempo real... ⏳</div>
+        <div style="text-align: center;">
+            <div class="sync-status" id="estado-sync">Conectando en tiempo real... ⏳</div>
+        </div>
     </div>
 
-    <!-- NAVEGACIÓN -->
+    <!-- NAVEGACIÓN INFERIOR GRANDE -->
     <nav>
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
-            <span>📅</span> Clases
+            <span class="icon">📅</span>
+            <span>Clases</span>
         </button>
         <button onclick="cambiarSeccion('torneos')" id="nav-torneos">
-            <span>🏆</span> Torneos
+            <span class="icon">🏆</span>
+            <span>Torneos</span>
         </button>
         <button onclick="cambiarSeccion('prueba')" id="nav-prueba">
-            <span>🎁</span> Día de Prueba
+            <span class="icon">🎁</span>
+            <span>Prueba</span>
         </button>
         <button onclick="cambiarSeccion('perfil')" id="nav-perfil">
-            <span>👤</span> Mi Perfil
+            <span class="icon">👤</span>
+            <span>Perfil</span>
         </button>
         <button onclick="cambiarSeccion('monitor')" id="nav-monitor">
-            <span>🔑</span> Monitor
+            <span class="icon">🔑</span>
+            <span>Monitor</span>
         </button>
     </nav>
 
     <script>
-        // Enlace directo a tu npoint.io
         const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
         
         let modoMonitorActivo = false;
@@ -379,6 +431,7 @@
             
             document.getElementById('seccion-' + seccion).classList.add('active');
             document.getElementById('nav-' + seccion).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         async function cargarDatos() {
@@ -406,9 +459,7 @@
             try {
                 let respuesta = await fetch(API_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosGlobales)
                 });
                 if(respuesta.ok) {
@@ -444,10 +495,8 @@
             });
 
             guardarDatos();
-            
             document.getElementById('input-nombre-prueba').value = "";
             document.getElementById('input-telefono-prueba').value = "";
-            
             alert("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso.");
         }
 
@@ -468,7 +517,7 @@
             document.getElementById('nuevo-alumno-pass').value = "";
             document.getElementById('nuevo-alumno-clases').value = "10";
             guardarDatos();
-            alert("¡Alumno creado con éxito con bono de 10 clases!");
+            alert("¡Alumno creado con éxito!");
         }
 
         function iniciarSesionAlumno() {
@@ -536,6 +585,7 @@
                 document.getElementById('saludo-alumno').innerText = "¡Hola, " + alumnoActual.nombre + "!";
                 let reg = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
                 let clases = reg ? reg.clasesBono : 0;
+                alumnoActual.clasesBono = clases;
                 document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>Clases disponibles en tu bono:</strong> ${clases}`;
             } else {
                 document.getElementById('panel-no-identificado').style.display = 'block';
@@ -544,7 +594,7 @@
 
             let htmlEntrenamientos = "";
             if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0) {
-                htmlEntrenamientos = "<p style='text-align:center; padding:10px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
+                htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
             } else {
                 datosGlobales.entrenamientos.forEach(ent => {
                     let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
@@ -589,10 +639,10 @@
                 if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
                     datosGlobales.avisos.forEach(aviso => {
                         avisosHtml += `
-                            <div class="card" style="background: white; border-color: #f59e0b; padding: 14px; margin-bottom: 10px;">
-                                <p style="color: #b45309; font-weight: bold; margin-bottom: 4px;">⚠️ Solicitud: ${aviso.tipo}</p>
-                                <p style="color: var(--text); font-size: 0.9rem; margin-bottom: 10px;">${aviso.texto}</p>
-                                <button class="success" style="padding: 8px; font-size: 0.85rem;" onclick="resolverAviso(${aviso.id})">✔ Marcar como Atendido / Visto</button>
+                            <div class="card" style="background: white; border-color: #f59e0b; padding: 16px; margin-bottom: 12px;">
+                                <p style="color: #b45309; font-weight: bold; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
+                                <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 12px;">${aviso.texto}</p>
+                                <button class="success" style="padding: 10px; font-size: 0.9rem;" onclick="resolverAviso(${aviso.id})">✔ Marcar como Atendido</button>
                             </div>
                         `;
                     });
@@ -605,12 +655,12 @@
                 if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
                     datosGlobales.alumnos.forEach((al, idx) => {
                         listaAdminHtml += `
-                            <div class="card" style="padding:12px; margin-bottom:10px; background:white;">
-                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
-                                <p style="margin-bottom:8px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
-                                <div style="display:flex; gap:8px;">
-                                    <button onclick="modificarBono(${idx})" style="padding:6px; font-size:0.85rem; margin-top:0;">Editar Clases</button>
-                                    <button class="danger" style="padding:6px; font-size:0.85rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
+                            <div class="card" style="padding:14px; margin-bottom:12px; background:white;">
+                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
+                                <p style="margin-bottom:12px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
+                                <div style="display:flex; gap:10px;">
+                                    <button onclick="modificarBono(${idx})" style="padding:8px 12px; font-size:0.9rem; margin-top:0;">Editar Clases</button>
+                                    <button class="danger" style="padding:8px 12px; font-size:0.9rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
                                 </div>
                             </div>
                         `;
@@ -628,24 +678,37 @@
 
         function apuntarseEntrenamiento(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil' para apuntarte.");
+                alert("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.");
                 cambiarSeccion('perfil');
                 return;
             }
+
+            let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
+
+            if(!alumnoBD || alumnoBD.clasesBono <= 0) {
+                alert("❌ No te quedan clases en tu bono. Solicita una recarga desde la pestaña 'Perfil' antes de apuntarte.");
+                return;
+            }
+
             let ent = datosGlobales.entrenamientos.find(e => e.id === id);
             if(ent) {
                 if(!ent.inscritos) ent.inscritos = [];
                 if(!ent.inscritos.includes(alumnoActual.nombre)) {
                     ent.inscritos.push(alumnoActual.nombre);
+                    alumnoBD.clasesBono -= 1;
+                    alumnoActual.clasesBono = alumnoBD.clasesBono;
+
                     guardarDatos();
-                    alert("¡Te has apuntado correctamente!");
-                } else { alert("Ya estás apuntado a este entrenamiento."); }
+                    alert("✅ ¡Te has apuntado correctamente! Se ha descontado 1 clase de tu bono.");
+                } else { 
+                    alert("Ya estás apuntado a este entrenamiento."); 
+                }
             }
         }
 
         function apuntarseTorneo(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil' para apuntarte.");
+                alert("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -746,7 +809,7 @@
         }
 
         cargarDatos();
-        setInterval(cargarDatos, 5000);
+        setInterval(cargarDatos, 5005);
     </script>
 </body>
 </html>
