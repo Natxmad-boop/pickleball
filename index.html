@@ -360,7 +360,8 @@
     </nav>
 
     <script>
-        const API_URL = "https://api.npoint.io/451d4728d05c351c11fb"; 
+        // Enlace directo a tu npoint.io
+        const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
         
         let modoMonitorActivo = false;
         let alumnoActual = null; 
@@ -382,7 +383,7 @@
 
         async function cargarDatos() {
             try {
-                let respuesta = await fetch(`${API_URL}?r=${Date.now()}`);
+                let respuesta = await fetch(API_URL);
                 if(respuesta.ok) {
                     let json = await respuesta.json();
                     if(json) {
@@ -404,15 +405,19 @@
             document.getElementById('estado-sync').innerText = "Guardando cambios... ⏳";
             try {
                 let respuesta = await fetch(API_URL, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(datosGlobales)
                 });
                 if(respuesta.ok) {
                     document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
+                } else {
+                    document.getElementById('estado-sync').innerText = "Error al guardar 🔴";
                 }
             } catch(e) {
-                document.getElementById('estado-sync').innerText = "Error de sincronización 🔴";
+                document.getElementById('estado-sync').innerText = "Error de red 🔴";
             }
             renderizar();
         }
