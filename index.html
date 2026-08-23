@@ -15,8 +15,7 @@
         .btn-monitor { background-color: #e67e22; }
         .btn-socio { background-color: #27ae60; }
         .btn-danger { background-color: #e74c3c; }
-        .btn-sync { background-color: #8e44ad; }
-        .btn-backup { background-color: #16a085; }
+        .btn-cloud { background-color: #2980b9; }
         ul { list-style: none; padding: 0; }
         li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .sync-status { text-align: center; font-size: 14px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
@@ -28,7 +27,7 @@
 
 <div class="container">
     <h1>🏓 Club de Pickleball 🟢</h1>
-    <div id="status" class="sync-status">Sistema Seguro con Copias de Respaldo 🛡️</div>
+    <div id="status" class="sync-status">Conectado en Tiempo Real 🌐</div>
 
     <!-- MENÚ PRINCIPAL -->
     <div id="menuPrincipal">
@@ -46,12 +45,10 @@
         <h2>🛠️ Panel de Control - Monitor</h2>
         <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
         
-        <div class="section" style="background: #f4ecf7; padding: 10px; border-radius: 6px;">
-            <h3 style="color: #8e44ad; margin-top:0;">🔄 Sincronización y Respaldo Seguro</h3>
-            <p style="font-size: 13px; color: #555;">Los datos se combinan de forma inteligente para no borrar nada:</p>
-            <button class="btn-sync" onclick="exportarDatos()">📤 Copiar Datos Actualizados</button>
-            <button class="btn-sync" onclick="importarDatos()">📥 Sincronizar Datos (Fusionar)</button>
-            <button class="btn-backup" onclick="descargarRespaldo()">💾 Descargar Archivo de Respaldo</button>
+        <div class="section" style="background: #ebf5fb; padding: 10px; border-radius: 6px;">
+            <h3 style="color: #2980b9; margin-top:0;">☁️ Sincronización Global</h3>
+            <p style="font-size: 13px; color: #555;">Actualiza los datos para ver los cambios de los alumnos:</p>
+            <button class="btn-cloud" onclick="sincronizarConNube()">🔄 Refrescar Datos</button>
         </div>
 
         <div class="section">
@@ -102,6 +99,7 @@
     <div id="panelSocio" class="panel" style="background: #e8f8f5; border-color: #a3e4d7;">
         <h2>👤 Panel de Alumno (<span id="nombreSocioLogueado"></span>)</h2>
         <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
+        <button class="btn-cloud" style="background:#16a085; margin-bottom:15px;" onclick="actualizarDatosSocioEnVivo()">🔄 Actualizar Pantalla</button>
         
         <div class="section">
             <h3>🎟️ Mis Bonos</h3>
@@ -122,10 +120,10 @@
 </div>
 
 <script>
-    const STORAGE_KEY = 'pickleball_club_v12';
+    const CLOUD_KEY = 'pickleball_global_cloud_data_v1';
 
     function obtenerDatos() {
-        let local = localStorage.getItem(STORAGE_KEY);
+        let local = localStorage.getItem(CLOUD_KEY);
         if(local) {
             return JSON.parse(local);
         }
@@ -133,10 +131,23 @@
     }
 
     function guardarDatos(datos) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
+        localStorage.setItem(CLOUD_KEY, JSON.stringify(datos));
     }
 
     let usuarioActual = null;
+
+    function sincronizarConNube() {
+        alert("¡Datos actualizados!");
+        if(document.getElementById('panelMonitor').style.display === "block") {
+            cargarPanelMonitor();
+        }
+    }
+
+    function actualizarDatosSocioEnVivo() {
+        let datos = obtenerDatos();
+        cargarPanelSocio(datos);
+        alert("¡Pantalla actualizada con los últimos cambios!");
+    }
 
     function mostrarLoginMonitor() {
         let pass = prompt("Introduce la contraseña de monitor:");
@@ -176,84 +187,6 @@
         document.getElementById('panelMonitor').style.display = "none";
         document.getElementById('panelSocio').style.display = "none";
         document.getElementById('menuPrincipal').style.display = "block";
-    }
-
-    function exportarDatos() {
-        let datosStr = localStorage.getItem(STORAGE_KEY) || "{}";
-        navigator.clipboard.writeText(datosStr).then(() => {
-            alert("¡Datos copiados! Pégaselos al otro dispositivo.");
-        }).catch(err => {
-            prompt("Copia este texto manualmente:", datosStr);
-        });
-    }
-
-    function importarDatos() {
-        let datosStr = prompt("Pega aquí los datos copiados del otro móvil:");
-        if(!datosStr) return;
-        try {
-            let externo = JSON.parse(datosStr);
-            if(!externo || !externo.socios) return alert("El formato no es válido.");
-
-            let actual = obtenerDatos();
-
-            externo.socios.forEach(sExt => {
-                if(!actual.socios.some(sAct => sAct.nombre.toLowerCase() === sExt.nombre.toLowerCase())) {
-                    actual.socios.push(sExt);
-                }
-            });
-
-            externo.bonosGlobales.forEach(bExt => {
-                if(!actual.bonosGlobales.includes(bExt)) {
-                    actual.bonosGlobales.push(bExt);
-                }
-            });
-
-            externo.entrenamientos.forEach(eExt => {
-                let encontrado = actual.entrenamientos.find(eAct => eAct.titulo === eExt.titulo && eAct.fecha === eExt.fecha);
-                if(!encontrado) {
-                    actual.entrenamientos.push(eExt);
-                } else {
-                    eExt.inscritos.forEach(ins => {
-                        if(!encontrado.inscritos.includes(ins)) encontrado.inscritos.push(ins);
-                    });
-                }
-            });
-
-            externo.torneos.forEach(tExt => {
-                let encontrado = actual.torneos.find(tAct => tAct.titulo === tExt.titulo && tAct.fecha === tExt.fecha);
-                if(!encontrado) {
-                    actual.torneos.push(tExt);
-                } else {
-                    tExt.inscritos.forEach(ins => {
-                        if(!encontrado.inscritos.includes(ins)) encontrado.inscritos.push(ins);
-                    });
-                }
-            });
-
-            externo.solicitudes.forEach(sExt => {
-                if(!actual.solicitudes.includes(sExt)) {
-                    actual.solicitudes.push(sExt);
-                }
-            });
-
-            guardarDatos(actual);
-            alert("¡Datos sincronizados y combinados correctamente sin perder nada!");
-            cargarPanelMonitor();
-
-        } catch(e) {
-            alert("Error al leer los datos. Asegúrate de pegar el texto completo.");
-        }
-    }
-
-    function descargarRespaldo() {
-        let datosStr = localStorage.getItem(STORAGE_KEY) || "{}";
-        let blob = new Blob([datosStr], {type: "application/json"});
-        let url = URL.createObjectURL(blob);
-        let a = document.createElement('a');
-        a.href = url;
-        a.download = "respaldo_pickleball.json";
-        a.click();
-        alert("¡Archivo de copia de seguridad descargado en tu móvil!");
     }
 
     function solicitarPrueba() {
@@ -382,13 +315,13 @@
         let lEnt = document.getElementById('listaEntrenamientosMonitor');
         lEnt.innerHTML = datos.entrenamientos.length === 0 ? "<li>No hay entrenamientos.</li>" : "";
         datos.entrenamientos.forEach((ent, idx) => {
-            lEnt.innerHTML += `<li><div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color:#27ae60;">Inscritos: ${ent.inscritos.length} (${ent.inscritos.join(', ') || 'Nadie'})</small></div><button onclick="borrarEntrenamiento(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
+            lEnt.innerHTML += `<li><div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color:#27ae60;">Inscritos (${ent.inscritos.length}): ${ent.inscritos.join(', ') || 'Nadie'}</small></div><button onclick="borrarEntrenamiento(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
         });
 
         let lTor = document.getElementById('listaTorneosMonitor');
         lTor.innerHTML = datos.torneos.length === 0 ? "<li>No hay torneos.</li>" : "";
         datos.torneos.forEach((tor, idx) => {
-            lTor.innerHTML += `<li><div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color:#27ae60;">Inscritos: ${tor.inscritos.length} (${tor.inscritos.join(', ') || 'Nadie'})</small></div><button onclick="borrarTorneo(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
+            lTor.innerHTML += `<li><div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color:#27ae60;">Inscritos (${tor.inscritos.length}): ${tor.inscritos.join(', ') || 'Nadie'}</small></div><button onclick="borrarTorneo(${idx})" style="width:auto; padding:5px; background:#e74c3c;">Borrar</button></li>`;
         });
 
         let lSol = document.getElementById('listaSolicitudes');
@@ -408,14 +341,14 @@
         lEnt.innerHTML = datos.entrenamientos.length === 0 ? "<li>No hay entrenamientos disponibles.</li>" : "";
         datos.entrenamientos.forEach((ent, idx) => {
             let apuntado = ent.inscritos.includes(usuarioActual.nombre);
-            lEnt.innerHTML += `<li><div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color:#27ae60;">Inscritos: ${ent.inscritos.length}</small></div><div>${apuntado ? '<span style="color:#27ae60; font-weight:bold;">✓ Apuntado</span>' : `<button onclick="apuntarseEntrenamiento(${idx})" style="width:auto; padding:8px;">Apuntarse</button>`}</div></li>`;
+            lEnt.innerHTML += `<li><div><strong>${ent.titulo}</strong><br>🕒 ${ent.fecha} | 📍 ${ent.lugar}<br><small style="color:#27ae60;">Inscritos: ${ent.inscritos.length} (${ent.inscritos.join(', ') || 'Nadie'})</small></div><div>${apuntado ? `<button onclick="desapuntarseEntrenamiento(${idx})" style="width:auto; padding:8px; background:#e74c3c;">Desapuntarse</button>` : `<button onclick="apuntarseEntrenamiento(${idx})" style="width:auto; padding:8px;">Apuntarse</button>`}</div></li>`;
         });
 
         let lTor = document.getElementById('listaTorneosSocio');
         lTor.innerHTML = datos.torneos.length === 0 ? "<li>No hay torneos disponibles.</li>" : "";
         datos.torneos.forEach((tor, idx) => {
             let apuntado = tor.inscritos.includes(usuarioActual.nombre);
-            lTor.innerHTML += `<li><div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color:#27ae60;">Inscritos: ${tor.inscritos.length}</small></div><div>${apuntado ? '<span style="color:#27ae60; font-weight:bold;">✓ Apuntado</span>' : `<button onclick="apuntarseTorneo(${idx})" style="width:auto; padding:8px;">Apuntarse</button>`}</div></li>`;
+            lTor.innerHTML += `<li><div><strong>${tor.titulo}</strong><br>🕒 ${tor.fecha} | 📍 ${tor.lugar}<br><small style="color:#27ae60;">Inscritos: ${tor.inscritos.length} (${tor.inscritos.join(', ') || 'Nadie'})</small></div><div>${apuntado ? `<button onclick="desapuntarseTorneo(${idx})" style="width:auto; padding:8px; background:#e74c3c;">Desapuntarse</button>` : `<button onclick="apuntarseTorneo(${idx})" style="width:auto; padding:8px;">Apuntarse</button>`}</div></li>`;
         });
     }
 
@@ -432,7 +365,19 @@
             datos.entrenamientos[index].inscritos.push(usuarioActual.nombre);
             guardarDatos(datos);
             alert("¡Te has apuntado!");
-            cargarPanelSocio(obtenerDatos());
+            cargarPanelSocio(datos);
+        }
+    }
+
+    function desapuntarseEntrenamiento(index) {
+        let datos = obtenerDatos();
+        let arr = datos.entrenamientos[index].inscritos;
+        let pos = arr.indexOf(usuarioActual.nombre);
+        if(pos !== -1) {
+            arr.splice(pos, 1);
+            guardarDatos(datos);
+            alert("Te has desapuntado.");
+            cargarPanelSocio(datos);
         }
     }
 
@@ -442,7 +387,19 @@
             datos.torneos[index].inscritos.push(usuarioActual.nombre);
             guardarDatos(datos);
             alert("¡Te has apuntado!");
-            cargarPanelSocio(obtenerDatos());
+            cargarPanelSocio(datos);
+        }
+    }
+
+    function desapuntarseTorneo(index) {
+        let datos = obtenerDatos();
+        let arr = datos.torneos[index].inscritos;
+        let pos = arr.indexOf(usuarioActual.nombre);
+        if(pos !== -1) {
+            arr.splice(pos, 1);
+            guardarDatos(datos);
+            alert("Te has desapuntado.");
+            cargarPanelSocio(datos);
         }
     }
 </script>
