@@ -283,7 +283,9 @@
     </nav>
 
     <script>
-        const BIN_ID = "679f225ae41b4d34e482312d"; 
+        // ⚠️ PEGA AQUÍ TUS CREDENCIALES REALES DE JSONBIN.IO
+        const BIN_ID = "PON_AQUI_TU_BIN_ID"; 
+        const MASTER_KEY = "PON_AQUI_TU_MASTER_KEY"; 
         
         let modoMonitorActivo = false;
         let alumnoActual = null; 
@@ -292,7 +294,7 @@
             entrenamientos: [],
             torneos: [],
             alumnos: [],
-            avisos: [] // Guarda los avisos para el monitor
+            avisos: []
         };
 
         function cambiarSeccion(seccion) {
@@ -306,7 +308,7 @@
         async function cargarDatos() {
             try {
                 let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': '$2a$10$tKunrUREgDCDiNhV6LiRBD34ahN2e5x5x5x5x5x5x5x5x5x5x' }
+                    headers: { 'X-Master-Key': MASTER_KEY }
                 });
                 if(respuesta.ok) {
                     let json = await respuesta.json();
@@ -314,9 +316,12 @@
                         datosGlobales = json.record;
                         if(!datosGlobales.avisos) datosGlobales.avisos = [];
                     }
+                    document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
+                } else {
+                    document.getElementById('estado-sync').innerText = "Error al cargar datos (Revisa tu Bin ID) 🔴";
                 }
             } catch(e) {
-                console.log("Error de red menor");
+                document.getElementById('estado-sync').innerText = "Sin conexión 🔴";
             }
             renderizar();
         }
@@ -328,14 +333,14 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Master-Key': '$2a$10$tKunrUREgDCDiNhV6LiRBD34ahN2e5x5x5x5x5x5x5x5x5x5x'
+                        'X-Master-Key': MASTER_KEY
                     },
                     body: JSON.stringify(datosGlobales)
                 });
                 if(respuesta.ok) {
                     document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
                 } else {
-                    document.getElementById('estado-sync').innerText = "Error al guardar 🔴";
+                    document.getElementById('estado-sync').innerText = "Error al guardar (Revisa tu Master Key) 🔴";
                 }
             } catch(e) {
                 document.getElementById('estado-sync').innerText = "Sin conexión 🔴";
@@ -390,7 +395,6 @@
             if(!alumnoActual) return;
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
             
-            // Comprobar si ya hay una solicitud idéntica pendiente
             let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Primera Clase');
             if(yaPedido) return alert("Ya has solicitado tu primera clase. El monitor te avisará pronto.");
 
@@ -490,7 +494,6 @@
             document.getElementById('lista-torneos').innerHTML = htmlTorneos;
 
             if(modoMonitorActivo) {
-                // Renderizar avisos para el monitor
                 let avisosHtml = "";
                 if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
                     datosGlobales.avisos.forEach(aviso => {
@@ -650,7 +653,7 @@
         }
 
         cargarDatos();
-        setInterval(cargarDatos, 6000);
+        setInterval(cargarDatos, 6000); // Se actualiza automáticamente cada 6 segundos
     </script>
 </body>
 </html>
