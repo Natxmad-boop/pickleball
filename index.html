@@ -150,7 +150,7 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 10px 5px;
+            padding: 10px 2px;
             box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
             border-top: 1px solid #e2e8f0;
             z-index: 1000;
@@ -160,16 +160,16 @@
             background: none;
             color: var(--text-light);
             border: none;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             margin: 0;
-            padding: 6px 4px;
+            padding: 6px 2px;
             font-weight: 500;
             width: auto;
             box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 3px;
+            gap: 2px;
         }
 
         nav button.active {
@@ -222,13 +222,6 @@
         
         <!-- 1. CLASES -->
         <div id="seccion-entrenamientos" class="section active">
-            <!-- TARJETA PARA PEDIR CLASE GRATIS SIN REGISTRO -->
-            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
-                <h3 style="color: #15803d;">🎁 ¿Nueva/o por aquí?</h3>
-                <p style="color: #166534;">Prueba este deporte totalmente gratis. ¡Pide tu primera clase de prueba sin necesidad de registrarte!</p>
-                <button class="success" onclick="pedirClaseLibreSinRegistro()">Solicitar Clase Gratis (Sin Registro)</button>
-            </div>
-
             <h2>📅 Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 15px;">
                 <p>Cargando entrenamientos...</p>
@@ -265,7 +258,25 @@
             </div>
         </div>
 
-        <!-- 3. MI PERFIL (ALUMNO) -->
+        <!-- 3. DÍA DE PRUEBA (NUEVA PESTAÑA EXCLUSIVA) -->
+        <div id="seccion-prueba" class="section">
+            <h2>🎁 Solicitar Día de Prueba</h2>
+            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
+                <h3 style="color: #15803d;">🏓 ¡Ven a probar sin compromiso!</h3>
+                <p style="color: #166534; margin-bottom: 15px;">¿Quieres iniciarte en el Pickleball? Solicita tu primera clase totalmente gratis **sin necesidad de registrarte ni crear cuentas**.</p>
+                
+                <label style="color: #166534; font-weight: 600;">Tu Nombre y Apellidos:</label>
+                <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
+                
+                <label style="color: #166534; font-weight: 600;">Teléfono de contacto (Opcional):</label>
+                <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
+
+                <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 Enviar Solicitud al Monitor</button>
+            </div>
+            <p style="text-align: center; font-size: 0.85rem; color: var(--text-light); margin-top: 10px;">Al enviar la solicitud, el aviso aparecerá instantáneamente en el panel del monitor para que pueda coordinar tu asistencia.</p>
+        </div>
+
+        <!-- 4. MI PERFIL (ALUMNO) -->
         <div id="seccion-perfil" class="section">
             <h2>👤 Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
@@ -296,7 +307,7 @@
             </div>
         </div>
 
-        <!-- 4. MONITOR -->
+        <!-- 5. MONITOR -->
         <div id="seccion-monitor" class="section">
             <h2>🔑 Panel de Control (Monitor)</h2>
             <div class="card" style="margin-top: 15px;">
@@ -330,13 +341,16 @@
         <div class="sync-status" id="estado-sync">Conectando en tiempo real... ⏳</div>
     </div>
 
-    <!-- NAVEGACIÓN -->
+    <!-- NAVEGACIÓN INFERIOR CON PESTAÑA DÍA DE PRUEBA -->
     <nav>
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
             <span>📅</span> Clases
         </button>
         <button onclick="cambiarSeccion('torneos')" id="nav-torneos">
             <span>🏆</span> Torneos
+        </button>
+        <button onclick="cambiarSeccion('prueba')" id="nav-prueba">
+            <span>🎁</span> Día de Prueba
         </button>
         <button onclick="cambiarSeccion('perfil')" id="nav-perfil">
             <span>👤</span> Mi Perfil
@@ -408,19 +422,32 @@
         }
 
         function pedirClaseLibreSinRegistro() {
-            let nombre = prompt("¡Genial! Introduce tu Nombre y Apellidos para la clase de prueba gratuita:");
-            if(!nombre || nombre.trim() === "") return;
+            let nombre = document.getElementById('input-nombre-prueba').value.trim();
+            let telefono = document.getElementById('input-telefono-prueba').value.trim();
+
+            if(!nombre) {
+                alert("Por favor, introduce al menos tu nombre y apellidos.");
+                return;
+            }
 
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
 
+            let textoAviso = `${nombre} ha solicitado un Día de Prueba gratuito.`;
+            if(telefono) textoAviso += ` (Contacto: ${telefono})`;
+
             datosGlobales.avisos.push({
                 id: Date.now(),
-                alumno: nombre.trim(),
+                alumno: nombre,
                 tipo: 'Clase Gratis (Sin Registro)',
-                texto: `${nombre.trim()} ha solicitado una Clase Gratis de prueba sin registro previo.`
+                texto: textoAviso
             });
+
             guardarDatos();
-            alert("¡Solicitud enviada con éxito! El monitor se pondrá en contacto contigo pronto.");
+            
+            document.getElementById('input-nombre-prueba').value = "";
+            document.getElementById('input-telefono-prueba').value = "";
+            
+            alert("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso y se pondrá en contacto contigo.");
         }
 
         function registrarNuevoAlumno() {
