@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club de Pickleball - Alumnos y Monitor</title>
+    <title>Club de Pickleball</title>
     <style>
         :root {
             --primary: #0284c7;
@@ -15,6 +15,7 @@
             --border: #e2e8f0;
             --success: #16a34a;
             --danger: #dc2626;
+            --warning: #d97706;
         }
 
         * {
@@ -86,6 +87,7 @@
             cursor: pointer;
             transition: background 0.2s;
             margin-top: 8px;
+            width: 100%;
         }
 
         button:active {
@@ -94,6 +96,14 @@
 
         button.danger {
             background-color: var(--danger);
+        }
+
+        button.warning {
+            background-color: var(--warning);
+        }
+
+        button.success {
+            background-color: var(--success);
         }
 
         input, select {
@@ -128,6 +138,7 @@
             margin: 0;
             padding: 0;
             font-weight: normal;
+            width: auto;
         }
 
         nav button.active {
@@ -154,13 +165,13 @@
 <body>
 
     <header>
-        <h1>🏓 Club Pickleball</h1>
-        <p>Área Privada de Alumnos y Monitor</p>
+        <h1>🏓 Club de Pickleball</h1>
+        <p>Entrenamientos, Torneos y Bonos</p>
     </header>
 
     <div class="container">
         
-        <!-- 1. SECCIÓN CLASES / ENTRENAMIENTOS -->
+        <!-- 1. CLASES -->
         <div id="seccion-entrenamientos" class="section active">
             <h2>Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 15px;">
@@ -173,13 +184,13 @@
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
-                <label>Lugar / Dirección:</label>
+                <label>Lugar:</label>
                 <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
                 <button onclick="agregarEntrenamiento()">Crear Entrenamiento</button>
             </div>
         </div>
 
-        <!-- 2. SECCIÓN TORNEOS -->
+        <!-- 2. TORNEOS -->
         <div id="seccion-torneos" class="section">
             <h2>Torneos y Partidos</h2>
             <div id="lista-torneos" style="margin-top: 15px;">
@@ -192,33 +203,44 @@
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
-                <label>Lugar / Dirección:</label>
+                <label>Lugar:</label>
                 <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
                 <button onclick="agregarTorneo()">Crear Torneo</button>
             </div>
         </div>
 
-        <!-- 3. SECCIÓN MI PERFIL / BONOS (ALUMNO) -->
+        <!-- 3. MI PERFIL (ALUMNO) -->
         <div id="seccion-perfil" class="section">
             <h2>Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
-                <h3>Identifícate</h3>
-                <p>Introduce tu nombre y contraseña para ver tus bonos y gestionar tus clases.</p>
-                <label>Nombre:</label>
-                <input type="text" id="login-nombre" placeholder="Tu Nombre">
+                <h3>Iniciar Sesión</h3>
+                <p>Selecciona tu nombre e introduce tu contraseña o PIN personal.</p>
+                
+                <label>Selecciona tu Nombre:</label>
+                <select id="login-select-nombre">
+                    <option value="">-- El monitor debe crearte primero --</option>
+                </select>
+
                 <label>Contraseña / PIN:</label>
-                <input type="password" id="login-pass" placeholder="Tu contraseña">
-                <button onclick="iniciarSesionAlumno()">Entrar / Registrarme</button>
+                <input type="password" id="login-pass" placeholder="Tu PIN secreto">
+                <button onclick="iniciarSesionAlumno()">Entrar a mi Panel</button>
             </div>
 
             <div id="panel-identificado" class="card" style="display:none; background: #f0f9ff;">
                 <h3 id="saludo-alumno">¡Hola!</h3>
-                <p id="info-bono-personal">🎟️ <strong>Tus clases disponibles en bono:</strong> 0</p>
-                <button class="danger" onclick="cerrarSesionAlumno()">Cerrar Sesión</button>
+                <p id="info-bono-personal">🎟️ <strong>Clases disponibles en tu bono:</strong> 0</p>
+                <p style="font-size: 0.8rem; color: var(--success); margin-top: 5px;">✔ Sesión iniciada con seguridad</p>
+                
+                <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                    <button class="warning" onclick="solicitarPrimeraClase()">🎁 Solicitar Primera Clase (Prueba)</button>
+                    <button onclick="solicitarRecargaBono()">🎟️ Solicitar Recarga de Bono</button>
+                </div>
+
+                <button class="danger" style="margin-top: 15px;" onclick="cerrarSesionAlumno()">Cerrar Sesión</button>
             </div>
         </div>
 
-        <!-- 4. SECCIÓN MONITOR -->
+        <!-- 4. MONITOR -->
         <div id="seccion-monitor" class="section">
             <h2>Panel de Control (Monitor)</h2>
             <div class="card" style="margin-top: 15px;">
@@ -226,26 +248,33 @@
                 <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor (Contraseña)</button>
             </div>
 
-            <!-- Panel de administración para asignar bonos y ver alumnos -->
-            <div class="card" id="panel-opciones-admin" style="display:none;">
-                <h3>Gestión de Bonos y Alumnos</h3>
-                <label>Alumno:</label>
-                <select id="select-alumno-bono"></select>
-                <label>Asignar Clases al Bono:</label>
-                <input type="number" id="bono-clases" placeholder="Ej: 5 o 10">
-                <button onclick="actualizarBonoAlumno()">Actualizar Bono del Alumno</button>
+            <!-- Panel de administración protegido -->
+            <div class="card" id="panel-opciones-admin" style="display:none; background: #f0f9ff;">
+                <h3>🚨 Avisos Pendientes de Alumnos</h3>
+                <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
+                    <p style="color: var(--text-light);">No hay avisos pendientes.</p>
+                </div>
 
-                <h3 style="margin-top:20px;">Lista de Alumnos Registrados</h3>
+                <h3>Crear Nuevo Alumno</h3>
+                <label>Nombre del Alumno:</label>
+                <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
+                <label>Contraseña / PIN:</label>
+                <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
+                <label>Clases iniciales en el Bono:</label>
+                <input type="number" id="nuevo-alumno-clases" value="0" placeholder="Ej: 5 o 10">
+                <button onclick="registrarNuevoAlumno()">Crear Alumno</button>
+
+                <h3 style="margin-top:25px;">Alumnos Registrados y Bonos</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
 
-                <button class="danger" style="margin-top:20px;" onclick="reiniciarDatosCompletos()">Restaurar / Vaciar Todo</button>
+                <button class="danger" style="margin-top:25px;" onclick="reiniciarDatosCompletos()">Restaurar / Vaciar Todo</button>
             </div>
         </div>
         
-        <div class="sync-status" id="estado-sync">Sincronizado en tiempo real 🟢</div>
+        <div class="sync-status" id="estado-sync">Sincronizado 🟢</div>
     </div>
 
-    <!-- MENÚ DE NAVEGACIÓN INFERIOR -->
+    <!-- NAVEGACIÓN -->
     <nav>
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">📅 Clases</button>
         <button onclick="cambiarSeccion('torneos')" id="nav-torneos">🏆 Torneos</button>
@@ -262,7 +291,8 @@
         let datosGlobales = {
             entrenamientos: [],
             torneos: [],
-            alumnos: [] 
+            alumnos: [],
+            avisos: [] // Guarda los avisos para el monitor
         };
 
         function cambiarSeccion(seccion) {
@@ -276,16 +306,17 @@
         async function cargarDatos() {
             try {
                 let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
-                    headers: { 'X-Access-Key': '$2a$10$WqBqPzL5xXz8jQ3u8v5N2e5x5x5x5x5x5x5x5x5x5x5x5x5x5x' }
+                    headers: { 'X-Master-Key': '$2a$10$tKunrUREgDCDiNhV6LiRBD34ahN2e5x5x5x5x5x5x5x5x5x5x' }
                 });
                 if(respuesta.ok) {
                     let json = await respuesta.json();
                     if(json.record) {
                         datosGlobales = json.record;
+                        if(!datosGlobales.avisos) datosGlobales.avisos = [];
                     }
                 }
             } catch(e) {
-                console.log("Modo local activo");
+                console.log("Error de red menor");
             }
             renderizar();
         }
@@ -293,46 +324,59 @@
         async function guardarDatos() {
             document.getElementById('estado-sync').innerText = "Sincronizando... ⏳";
             try {
-                await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-Access-Key': '$2a$10$WqBqPzL5xXz8jQ3u8v5N2e5x5x5x5x5x5x5x5x5x5x5x5x5x'
+                        'X-Master-Key': '$2a$10$tKunrUREgDCDiNhV6LiRBD34ahN2e5x5x5x5x5x5x5x5x5x5x'
                     },
                     body: JSON.stringify(datosGlobales)
                 });
-                document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
+                if(respuesta.ok) {
+                    document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
+                } else {
+                    document.getElementById('estado-sync').innerText = "Error al guardar 🔴";
+                }
             } catch(e) {
-                document.getElementById('estado-sync').innerText = "Error de sincronización 🔴";
+                document.getElementById('estado-sync').innerText = "Sin conexión 🔴";
             }
             renderizar();
         }
 
-        function iniciarSesionAlumno() {
-            let nombre = document.getElementById('login-nombre').value.trim();
-            let pass = document.getElementById('login-pass').value.trim();
-            if(!nombre || !pass) return alert("Introduce tu nombre y contraseña");
+        function registrarNuevoAlumno() {
+            let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
+            let pass = document.getElementById('nuevo-alumno-pass').value.trim();
+            let clases = parseInt(document.getElementById('nuevo-alumno-clases').value) || 0;
 
+            if(!nombre || !pass) return alert("Escribe el nombre y la contraseña del alumno");
             if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
 
-            let encontrado = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombre.toLowerCase());
-            
-            if(encontrado) {
-                if(encontrado.pass === pass) {
-                    alumnoActual = encontrado;
-                    alert("¡Bienvenido de nuevo, " + alumnoActual.nombre + "!");
-                } else {
-                    return alert("Contraseña incorrecta para este alumno.");
-                }
-            } else {
-                let nuevo = { nombre: nombre, pass: pass, clasesBono: 0 };
-                datosGlobales.alumnos.push(nuevo);
-                alumnoActual = nuevo;
-                guardarDatos();
-                alert("¡Cuenta creada con éxito! Bienvenido, " + nombre);
-            }
+            let existe = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombre.toLowerCase());
+            if(existe) return alert("Ya existe un alumno con ese nombre.");
 
-            document.getElementById('login-nombre').value = "";
+            datosGlobales.alumnos.push({ nombre, pass, clasesBono: clases });
+            document.getElementById('nuevo-alumno-nombre').value = "";
+            document.getElementById('nuevo-alumno-pass').value = "";
+            document.getElementById('nuevo-alumno-clases').value = "0";
+            guardarDatos();
+            alert("¡Alumno creado con éxito!");
+        }
+
+        function iniciarSesionAlumno() {
+            let select = document.getElementById('login-select-nombre');
+            let nombre = select.value;
+            let pass = document.getElementById('login-pass').value.trim();
+
+            if(!nombre) return alert("Por favor, selecciona tu nombre de la lista.");
+            if(!pass) return alert("Introduce tu contraseña.");
+
+            let alumno = datosGlobales.alumnos.find(a => a.nombre === nombre);
+            if(alumno && alumno.pass === pass) {
+                alumnoActual = alumno;
+                alert("¡Bienvenido, " + alumno.nombre + "!");
+            } else {
+                alert("Contraseña incorrecta.");
+            }
             document.getElementById('login-pass').value = "";
             renderizar();
         }
@@ -340,17 +384,64 @@
         function cerrarSesionAlumno() {
             alumnoActual = null;
             renderizar();
-            alert("Has cerrado sesión.");
+        }
+
+        function solicitarPrimeraClase() {
+            if(!alumnoActual) return;
+            if(!datosGlobales.avisos) datosGlobales.avisos = [];
+            
+            // Comprobar si ya hay una solicitud idéntica pendiente
+            let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Primera Clase');
+            if(yaPedido) return alert("Ya has solicitado tu primera clase. El monitor te avisará pronto.");
+
+            datosGlobales.avisos.push({
+                id: Date.now(),
+                alumno: alumnoActual.nombre,
+                tipo: 'Primera Clase',
+                texto: `${alumnoActual.nombre} ha solicitado su Primera Clase de prueba.`
+            });
+            guardarDatos();
+            alert("¡Solicitud enviada al monitor con éxito!");
+        }
+
+        function solicitarRecargaBono() {
+            if(!alumnoActual) return;
+            if(!datosGlobales.avisos) datosGlobales.avisos = [];
+
+            let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono');
+            if(yaPedido) return alert("Ya tienes una solicitud de bono pendiente con el monitor.");
+
+            datosGlobales.avisos.push({
+                id: Date.now(),
+                alumno: alumnoActual.nombre,
+                tipo: 'Recarga Bono',
+                texto: `${alumnoActual.nombre} solicita recargar su Bono de clases.`
+            });
+            guardarDatos();
+            alert("¡Aviso de recarga de bono enviado al monitor!");
+        }
+
+        function resolverAviso(id) {
+            datosGlobales.avisos = datosGlobales.avisos.filter(a => a.id !== id);
+            guardarDatos();
         }
 
         function renderizar() {
+            let selectHtml = `<option value="">-- Selecciona tu nombre --</option>`;
+            if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
+                datosGlobales.alumnos.forEach(al => {
+                    selectHtml += `<option value="${al.nombre}">${al.nombre}</option>`;
+                });
+            }
+            document.getElementById('login-select-nombre').innerHTML = selectHtml;
+
             if(alumnoActual) {
                 document.getElementById('panel-no-identificado').style.display = 'none';
                 document.getElementById('panel-identificado').style.display = 'block';
                 document.getElementById('saludo-alumno').innerText = "¡Hola, " + alumnoActual.nombre + "!";
                 let reg = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
                 let clases = reg ? reg.clasesBono : 0;
-                document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>Tus clases disponibles en bono:</strong> ${clases}`;
+                document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>Clases disponibles en tu bono:</strong> ${clases}`;
             } else {
                 document.getElementById('panel-no-identificado').style.display = 'block';
                 document.getElementById('panel-identificado').style.display = 'none';
@@ -399,18 +490,38 @@
             document.getElementById('lista-torneos').innerHTML = htmlTorneos;
 
             if(modoMonitorActivo) {
-                let selectHtml = "";
+                // Renderizar avisos para el monitor
+                let avisosHtml = "";
+                if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
+                    datosGlobales.avisos.forEach(aviso => {
+                        avisosHtml += `
+                            <div class="card" style="background: #fffbeb; border-color: #fde68a; padding: 10px; margin-bottom: 8px;">
+                                <p style="color: #92400e; font-weight: bold; margin-bottom: 4px;">⚠️ ${aviso.tipo}</p>
+                                <p style="color: #b45309; font-size: 0.85rem; margin-bottom: 8px;">${aviso.texto}</p>
+                                <button class="success" style="padding: 4px 8px; font-size: 0.8rem; width: auto;" onclick="resolverAviso(${aviso.id})">Marcar como Atendido / Visto</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    avisosHtml = `<p style="color: var(--text-light); font-size: 0.9rem;">No hay avisos pendientes.</p>`;
+                }
+                document.getElementById('lista-avisos-monitor').innerHTML = avisosHtml;
+
                 let listaAdminHtml = "";
                 if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
                     datosGlobales.alumnos.forEach((al, idx) => {
-                        selectHtml += `<option value="${al.nombre}">${al.nombre} (${al.clasesBono} clases)</option>`;
-                        listaAdminHtml += `<div class="card" style="padding:8px; margin-bottom:5px;">👤 <strong>${al.nombre}</strong> - Clases: ${al.clasesBono} <button class="danger" style="float:right; padding:2px 6px; font-size:0.7rem;" onclick="borrarAlumno(${idx})">Eliminar</button></div>`;
+                        listaAdminHtml += `
+                            <div class="card" style="padding:10px; margin-bottom:8px; background:white;">
+                                👤 <strong>${al.nombre}</strong> (PIN: <code>${al.pass}</code>)<br>
+                                🎟️ Clases bono: <strong>${al.clasesBono}</strong>
+                                <button onclick="modificarBono(${idx})" style="padding:4px 8px; font-size:0.8rem; margin-right:5px; width:auto;">Editar Clases</button>
+                                <button class="danger" style="padding:4px 8px; font-size:0.8rem; width:auto;" onclick="borrarAlumno(${idx})">Eliminar</button>
+                            </div>
+                        `;
                     });
                 } else {
-                    selectHtml = `<option value="">No hay alumnos registrados</option>`;
-                    listaAdminHtml = `<p>No hay alumnos registrados aún.</p>`;
+                    listaAdminHtml = `<p>No hay alumnos dados de alta todavía.</p>`;
                 }
-                document.getElementById('select-alumno-bono').innerHTML = selectHtml;
                 document.getElementById('lista-alumnos-admin').innerHTML = listaAdminHtml;
             }
 
@@ -421,7 +532,7 @@
 
         function apuntarseEntrenamiento(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión en la pestaña 'Mi Perfil' con tu nombre y contraseña para apuntarte.");
+                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil'.");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -438,7 +549,7 @@
 
         function apuntarseTorneo(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión en la pestaña 'Mi Perfil' con tu nombre y contraseña para apuntarte.");
+                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil'.");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -457,7 +568,7 @@
             let titulo = document.getElementById('nuevo-titulo').value;
             let fecha = document.getElementById('nuevo-fecha').value;
             let lugar = document.getElementById('nuevo-lugar').value;
-            if(!titulo || !fecha) return alert("Rellena al menos el título y la fecha");
+            if(!titulo || !fecha) return alert("Rellena el título y la fecha");
             if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
             datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             document.getElementById('nuevo-titulo').value = "";
@@ -477,7 +588,7 @@
             let titulo = document.getElementById('torneo-titulo').value;
             let fecha = document.getElementById('torneo-fecha').value;
             let lugar = document.getElementById('torneo-lugar').value;
-            if(!titulo || !fecha) return alert("Rellena al menos el título y la fecha");
+            if(!titulo || !fecha) return alert("Rellena el título y la fecha");
             if(!datosGlobales.torneos) datosGlobales.torneos = [];
             datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             document.getElementById('torneo-titulo').value = "";
@@ -493,17 +604,11 @@
             }
         }
 
-        function actualizarBonoAlumno() {
-            let nombreSelec = document.getElementById('select-alumno-bono').value;
-            let clasesNuevas = parseInt(document.getElementById('bono-clases').value);
-            if(!nombreSelec || isNaN(clasesNuevas)) return alert("Selecciona un alumno e introduce un número de clases");
-
-            let al = datosGlobales.alumnos.find(a => a.nombre === nombreSelec);
-            if(al) {
-                al.clasesBono = clasesNuevas;
+        function modificarBono(index) {
+            let nuevoValor = prompt("Introduce el nuevo número de clases disponibles:", datosGlobales.alumnos[index].clasesBono);
+            if(nuevoValor !== null && !isNaN(nuevoValor)) {
+                datosGlobales.alumnos[index].clasesBono = parseInt(nuevoValor);
                 guardarDatos();
-                alert("¡Bono actualizado para " + al.nombre + "!");
-                document.getElementById('bono-clases').value = "";
             }
         }
 
@@ -539,13 +644,13 @@
 
         function reiniciarDatosCompletos() {
             if(prompt("Escribe 'BORRAR' para vaciar todo:") === 'BORRAR') {
-                datosGlobales = { entrenamientos: [], torneos: [], alumnos: [] };
+                datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [] };
                 guardarDatos();
             }
         }
 
         cargarDatos();
-        setInterval(cargarDatos, 10000);
+        setInterval(cargarDatos, 6000);
     </script>
 </body>
 </html>
