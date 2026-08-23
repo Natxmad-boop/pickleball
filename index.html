@@ -115,7 +115,7 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 10px 0;
+            padding: 8px 0;
             box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
             border-top: 1px solid var(--border);
             z-index: 1000;
@@ -125,7 +125,7 @@
             background: none;
             color: var(--text-light);
             border: none;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             margin: 0;
             padding: 0;
             font-weight: normal;
@@ -156,11 +156,11 @@
 
     <header>
         <h1>🏓 Club Pickleball</h1>
-        <p>Gestión de Entrenamientos y Alumnos</p>
+        <p>Gestión Completa del Club</p>
     </header>
 
     <div class="container">
-        <!-- SECCIÓN DE ENTRENAMIENTOS -->
+        <!-- 1. SECCIÓN ENTRENAMIENTOS -->
         <div id="seccion-entrenamientos" class="section active">
             <h2>Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 15px;">
@@ -177,7 +177,41 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DE SOCIOS -->
+        <!-- 2. SECCIÓN TORNEOS -->
+        <div id="seccion-torneos" class="section">
+            <h2>Torneos y Partidos</h2>
+            <div id="lista-torneos" style="margin-top: 15px;">
+                <p>Cargando torneos...</p>
+            </div>
+            
+            <div class="card" id="panel-crear-torneo" style="margin-top: 25px; background: #f0f9ff; display:none;">
+                <h3>Crear Nuevo Torneo (Monitor)</h3>
+                <label>Nombre del Torneo:</label>
+                <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Relámpago Verano">
+                <label>Fecha:</label>
+                <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
+                <button onclick="agregarTorneo()">Crear Torneo</button>
+            </div>
+        </div>
+
+        <!-- 3. SECCIÓN BONOS -->
+        <div id="seccion-bonos" class="section">
+            <h2>Control de Bonos de Alumnos</h2>
+            <div id="lista-bonos" style="margin-top: 15px;">
+                <p>Cargando bonos...</p>
+            </div>
+            
+            <div class="card" id="panel-crear-bono" style="margin-top: 25px; background: #f0f9ff; display:none;">
+                <h3>Asignar / Crear Bono (Monitor)</h3>
+                <label>Nombre del Alumno:</label>
+                <input type="text" id="bono-alumno" placeholder="Nombre y Apellidos">
+                <label>Clases Disponibles:</label>
+                <input type="number" id="bono-clases" placeholder="Ej: 5 o 10">
+                <button onclick="agregarBono()">Guardar Bono</button>
+            </div>
+        </div>
+
+        <!-- 4. SECCIÓN ALUMNOS -->
         <div id="seccion-socios" class="section">
             <h2>Lista de Alumnos del Club</h2>
             <div style="margin-top: 15px;" id="lista-socios">
@@ -191,7 +225,7 @@
             </div>
         </div>
 
-        <!-- SECCIÓN DE ACCESO MONITOR -->
+        <!-- 5. SECCIÓN MONITOR -->
         <div id="seccion-monitor" class="section">
             <h2>Panel de Control (Monitor)</h2>
             <div class="card" style="margin-top: 15px;">
@@ -199,9 +233,8 @@
                 <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor (Contraseña)</button>
             </div>
             <div class="card">
-                <h3>Opciones de Administrador</h3>
-                <p>Al activar el modo monitor, podrás borrar entrenamientos antiguos, crear clases nuevas y gestionar el club por completo.</p>
-                <button class="danger" onclick="reiniciarDatosCompletos()">Restaurar/Limpiar Datos</button>
+                <p>La contraseña de monitor es: <strong>1234</strong></p>
+                <button class="danger" onclick="reiniciarDatosCompletos()">Restaurar / Vaciar Todo</button>
             </div>
         </div>
         
@@ -210,7 +243,9 @@
 
     <!-- MENÚ DE NAVEGACIÓN INFERIOR -->
     <nav>
-        <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">📅 Entrenamientos</button>
+        <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">📅 Clases</button>
+        <button onclick="cambiarSeccion('torneos')" id="nav-torneos">🏆 Torneos</button>
+        <button onclick="cambiarSeccion('bonos')" id="nav-bonos">🎟️ Bonos</button>
         <button onclick="cambiarSeccion('socios')" id="nav-socios">👥 Alumnos</button>
         <button onclick="cambiarSeccion('monitor')" id="nav-monitor">🔑 Monitor</button>
     </nav>
@@ -221,6 +256,8 @@
         let modoMonitorActivo = false;
         let datosGlobales = {
             entrenamientos: [],
+            torneos: [],
+            bonosGlobales: [],
             socios: []
         };
 
@@ -268,55 +305,92 @@
         }
 
         function renderizar() {
-            // Render entrenamientos
+            // Entrenamientos
             let htmlEntrenamientos = "";
-            if(datosGlobales.entrenamientos.length === 0) {
-                htmlEntrenamientos = "<p>No hay entrenamientos programados todavía.</p>";
+            if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0) {
+                htmlEntrenamientos = "<p>No hay entrenamientos programados.</p>";
             } else {
                 datosGlobales.entrenamientos.forEach(ent => {
-                    let botonBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
+                    let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
                     htmlEntrenamientos += `
                         <div class="card">
                             <h3>${ent.titulo}</h3>
                             <p>🕒 ${ent.fecha}</p>
                             <p>👤 <strong>Inscritos:</strong> ${ent.inscritos && ent.inscritos.length > 0 ? ent.inscritos.join(', ') : 'Nadie apuntado aún'}</p>
                             <button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme</button>
-                            ${botonBorrar}
+                            ${btnBorrar}
                         </div>
                     `;
                 });
             }
             document.getElementById('lista-entrenamientos').innerHTML = htmlEntrenamientos;
 
-            // Render socios
+            // Torneos
+            let htmlTorneos = "";
+            if(!datosGlobales.torneos || datosGlobales.torneos.length === 0) {
+                htmlTorneos = "<p>No hay torneos programados.</p>";
+            } else {
+                datosGlobales.torneos.forEach(tor => {
+                    let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar Torneo</button>` : '';
+                    htmlTorneos += `
+                        <div class="card">
+                            <h3>🏆 ${tor.titulo}</h3>
+                            <p>📅 ${tor.fecha}</p>
+                            <p>👥 <strong>Participantes:</strong> ${tor.inscritos && tor.inscritos.length > 0 ? tor.inscritos.join(', ') : 'Inscripciones abiertas'}</p>
+                            <button onclick="apuntarseTorneo(${tor.id})">Apuntarme al Torneo</button>
+                            ${btnBorrarTorneo}
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('lista-torneos').innerHTML = htmlTorneos;
+
+            // Bonos
+            let htmlBonos = "";
+            if(!datosGlobales.bonosGlobales || datosGlobales.bonosGlobales.length === 0) {
+                htmlBonos = "<p>No hay bonos registrados.</p>";
+            } else {
+                datosGlobales.bonosGlobales.forEach((bono, index) => {
+                    let btnBorrarBono = modoMonitorActivo ? `<button class="danger" style="padding:2px 6px; font-size:0.75rem; float:right;" onclick="borrarBono(${index})">Eliminar</button>` : '';
+                    htmlBonos += `
+                        <div class="card" style="padding: 10px; margin-bottom: 8px;">
+                            🎟️ <strong>${bono.alumno}</strong>: ${bono.clases} clases restantes
+                            ${btnBorrarBono}
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('lista-bonos').innerHTML = htmlBonos;
+
+            // Alumnos
             let htmlSocios = "";
             if(!datosGlobales.socios || datosGlobales.socios.length === 0) {
                 htmlSocios = "<p>No hay alumnos apuntados todavía.</p>";
             } else {
                 datosGlobales.socios.forEach((socio, index) => {
-                    let botonBorrarSocio = modoMonitorActivo ? ` <button class="danger" style="padding:2px 6px; font-size:0.75rem; float:right;" onclick="borrarSocio(${index})">Eliminar</button>` : '';
-                    htmlSocios += `<div class="card" style="padding: 10px; margin-bottom: 8px;">👤 ${socio} ${botonBorrarSocio}</div>`;
+                    let btnBorrarSocio = modoMonitorActivo ? `<button class="danger" style="padding:2px 6px; font-size:0.75rem; float:right;" onclick="borrarSocio(${index})">Eliminar</button>` : '';
+                    htmlSocios += `<div class="card" style="padding: 10px; margin-bottom: 8px;">👤 ${socio} ${btnBorrarSocio}</div>`;
                 });
             }
             document.getElementById('lista-socios').innerHTML = htmlSocios;
 
-            // Mostrar u ocultar panel de crear según modo monitor
+            // Mostrar paneles de monitor
             document.getElementById('panel-crear-entrenamiento').style.display = modoMonitorActivo ? 'block' : 'none';
+            document.getElementById('panel-crear-torneo').style.display = modoMonitorActivo ? 'block' : 'none';
+            document.getElementById('panel-crear-bono').style.display = modoMonitorActivo ? 'block' : 'none';
         }
 
+        // Funciones de acción
         function apuntarseEntrenamiento(id) {
             let nombre = prompt("Introduce tu nombre y apellidos:");
             if(!nombre) return;
-            
             let ent = datosGlobales.entrenamientos.find(e => e.id === id);
             if(ent) {
                 if(!ent.inscritos) ent.inscritos = [];
                 if(!ent.inscritos.includes(nombre)) {
                     ent.inscritos.push(nombre);
                     guardarDatos();
-                } else {
-                    alert("Ya estás apuntado a este entrenamiento.");
-                }
+                } else { alert("Ya estás apuntado."); }
             }
         }
 
@@ -324,22 +398,65 @@
             let titulo = document.getElementById('nuevo-titulo').value;
             let fecha = document.getElementById('nuevo-fecha').value;
             if(!titulo || !fecha) return alert("Rellena todos los campos");
-
             if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
-            datosGlobales.entrenamientos.push({
-                id: Date.now(),
-                titulo: titulo,
-                fecha: fecha,
-                inscritos: []
-            });
+            datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, inscritos: [] });
             document.getElementById('nuevo-titulo').value = "";
             document.getElementById('nuevo-fecha').value = "";
             guardarDatos();
         }
 
         function borrarEntrenamiento(id) {
-            if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
+            if(confirm("¿Borrar este entrenamiento?")) {
                 datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
+                guardarDatos();
+            }
+        }
+
+        function apuntarseTorneo(id) {
+            let nombre = prompt("Introduce tu nombre para el torneo:");
+            if(!nombre) return;
+            let tor = datosGlobales.torneos.find(t => t.id === id);
+            if(tor) {
+                if(!tor.inscritos) tor.inscritos = [];
+                if(!tor.inscritos.includes(nombre)) {
+                    tor.inscritos.push(nombre);
+                    guardarDatos();
+                } else { alert("Ya estás apuntado a este torneo."); }
+            }
+        }
+
+        function agregarTorneo() {
+            let titulo = document.getElementById('torneo-titulo').value;
+            let fecha = document.getElementById('torneo-fecha').value;
+            if(!titulo || !fecha) return alert("Rellena todos los campos");
+            if(!datosGlobales.torneos) datosGlobales.torneos = [];
+            datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, inscritos: [] });
+            document.getElementById('torneo-titulo').value = "";
+            document.getElementById('torneo-fecha').value = "";
+            guardarDatos();
+        }
+
+        function borrarTorneo(id) {
+            if(confirm("¿Borrar este torneo?")) {
+                datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
+                guardarDatos();
+            }
+        }
+
+        function agregarBono() {
+            let alumno = document.getElementById('bono-alumno').value;
+            let clases = document.getElementById('bono-clases').value;
+            if(!alumno || !clases) return alert("Rellena todos los campos");
+            if(!datosGlobales.bonosGlobales) datosGlobales.bonosGlobales = [];
+            datosGlobales.bonosGlobales.push({ alumno, clases });
+            document.getElementById('bono-alumno').value = "";
+            document.getElementById('bono-clases').value = "";
+            guardarDatos();
+        }
+
+        function borrarBono(index) {
+            if(confirm("¿Eliminar este bono?")) {
+                datosGlobales.bonosGlobales.splice(index, 1);
                 guardarDatos();
             }
         }
@@ -347,19 +464,16 @@
         function registrarSocio() {
             let nombre = document.getElementById('nombre-socio').value;
             if(!nombre) return alert("Escribe tu nombre");
-
             if(!datosGlobales.socios) datosGlobales.socios = [];
             if(!datosGlobales.socios.includes(nombre)) {
                 datosGlobales.socios.push(nombre);
                 document.getElementById('nombre-socio').value = "";
                 guardarDatos();
-            } else {
-                alert("Este alumno ya está registrado.");
-            }
+            } else { alert("Este alumno ya está registrado."); }
         }
 
         function borrarSocio(index) {
-            if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
+            if(confirm("¿Eliminar este alumno?")) {
                 datosGlobales.socios.splice(index, 1);
                 guardarDatos();
             }
@@ -367,16 +481,16 @@
 
         function alternarModoMonitor() {
             if(!modoMonitorActivo) {
-                let pass = prompt("Introduce la contraseña de monitor:");
-                if(pass === "pickle123") {
+                let pass = prompt("Introduce la contraseña de monitor (es 1234):");
+                if(pass === "1234") {
                     modoMonitorActivo = true;
                     document.getElementById('estado-modo-monitor').innerHTML = "Estado actual: <strong style='color:var(--success);'>MODO MONITOR ACTIVADO 🔓</strong>";
                     document.getElementById('btn-toggle-monitor').innerText = "Bloquear / Salir de Monitor";
                     document.getElementById('btn-toggle-monitor').className = "danger";
-                    alert("¡Modo monitor activado! Ahora puedes crear y borrar entrenamientos o alumnos.");
+                    alert("¡Modo monitor activado! Ahora puedes crear torneos, bonos, clases y borrar lo que necesites.");
                     renderizar();
                 } else if(pass !== null) {
-                    alert("Contraseña incorrecta.");
+                    alert("Contraseña incorrecta (recuerda que es 1234).");
                 }
             } else {
                 modoMonitorActivo = false;
@@ -389,8 +503,8 @@
         }
 
         function reiniciarDatosCompletos() {
-            if(prompt("Escribe 'BORRAR' para vaciar todos los datos y empezar de cero:") === 'BORRAR') {
-                datosGlobales = { entrenamientos: [], socios: [] };
+            if(prompt("Escribe 'BORRAR' para vaciar todo:") === 'BORRAR') {
+                datosGlobales = { entrenamientos: [], torneos: [], bonosGlobales: [], socios: [] };
                 guardarDatos();
             }
         }
