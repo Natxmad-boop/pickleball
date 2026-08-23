@@ -156,7 +156,7 @@
 
     <header>
         <h1>🏓 Club Pickleball</h1>
-        <p>Panel de Entrenamientos y Actividad</p>
+        <p>Gestión de Entrenamientos y Alumnos</p>
     </header>
 
     <div class="container">
@@ -167,7 +167,7 @@
                 <p>Cargando entrenamientos...</p>
             </div>
             
-            <div class="card" style="margin-top: 25px; background: #f0f9ff;">
+            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 25px; background: #f0f9ff; display:none;">
                 <h3>Añadir Nuevo Entrenamiento (Monitor)</h3>
                 <label>Título / Nivel:</label>
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
@@ -179,15 +179,29 @@
 
         <!-- SECCIÓN DE SOCIOS -->
         <div id="seccion-socios" class="section">
-            <h2>Lista de Socios / Alumnos</h2>
+            <h2>Lista de Alumnos del Club</h2>
             <div style="margin-top: 15px;" id="lista-socios">
-                <p>Cargando socios...</p>
+                <p>Cargando alumnos...</p>
             </div>
             
             <div class="card" style="margin-top: 25px;">
                 <h3>Registrarse en el Club</h3>
                 <input type="text" id="nombre-socio" placeholder="Tu Nombre y Apellidos">
-                <button onclick="registrarSocio()">Apuntarse</button>
+                <button onclick="registrarSocio()">Apuntarse como Alumno</button>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE ACCESO MONITOR -->
+        <div id="seccion-monitor" class="section">
+            <h2>Panel de Control (Monitor)</h2>
+            <div class="card" style="margin-top: 15px;">
+                <p id="estado-modo-monitor">Estado actual: <strong>Modo Alumno / Público</strong></p>
+                <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor (Contraseña)</button>
+            </div>
+            <div class="card">
+                <h3>Opciones de Administrador</h3>
+                <p>Al activar el modo monitor, podrás borrar entrenamientos antiguos, crear clases nuevas y gestionar el club por completo.</p>
+                <button class="danger" onclick="reiniciarDatosCompletos()">Restaurar/Limpiar Datos</button>
             </div>
         </div>
         
@@ -198,22 +212,18 @@
     <nav>
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">📅 Entrenamientos</button>
         <button onclick="cambiarSeccion('socios')" id="nav-socios">👥 Alumnos</button>
+        <button onclick="cambiarSeccion('monitor')" id="nav-monitor">🔑 Monitor</button>
     </nav>
 
     <script>
-        // Sistema de almacenamiento en la nube automático e integrado
-        const BIN_ID = "679f225ae41b4d34e482312d"; // Bin preconfigurado de alta disponibilidad
-        const API_KEY = "$2a$10$7vN3l... (auto)"; // Llave integrada por defecto para el club
-
+        const BIN_ID = "679f225ae41b4d34e482312d"; 
+        
+        let modoMonitorActivo = false;
         let datosGlobales = {
-            entrenamientos: [
-                { id: 1, titulo: "Entrenamiento Nivel Medio", fecha: "Lunes a las 19:00", inscritos: [] },
-                { id: 2, titulo: "Clase Cero / Iniciación", fecha: "Miércoles a las 18:00", inscritos: [] }
-            ],
-            socios: ["Carlos (Monitor)", "Ana Gómez"]
+            entrenamientos: [],
+            socios: []
         };
 
-        // Cambiar entre pestañas
         function cambiarSeccion(seccion) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
@@ -222,7 +232,6 @@
             document.getElementById('nav-' + seccion).classList.add('active');
         }
 
-        // Cargar datos de la nube
         async function cargarDatos() {
             try {
                 let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
@@ -240,7 +249,6 @@
             renderizar();
         }
 
-        // Guardar datos en la nube
         async function guardarDatos() {
             document.getElementById('estado-sync').innerText = "Sincronizando... ⏳";
             try {
@@ -259,39 +267,56 @@
             renderizar();
         }
 
-        // Pintar la interfaz en pantalla
         function renderizar() {
             // Render entrenamientos
             let htmlEntrenamientos = "";
-            datosGlobales.entrenamientos.forEach(ent => {
-                htmlEntrenamientos += `
-                    <div class="card">
-                        <h3>${ent.titulo}</h3>
-                        <p>🕒 ${ent.fecha}</p>
-                        <p>👤 <strong>Inscritos:</strong> ${ent.inscritos.length > 0 ? ent.inscritos.join(', ') : 'Nadie apuntado aún'}</p>
-                        <button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme</button>
-                    </div>
-                `;
-            });
+            if(datosGlobales.entrenamientos.length === 0) {
+                htmlEntrenamientos = "<p>No hay entrenamientos programados todavía.</p>";
+            } else {
+                datosGlobales.entrenamientos.forEach(ent => {
+                    let botonBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
+                    htmlEntrenamientos += `
+                        <div class="card">
+                            <h3>${ent.titulo}</h3>
+                            <p>🕒 ${ent.fecha}</p>
+                            <p>👤 <strong>Inscritos:</strong> ${ent.inscritos && ent.inscritos.length > 0 ? ent.inscritos.join(', ') : 'Nadie apuntado aún'}</p>
+                            <button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme</button>
+                            ${botonBorrar}
+                        </div>
+                    `;
+                });
+            }
             document.getElementById('lista-entrenamientos').innerHTML = htmlEntrenamientos;
 
             // Render socios
             let htmlSocios = "";
-            datosGlobales.socios.forEach(socio => {
-                htmlSocios += `<div class="card" style="padding: 10px; margin-bottom: 8px;">👤 ${socio}</div>`;
-            });
+            if(!datosGlobales.socios || datosGlobales.socios.length === 0) {
+                htmlSocios = "<p>No hay alumnos apuntados todavía.</p>";
+            } else {
+                datosGlobales.socios.forEach((socio, index) => {
+                    let botonBorrarSocio = modoMonitorActivo ? ` <button class="danger" style="padding:2px 6px; font-size:0.75rem; float:right;" onclick="borrarSocio(${index})">Eliminar</button>` : '';
+                    htmlSocios += `<div class="card" style="padding: 10px; margin-bottom: 8px;">👤 ${socio} ${botonBorrarSocio}</div>`;
+                });
+            }
             document.getElementById('lista-socios').innerHTML = htmlSocios;
+
+            // Mostrar u ocultar panel de crear según modo monitor
+            document.getElementById('panel-crear-entrenamiento').style.display = modoMonitorActivo ? 'block' : 'none';
         }
 
-        // Acciones de usuario
         function apuntarseEntrenamiento(id) {
-            let nombre = prompt("Introduce tu nombre para apuntarte:");
+            let nombre = prompt("Introduce tu nombre y apellidos:");
             if(!nombre) return;
             
             let ent = datosGlobales.entrenamientos.find(e => e.id === id);
-            if(ent && !ent.inscritos.includes(nombre)) {
-                ent.inscritos.push(nombre);
-                guardarDatos();
+            if(ent) {
+                if(!ent.inscritos) ent.inscritos = [];
+                if(!ent.inscritos.includes(nombre)) {
+                    ent.inscritos.push(nombre);
+                    guardarDatos();
+                } else {
+                    alert("Ya estás apuntado a este entrenamiento.");
+                }
             }
         }
 
@@ -300,6 +325,7 @@
             let fecha = document.getElementById('nuevo-fecha').value;
             if(!titulo || !fecha) return alert("Rellena todos los campos");
 
+            if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
             datosGlobales.entrenamientos.push({
                 id: Date.now(),
                 titulo: titulo,
@@ -311,20 +337,65 @@
             guardarDatos();
         }
 
-        function registrarSocio() {
-            let nombre = document.getElementById('nombre-socio').value;
-            if(!nombre) return alert("Escribe tu nombre");
-
-            if(!datosGlobales.socios.includes(nombre)) {
-                datosGlobales.socios.push(nombre);
-                document.getElementById('nombre-socio').value = "";
+        function borrarEntrenamiento(id) {
+            if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
+                datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
                 guardarDatos();
             }
         }
 
-        // Cargar al iniciar
+        function registrarSocio() {
+            let nombre = document.getElementById('nombre-socio').value;
+            if(!nombre) return alert("Escribe tu nombre");
+
+            if(!datosGlobales.socios) datosGlobales.socios = [];
+            if(!datosGlobales.socios.includes(nombre)) {
+                datosGlobales.socios.push(nombre);
+                document.getElementById('nombre-socio').value = "";
+                guardarDatos();
+            } else {
+                alert("Este alumno ya está registrado.");
+            }
+        }
+
+        function borrarSocio(index) {
+            if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
+                datosGlobales.socios.splice(index, 1);
+                guardarDatos();
+            }
+        }
+
+        function alternarModoMonitor() {
+            if(!modoMonitorActivo) {
+                let pass = prompt("Introduce la contraseña de monitor:");
+                if(pass === "pickle123") {
+                    modoMonitorActivo = true;
+                    document.getElementById('estado-modo-monitor').innerHTML = "Estado actual: <strong style='color:var(--success);'>MODO MONITOR ACTIVADO 🔓</strong>";
+                    document.getElementById('btn-toggle-monitor').innerText = "Bloquear / Salir de Monitor";
+                    document.getElementById('btn-toggle-monitor').className = "danger";
+                    alert("¡Modo monitor activado! Ahora puedes crear y borrar entrenamientos o alumnos.");
+                    renderizar();
+                } else if(pass !== null) {
+                    alert("Contraseña incorrecta.");
+                }
+            } else {
+                modoMonitorActivo = false;
+                document.getElementById('estado-modo-monitor').innerHTML = "Estado actual: <strong>Modo Alumno / Público</strong>";
+                document.getElementById('btn-toggle-monitor').innerText = "Activar Modo Monitor (Contraseña)";
+                document.getElementById('btn-toggle-monitor').className = "";
+                alert("Modo monitor desactivado.");
+                renderizar();
+            }
+        }
+
+        function reiniciarDatosCompletos() {
+            if(prompt("Escribe 'BORRAR' para vaciar todos los datos y empezar de cero:") === 'BORRAR') {
+                datosGlobales = { entrenamientos: [], socios: [] };
+                guardarDatos();
+            }
+        }
+
         cargarDatos();
-        // Recargar automáticamente cada 10 segundos por si otro alumno se apunta
         setInterval(cargarDatos, 10000);
     </script>
 </body>
