@@ -8,14 +8,15 @@
         :root {
             --primary: #0284c7;
             --primary-dark: #0369a1;
-            --bg: #f8fafc;
+            --bg: #f1f5f9;
             --card-bg: #ffffff;
-            --text: #1e293b;
-            --text-light: #64748b;
-            --border: #e2e8f0;
+            --text: #0f172a;
+            --text-light: #475569;
+            --border: #cbd5e1;
             --success: #16a34a;
             --danger: #dc2626;
             --warning: #d97706;
+            --radius: 14px;
         }
 
         * {
@@ -28,66 +29,79 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 70px;
+            padding-bottom: 90px;
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: linear-gradient(135deg, #0284c7, #0f172a);
             color: white;
-            padding: 20px;
+            padding: 25px 15px;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
         }
 
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             margin-bottom: 5px;
+            letter-spacing: -0.5px;
         }
 
         header p {
             font-size: 0.9rem;
-            opacity: 0.9;
+            opacity: 0.85;
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 15px;
+            padding: 20px 15px;
         }
 
         .card {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         .card h3 {
             color: var(--primary-dark);
-            margin-bottom: 8px;
-            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .card p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-light);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            line-height: 1.4;
         }
 
         button {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 8px;
+            transition: all 0.2s ease;
+            margin-top: 10px;
             width: 100%;
+            box-shadow: 0 2px 4px rgba(2, 132, 199, 0.2);
+        }
+
+        button:hover {
+            opacity: 0.95;
+            transform: translateY(-1px);
         }
 
         button:active {
@@ -96,24 +110,36 @@
 
         button.danger {
             background-color: var(--danger);
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
         }
 
         button.warning {
             background-color: var(--warning);
+            box-shadow: 0 2px 4px rgba(217, 119, 6, 0.2);
         }
 
         button.success {
             background-color: var(--success);
+            box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
         }
 
         input, select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 6px;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
+            background: #fff;
+            color: var(--text);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
         }
 
         nav {
@@ -124,9 +150,9 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
-            border-top: 1px solid var(--border);
+            padding: 10px 5px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.08);
+            border-top: 1px solid #e2e8f0;
             z-index: 1000;
         }
 
@@ -134,16 +160,21 @@
             background: none;
             color: var(--text-light);
             border: none;
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             margin: 0;
-            padding: 0;
-            font-weight: normal;
+            padding: 6px 4px;
+            font-weight: 500;
             width: auto;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
         }
 
         nav button.active {
             color: var(--primary);
-            font-weight: bold;
+            font-weight: 700;
         }
 
         .section {
@@ -152,13 +183,31 @@
 
         .section.active {
             display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .sync-status {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-align: center;
             color: var(--text-light);
-            margin-top: 10px;
+            margin: 15px 0;
+            font-weight: 500;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #e0f2fe;
+            color: var(--primary-dark);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
         }
     </style>
 </head>
@@ -166,120 +215,129 @@
 
     <header>
         <h1>🏓 Club de Pickleball</h1>
-        <p>Entrenamientos, Torneos y Bonos</p>
+        <p>Sistema oficial de entrenamientos y bonos</p>
     </header>
 
     <div class="container">
         
         <!-- 1. CLASES -->
         <div id="seccion-entrenamientos" class="section active">
-            <h2>Próximos Entrenamientos</h2>
+            <h2>📅 Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 15px;">
                 <p>Cargando entrenamientos...</p>
             </div>
             
-            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 25px; background: #f0f9ff; display:none;">
-                <h3>Añadir Nuevo Entrenamiento (Monitor)</h3>
+            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 25px; background: #f8fafc; display:none; border: 2px dashed var(--primary);">
+                <h3>➕ Añadir Nuevo Entrenamiento</h3>
                 <label>Título / Nivel:</label>
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
                 <label>Lugar:</label>
                 <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
-                <button onclick="agregarEntrenamiento()">Crear Entrenamiento</button>
+                <button onclick="agregarEntrenamiento()">Publicar Entrenamiento</button>
             </div>
         </div>
 
         <!-- 2. TORNEOS -->
         <div id="seccion-torneos" class="section">
-            <h2>Torneos y Partidos</h2>
+            <h2>🏆 Torneos y Competiciones</h2>
             <div id="lista-torneos" style="margin-top: 15px;">
                 <p>Cargando torneos...</p>
             </div>
             
-            <div class="card" id="panel-crear-torneo" style="margin-top: 25px; background: #f0f9ff; display:none;">
-                <h3>Crear Nuevo Torneo (Monitor)</h3>
+            <div class="card" id="panel-crear-torneo" style="margin-top: 25px; background: #f8fafc; display:none; border: 2px dashed var(--primary);">
+                <h3>➕ Crear Nuevo Torneo</h3>
                 <label>Nombre del Torneo:</label>
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
                 <label>Lugar:</label>
                 <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
-                <button onclick="agregarTorneo()">Crear Torneo</button>
+                <button onclick="agregarTorneo()">Publicar Torneo</button>
             </div>
         </div>
 
         <!-- 3. MI PERFIL (ALUMNO) -->
         <div id="seccion-perfil" class="section">
-            <h2>Mi Panel de Alumno</h2>
+            <h2>👤 Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
-                <h3>Iniciar Sesión</h3>
-                <p>Selecciona tu nombre e introduce tu contraseña o PIN personal.</p>
+                <h3>🔒 Iniciar Sesión</h3>
+                <p>Selecciona tu nombre de la lista e introduce tu PIN personal para acceder a tus bonos y gestiones.</p>
                 
                 <label>Selecciona tu Nombre:</label>
                 <select id="login-select-nombre">
                     <option value="">-- El monitor debe crearte primero --</option>
                 </select>
 
-                <label>Contraseña / PIN:</label>
+                <label>PIN Personal:</label>
                 <input type="password" id="login-pass" placeholder="Tu PIN secreto">
-                <button onclick="iniciarSesionAlumno()">Entrar a mi Panel</button>
+                <button onclick="iniciarSesionAlumno()">Acceder a mi Cuenta</button>
             </div>
 
-            <div id="panel-identificado" class="card" style="display:none; background: #f0f9ff;">
-                <h3 id="saludo-alumno">¡Hola!</h3>
-                <p id="info-bono-personal">🎟️ <strong>Clases disponibles en tu bono:</strong> 0</p>
-                <p style="font-size: 0.8rem; color: var(--success); margin-top: 5px;">✔ Sesión iniciada con seguridad</p>
+            <div id="panel-identificado" class="card" style="display:none; background: #f0fdf4; border-color: #bbf7d0;">
+                <span class="badge">Sesión Activa</span>
+                <h3 id="saludo-alumno" style="color: #15803d;">¡Hola!</h3>
+                <p id="info-bono-personal" style="font-size: 1.05rem; color: #166534; margin: 10px 0;">🎟️ <strong>Clases disponibles:</strong> 0</p>
                 
-                <div style="margin-top: 15px; border-top: 1px solid var(--border); padding-top: 15px;">
+                <div style="margin-top: 20px; border-top: 1px solid #dcfce7; padding-top: 15px;">
+                    <p style="font-size: 0.85rem; font-weight: 600; color: #166534; margin-bottom: 8px;">¿Necesitas solicitar algo?</p>
                     <button class="warning" onclick="solicitarPrimeraClase()">🎁 Solicitar Primera Clase (Prueba)</button>
-                    <button onclick="solicitarRecargaBono()">🎟️ Solicitar Recarga de Bono</button>
+                    <button class="success" onclick="solicitarRecargaBono()">🎟️ Solicitar Recarga de Bono (10 clases)</button>
                 </div>
 
-                <button class="danger" style="margin-top: 15px;" onclick="cerrarSesionAlumno()">Cerrar Sesión</button>
+                <button class="danger" style="margin-top: 20px;" onclick="cerrarSesionAlumno()">Cerrar Sesión</button>
             </div>
         </div>
 
         <!-- 4. MONITOR -->
         <div id="seccion-monitor" class="section">
-            <h2>Panel de Control (Monitor)</h2>
+            <h2>🔑 Panel de Control (Monitor)</h2>
             <div class="card" style="margin-top: 15px;">
                 <p id="estado-modo-monitor">Estado actual: <strong>Modo Alumno / Público</strong></p>
-                <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor (Contraseña)</button>
+                <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor</button>
             </div>
 
             <!-- Panel de administración protegido -->
-            <div class="card" id="panel-opciones-admin" style="display:none; background: #f0f9ff;">
-                <h3>🚨 Avisos Pendientes de Alumnos</h3>
-                <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
-                    <p style="color: var(--text-light);">No hay avisos pendientes.</p>
+            <div class="card" id="panel-opciones-admin" style="display:none; background: #fffbeb; border-color: #fde68a;">
+                <h3 style="color: #b45309;">🚨 Solicitudes de Alumnos</h3>
+                <div id="lista-avisos-monitor" style="margin-bottom: 25px;">
+                    <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
                 </div>
 
-                <h3>Crear Nuevo Alumno</h3>
+                <h3 style="color: var(--primary-dark);">➕ Crear Nuevo Alumno</h3>
                 <label>Nombre del Alumno:</label>
                 <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
-                <label>Contraseña / PIN:</label>
+                <label>PIN de Acceso:</label>
                 <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
                 <label>Clases iniciales en el Bono:</label>
-                <input type="number" id="nuevo-alumno-clases" value="10" placeholder="Ej: 10">
-                <button onclick="registrarNuevoAlumno()">Crear Alumno</button>
+                <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
+                <button onclick="registrarNuevoAlumno()">Crear Alumno (Bono de 10 por defecto)</button>
 
-                <h3 style="margin-top:25px;">Alumnos Registrados y Bonos</h3>
+                <h3 style="margin-top:30px; color: var(--primary-dark);">👥 Alumnos Registrados</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
 
-                <button class="danger" style="margin-top:25px;" onclick="reiniciarDatosCompletos()">Restaurar / Vaciar Todo</button>
+                <button class="danger" style="margin-top:35px;" onclick="reiniciarDatosCompletos()">⚠️ Vaciar / Reiniciar Todo</button>
             </div>
         </div>
         
-        <div class="sync-status" id="estado-sync">Sincronizado 🟢</div>
+        <div class="sync-status" id="estado-sync">Conectando en tiempo real... ⏳</div>
     </div>
 
     <!-- NAVEGACIÓN -->
     <nav>
-        <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">📅 Clases</button>
-        <button onclick="cambiarSeccion('torneos')" id="nav-torneos">🏆 Torneos</button>
-        <button onclick="cambiarSeccion('perfil')" id="nav-perfil">👤 Mi Perfil</button>
-        <button onclick="cambiarSeccion('monitor')" id="nav-monitor">🔑 Monitor</button>
+        <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
+            <span>📅</span> Clases
+        </button>
+        <button onclick="cambiarSeccion('torneos')" id="nav-torneos">
+            <span>🏆</span> Torneos
+        </button>
+        <button onclick="cambiarSeccion('perfil')" id="nav-perfil">
+            <span>👤</span> Mi Perfil
+        </button>
+        <button onclick="cambiarSeccion('monitor')" id="nav-monitor">
+            <span>🔑</span> Monitor
+        </button>
     </nav>
 
     <script>
@@ -306,7 +364,8 @@
 
         async function cargarDatos() {
             try {
-                let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                // Añadimos un parámetro aleatorio para evitar que el navegador guarde una caché vieja (soluciona incógnito/móviles)
+                let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest?r=${Date.now()}`, {
                     headers: { 'X-Master-Key': MASTER_KEY }
                 });
                 if(respuesta.ok) {
@@ -324,7 +383,7 @@
         }
 
         async function guardarDatos() {
-            document.getElementById('estado-sync').innerText = "Sincronizando... ⏳";
+            document.getElementById('estado-sync').innerText = "Guardando cambios... ⏳";
             try {
                 let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
                     method: 'PUT',
@@ -338,7 +397,7 @@
                     document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
                 }
             } catch(e) {
-                document.getElementById('estado-sync').innerText = "Sin conexión 🔴";
+                document.getElementById('estado-sync').innerText = "Error de sincronización 🔴";
             }
             renderizar();
         }
@@ -360,7 +419,7 @@
             document.getElementById('nuevo-alumno-pass').value = "";
             document.getElementById('nuevo-alumno-clases').value = "10";
             guardarDatos();
-            alert("¡Alumno creado con éxito (Bono de 10 por defecto)!");
+            alert("¡Alumno creado con éxito con bono de 10 clases!");
         }
 
         function iniciarSesionAlumno() {
@@ -396,7 +455,7 @@
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
             
             let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Primera Clase');
-            if(yaPedido) return alert("Ya has solicitado tu primera clase. El monitor te avisará pronto.");
+            if(yaPedido) return alert("Ya tienes una solicitud de primera clase pendiente con el monitor.");
 
             datosGlobales.avisos.push({
                 id: Date.now(),
@@ -405,7 +464,7 @@
                 texto: `${alumnoActual.nombre} ha solicitado su Primera Clase de prueba.`
             });
             guardarDatos();
-            alert("¡Solicitud enviada al monitor con éxito!");
+            alert("¡Solicitud enviada al monitor correctamente!");
         }
 
         function solicitarRecargaBono() {
@@ -417,16 +476,16 @@
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
 
             let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono');
-            if(yaPedido) return alert("Ya tienes una solicitud de bono pendiente con el monitor.");
+            if(yaPedido) return alert("Ya tienes una solicitud de recarga pendiente con el monitor.");
 
             datosGlobales.avisos.push({
                 id: Date.now(),
                 alumno: alumnoActual.nombre,
                 tipo: 'Recarga Bono',
-                texto: `${alumnoActual.nombre} solicita recargar su Bono de clases.`
+                texto: `${alumnoActual.nombre} solicita recargar su Bono de 10 clases.`
             });
             guardarDatos();
-            alert("¡Aviso de recarga de bono enviado al monitor!");
+            alert("¡Aviso de recarga enviado al monitor correctamente!");
         }
 
         function resolverAviso(id) {
@@ -457,18 +516,18 @@
 
             let htmlEntrenamientos = "";
             if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0) {
-                htmlEntrenamientos = "<p>No hay entrenamientos programados.</p>";
+                htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
             } else {
                 datosGlobales.entrenamientos.forEach(ent => {
                     let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
                     let lugarTxt = ent.lugar ? `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p>` : '';
                     htmlEntrenamientos += `
                         <div class="card">
-                            <h3>${ent.titulo}</h3>
-                            <p>🕒 ${ent.fecha}</p>
+                            <h3>🏓 ${ent.titulo}</h3>
+                            <p>🕒 <strong>Fecha:</strong> ${ent.fecha}</p>
                             ${lugarTxt}
-                            <p>👤 <strong>Inscritos:</strong> ${ent.inscritos && ent.inscritos.length > 0 ? ent.inscritos.join(', ') : 'Nadie apuntado aún'}</p>
-                            <button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme con mi cuenta</button>
+                            <p>👥 <strong>Inscritos:</strong> ${ent.inscritos && ent.inscritos.length > 0 ? ent.inscritos.join(', ') : 'Nadie apuntado aún'}</p>
+                            <button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme a este entrenamiento</button>
                             ${btnBorrar}
                         </div>
                     `;
@@ -478,7 +537,7 @@
 
             let htmlTorneos = "";
             if(!datosGlobales.torneos || datosGlobales.torneos.length === 0) {
-                htmlTorneos = "<p>No hay torneos programados.</p>";
+                htmlTorneos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay torneos programados actualmente.</p>";
             } else {
                 datosGlobales.torneos.forEach(tor => {
                     let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar Torneo</button>` : '';
@@ -486,7 +545,7 @@
                     htmlTorneos += `
                         <div class="card">
                             <h3>🏆 ${tor.titulo}</h3>
-                            <p>📅 ${tor.fecha}</p>
+                            <p>📅 <strong>Fecha:</strong> ${tor.fecha}</p>
                             ${lugarTorneoTxt}
                             <p>👥 <strong>Participantes:</strong> ${tor.inscritos && tor.inscritos.length > 0 ? tor.inscritos.join(', ') : 'Inscripciones abiertas'}</p>
                             <button onclick="apuntarseTorneo(${tor.id})">Apuntarme al Torneo</button>
@@ -502,10 +561,10 @@
                 if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
                     datosGlobales.avisos.forEach(aviso => {
                         avisosHtml += `
-                            <div class="card" style="background: #fffbeb; border-color: #fde68a; padding: 10px; margin-bottom: 8px;">
-                                <p style="color: #92400e; font-weight: bold; margin-bottom: 4px;">⚠️ ${aviso.tipo}</p>
-                                <p style="color: #b45309; font-size: 0.85rem; margin-bottom: 8px;">${aviso.texto}</p>
-                                <button class="success" style="padding: 4px 8px; font-size: 0.8rem; width: auto;" onclick="resolverAviso(${aviso.id})">Marcar como Atendido / Visto</button>
+                            <div class="card" style="background: white; border-color: #f59e0b; padding: 14px; margin-bottom: 10px;">
+                                <p style="color: #b45309; font-weight: bold; margin-bottom: 4px;">⚠️ Solicitud: ${aviso.tipo}</p>
+                                <p style="color: var(--text); font-size: 0.9rem; margin-bottom: 10px;">${aviso.texto}</p>
+                                <button class="success" style="padding: 8px; font-size: 0.85rem;" onclick="resolverAviso(${aviso.id})">✔ Marcar como Atendido / Visto</button>
                             </div>
                         `;
                     });
@@ -518,16 +577,18 @@
                 if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
                     datosGlobales.alumnos.forEach((al, idx) => {
                         listaAdminHtml += `
-                            <div class="card" style="padding:10px; margin-bottom:8px; background:white;">
-                                👤 <strong>${al.nombre}</strong> (PIN: <code>${al.pass}</code>)<br>
-                                🎟️ Clases bono: <strong>${al.clasesBono}</strong>
-                                <button onclick="modificarBono(${idx})" style="padding:4px 8px; font-size:0.8rem; margin-right:5px; width:auto;">Editar Clases</button>
-                                <button class="danger" style="padding:4px 8px; font-size:0.8rem; width:auto;" onclick="borrarAlumno(${idx})">Eliminar</button>
+                            <div class="card" style="padding:12px; margin-bottom:10px; background:white;">
+                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
+                                <p style="margin-bottom:8px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
+                                <div style="display:flex; gap:8px;">
+                                    <button onclick="modificarBono(${idx})" style="padding:6px; font-size:0.85rem; margin-top:0;">Editar Clases</button>
+                                    <button class="danger" style="padding:6px; font-size:0.85rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
+                                </div>
                             </div>
                         `;
                     });
                 } else {
-                    listaAdminHtml = `<p>No hay alumnos dados de alta todavía.</p>`;
+                    listaAdminHtml = `<p style="color:var(--text-light)">No hay alumnos dados de alta todavía.</p>`;
                 }
                 document.getElementById('lista-alumnos-admin').innerHTML = listaAdminHtml;
             }
@@ -539,7 +600,7 @@
 
         function apuntarseEntrenamiento(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil'.");
+                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil' para apuntarte.");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -556,7 +617,7 @@
 
         function apuntarseTorneo(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil'.");
+                alert("Debes iniciar sesión primero en la pestaña 'Mi Perfil' para apuntarte.");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -585,7 +646,7 @@
         }
 
         function borrarEntrenamiento(id) {
-            if(confirm("¿Borrar este entrenamiento?")) {
+            if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
                 datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
                 guardarDatos();
             }
@@ -605,7 +666,7 @@
         }
 
         function borrarTorneo(id) {
-            if(confirm("¿Borrar este torneo?")) {
+            if(confirm("¿Seguro que quieres borrar este torneo?")) {
                 datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
                 guardarDatos();
             }
@@ -632,9 +693,9 @@
                 if(pass === "1234") {
                     modoMonitorActivo = true;
                     document.getElementById('estado-modo-monitor').innerHTML = "Estado actual: <strong style='color:var(--success);'>MODO MONITOR ACTIVADO 🔓</strong>";
-                    document.getElementById('btn-toggle-monitor').innerText = "Bloquear / Salir de Monitor";
+                    document.getElementById('btn-toggle-monitor').innerText = "Cerrar Modo Monitor";
                     document.getElementById('btn-toggle-monitor').className = "danger";
-                    alert("¡Modo monitor activado!");
+                    alert("¡Modo monitor activado con éxito!");
                     renderizar();
                 } else if(pass !== null) {
                     alert("Contraseña incorrecta.");
@@ -642,7 +703,7 @@
             } else {
                 modoMonitorActivo = false;
                 document.getElementById('estado-modo-monitor').innerHTML = "Estado actual: <strong>Modo Alumno / Público</strong>";
-                document.getElementById('btn-toggle-monitor').innerText = "Activar Modo Monitor (Contraseña)";
+                document.getElementById('btn-toggle-monitor').innerText = "Activar Modo Monitor";
                 document.getElementById('btn-toggle-monitor').className = "";
                 alert("Modo monitor desactivado.");
                 renderizar();
@@ -650,14 +711,15 @@
         }
 
         function reiniciarDatosCompletos() {
-            if(prompt("Escribe 'BORRAR' para vaciar todo:") === 'BORRAR') {
+            if(prompt("Escribe 'BORRAR' para vaciar absolutamente todo:") === 'BORRAR') {
                 datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [] };
                 guardarDatos();
             }
         }
 
         cargarDatos();
-        setInterval(cargarDatos, 6000);
+        // Sincronización automática cada 5 segundos para que refleje cambios entre dispositivos al instante
+        setInterval(cargarDatos, 5000);
     </script>
 </body>
 </html>
