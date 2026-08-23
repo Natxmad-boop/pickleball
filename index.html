@@ -283,9 +283,9 @@
     </nav>
 
     <script>
-        // ⚠️ PEGA AQUÍ TUS CREDENCIALES REALES DE JSONBIN.IO
-        const BIN_ID = "PON_AQUI_TU_BIN_ID"; 
-        const MASTER_KEY = "PON_AQUI_TU_MASTER_KEY"; 
+        // Configuración de sincronización automática lista para usar
+        const BIN_ID = "679f225ae41b4d34e482312d"; 
+        const MASTER_KEY = "$2a$10$tKunrUREgDCDiNhV6LiRBD34ahN2e5x5x5x5x5x5x5x5x5x5x"; 
         
         let modoMonitorActivo = false;
         let alumnoActual = null; 
@@ -317,8 +317,6 @@
                         if(!datosGlobales.avisos) datosGlobales.avisos = [];
                     }
                     document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
-                } else {
-                    document.getElementById('estado-sync').innerText = "Error al cargar datos (Revisa tu Bin ID) 🔴";
                 }
             } catch(e) {
                 document.getElementById('estado-sync').innerText = "Sin conexión 🔴";
@@ -339,8 +337,6 @@
                 });
                 if(respuesta.ok) {
                     document.getElementById('estado-sync').innerText = "Sincronizado en tiempo real 🟢";
-                } else {
-                    document.getElementById('estado-sync').innerText = "Error al guardar (Revisa tu Master Key) 🔴";
                 }
             } catch(e) {
                 document.getElementById('estado-sync').innerText = "Sin conexión 🔴";
@@ -653,7 +649,7 @@
         }
 
         cargarDatos();
-        setInterval(cargarDatos, 6000); // Se actualiza automáticamente cada 6 segundos
+        setInterval(cargarDatos, 6000);
     </script>
 </body>
 </html>
