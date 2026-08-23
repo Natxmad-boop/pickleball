@@ -16,6 +16,7 @@
         .btn-socio { background-color: #27ae60; }
         .btn-danger { background-color: #e74c3c; }
         .btn-sync { background-color: #8e44ad; }
+        .btn-backup { background-color: #16a085; }
         ul { list-style: none; padding: 0; }
         li { background: #ecf0f1; padding: 12px; margin-top: 8px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
         .sync-status { text-align: center; font-size: 14px; color: #27ae60; margin-bottom: 15px; font-weight: bold; }
@@ -27,7 +28,7 @@
 
 <div class="container">
     <h1>🏓 Club de Pickleball</h1>
-    <div id="status" class="sync-status">Sistema Local Estable ⚡</div>
+    <div id="status" class="sync-status">Sistema Seguro con Copias de Respaldo 🛡️</div>
 
     <!-- MENÚ PRINCIPAL -->
     <div id="menuPrincipal">
@@ -46,10 +47,11 @@
         <button class="btn-danger" onclick="cerrarSesion()">Cerrar Sesión</button>
         
         <div class="section" style="background: #f4ecf7; padding: 10px; border-radius: 6px;">
-            <h3 style="color: #8e44ad; margin-top:0;">🔄 Sincronización Rápida entre Móviles</h3>
-            <p style="font-size: 13px; color: #555;">Usa estos botones para pasar los datos al otro móvil o actualizar cambios:</p>
-            <button class="btn-sync" onclick="exportarDatos()">📤 Copiar Datos del Club</button>
-            <button class="btn-sync" onclick="importarDatos()">📥 Pegar Datos Actualizados</button>
+            <h3 style="color: #8e44ad; margin-top:0;">🔄 Sincronización y Respaldo Seguro</h3>
+            <p style="font-size: 13px; color: #555;">Los datos se combinan de forma inteligente para no borrar nada:</p>
+            <button class="btn-sync" onclick="exportarDatos()">📤 Copiar Datos Actualizados</button>
+            <button class="btn-sync" onclick="importarDatos()">📥 Sincronizar Datos (Fusionar)</button>
+            <button class="btn-backup" onclick="descargarRespaldo()">💾 Descargar Archivo de Respaldo</button>
         </div>
 
         <div class="section">
@@ -120,7 +122,7 @@
 </div>
 
 <script>
-    const STORAGE_KEY = 'pickleball_club_v11';
+    const STORAGE_KEY = 'pickleball_club_v12';
 
     function obtenerDatos() {
         let local = localStorage.getItem(STORAGE_KEY);
@@ -179,27 +181,86 @@
     function exportarDatos() {
         let datosStr = localStorage.getItem(STORAGE_KEY) || "{}";
         navigator.clipboard.writeText(datosStr).then(() => {
-            alert("¡Datos copiados al portapapeles! Pégaselos al otro móvil (por WhatsApp o bloc de notas).");
+            alert("¡Datos copiados! Pégaselos al otro dispositivo.");
         }).catch(err => {
             prompt("Copia este texto manualmente:", datosStr);
         });
     }
 
+    // Fusión inteligente: Añade lo nuevo sin borrar lo que ya existía
     function importarDatos() {
         let datosStr = prompt("Pega aquí los datos copiados del otro móvil:");
         if(!datosStr) return;
         try {
-            let parsed = JSON.parse(datosStr);
-            if(parsed && parsed.socios) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
-                alert("¡Datos actualizados correctamente!");
-                cargarPanelMonitor();
-            } else {
-                alert("El formato no es válido.");
-            }
+            let externo = JSON.parse(datosStr);
+            if(!externo || !externo.socios) return alert("El formato no es válido.");
+
+            let actual = obtenerDatos();
+
+            // Combinar socios evitando duplicados por nombre
+            externo.socios.forEach(sExt => {
+                if(!actual.socios.some(sAct => sAct.nombre.toLowerCase() === sExt.nombre.toLowerCase())) {
+                    actual.socios.push(sExt);
+                }
+            });
+
+            // Combinar bonos evitando duplicados exactos
+            externo.bonosGlobales.forEach(bExt => {
+                if(!actual.bonosGlobales.includes(bExt)) {
+                    actual.bonosGlobales.push(bExt);
+                }
+            });
+
+            // Combinar entrenamientos básicos
+            externo.entrenamientos.forEach(eExt => {
+                let encontrado = actual.entrenamientos.find(eAct => eAct.titulo === eExt.titulo && eAct.fecha === eExt.fecha);
+                if(!encontrado) {
+                    actual.entrenamientos.push(eExt);
+                } else {
+                    // Si existe, fusionar inscritos sin perder a nadie
+                    eExt.inscritos.forEach(ins => {
+                        if(!encontrado.inscritos.includes(ins)) encontrado.inscritos.push(ins);
+                    });
+                }
+            });
+
+            // Combinar torneos
+            externo.torneos.forEach(tExt => {
+                let encontrado = actual.torneos.find(tAct => tAct.titulo === tExt.titulo && tAct.fecha === tExt.fecha);
+                if(!encontrado) {
+                    actual.torneos.push(tExt);
+                } else {
+                    tExt.inscritos.forEach(ins => {
+                        if(!encontrado.inscritos.includes(ins)) encontrado.inscritos.push(ins);
+                    });
+                }
+            });
+
+            // Combinar solicitudes
+            externo.solicitudes.forEach(sExt => {
+                if(!actual.solicitudes.includes(sExt)) {
+                    actual.solicitudes.push(sExt);
+                }
+            });
+
+            guardarDatos(actual);
+            alert("¡Datos sincronizados y combinados correctamente sin perder nada!");
+            cargarPanelMonitor();
+
         } catch(e) {
             alert("Error al leer los datos. Asegúrate de pegar el texto completo.");
         }
+    }
+
+    function descargarRespaldo() {
+        let datosStr = localStorage.getItem(STORAGE_KEY) || "{}";
+        let blob = new Blob([datosStr], {type: "application/json"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement('a');
+        a.href = url;
+        a.download = "respaldo_pickleball.json";
+        a.click();
+        alert("¡Archivo de copia de seguridad descargado en tu móvil!");
     }
 
     function solicitarPrueba() {
