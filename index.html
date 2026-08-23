@@ -261,7 +261,7 @@
                 <label>Contraseña / PIN:</label>
                 <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
                 <label>Clases iniciales en el Bono:</label>
-                <input type="number" id="nuevo-alumno-clases" value="0" placeholder="Ej: 5 o 10">
+                <input type="number" id="nuevo-alumno-clases" value="10" placeholder="Ej: 10">
                 <button onclick="registrarNuevoAlumno()">Crear Alumno</button>
 
                 <h3 style="margin-top:25px;">Alumnos Registrados y Bonos</h3>
@@ -283,7 +283,6 @@
     </nav>
 
     <script>
-        // Configuración de sincronización automática lista para usar
         const BIN_ID = "679f225ae41b4d34e482312d"; 
         const MASTER_KEY = "$2a$10$tKunrUREgDCDiNhV6LiRBD34ahN2e5x5x5x5x5x5x5x5x5x5x"; 
         
@@ -347,7 +346,8 @@
         function registrarNuevoAlumno() {
             let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
             let pass = document.getElementById('nuevo-alumno-pass').value.trim();
-            let clases = parseInt(document.getElementById('nuevo-alumno-clases').value) || 0;
+            let clases = parseInt(document.getElementById('nuevo-alumno-clases').value);
+            if(isNaN(clases)) clases = 10;
 
             if(!nombre || !pass) return alert("Escribe el nombre y la contraseña del alumno");
             if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
@@ -358,9 +358,9 @@
             datosGlobales.alumnos.push({ nombre, pass, clasesBono: clases });
             document.getElementById('nuevo-alumno-nombre').value = "";
             document.getElementById('nuevo-alumno-pass').value = "";
-            document.getElementById('nuevo-alumno-clases').value = "0";
+            document.getElementById('nuevo-alumno-clases').value = "10";
             guardarDatos();
-            alert("¡Alumno creado con éxito!");
+            alert("¡Alumno creado con éxito (Bono de 10 por defecto)!");
         }
 
         function iniciarSesionAlumno() {
@@ -388,7 +388,11 @@
         }
 
         function solicitarPrimeraClase() {
-            if(!alumnoActual) return;
+            if(!alumnoActual) {
+                alert("Debes iniciar sesión en tu perfil para solicitar la primera clase.");
+                cambiarSeccion('perfil');
+                return;
+            }
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
             
             let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Primera Clase');
@@ -405,7 +409,11 @@
         }
 
         function solicitarRecargaBono() {
-            if(!alumnoActual) return;
+            if(!alumnoActual) {
+                alert("Debes iniciar sesión en tu perfil.");
+                cambiarSeccion('perfil');
+                return;
+            }
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
 
             let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono');
