@@ -222,6 +222,13 @@
         
         <!-- 1. CLASES -->
         <div id="seccion-entrenamientos" class="section active">
+            <!-- TARJETA PARA PEDIR CLASE GRATIS SIN REGISTRO -->
+            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
+                <h3 style="color: #15803d;">🎁 ¿Nueva/o por aquí?</h3>
+                <p style="color: #166534;">Prueba este deporte totalmente gratis. ¡Pide tu primera clase de prueba sin necesidad de registrarte!</p>
+                <button class="success" onclick="pedirClaseLibreSinRegistro()">Solicitar Clase Gratis (Sin Registro)</button>
+            </div>
+
             <h2>📅 Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 15px;">
                 <p>Cargando entrenamientos...</p>
@@ -263,7 +270,7 @@
             <h2>👤 Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
                 <h3>🔒 Iniciar Sesión</h3>
-                <p>Selecciona tu nombre de la lista e introduce tu PIN personal para acceder a tus bonos y gestiones.</p>
+                <p>Si ya estás registrado, selecciona tu nombre e introduce tu PIN personal.</p>
                 
                 <label>Selecciona tu Nombre:</label>
                 <select id="login-select-nombre">
@@ -281,8 +288,7 @@
                 <p id="info-bono-personal" style="font-size: 1.05rem; color: #166534; margin: 10px 0;">🎟️ <strong>Clases disponibles:</strong> 0</p>
                 
                 <div style="margin-top: 20px; border-top: 1px solid #dcfce7; padding-top: 15px;">
-                    <p style="font-size: 0.85rem; font-weight: 600; color: #166534; margin-bottom: 8px;">¿Necesitas solicitar algo?</p>
-                    <button class="warning" onclick="solicitarPrimeraClase()">🎁 Solicitar Primera Clase (Prueba)</button>
+                    <p style="font-size: 0.85rem; font-weight: 600; color: #166534; margin-bottom: 8px;">Gestión de Bonos:</p>
                     <button class="success" onclick="solicitarRecargaBono()">🎟️ Solicitar Recarga de Bono (10 clases)</button>
                 </div>
 
@@ -300,7 +306,7 @@
 
             <!-- Panel de administración protegido -->
             <div class="card" id="panel-opciones-admin" style="display:none; background: #fffbeb; border-color: #fde68a;">
-                <h3 style="color: #b45309;">🚨 Solicitudes de Alumnos</h3>
+                <h3 style="color: #b45309;">🚨 Solicitudes y Avisos de Alumnos</h3>
                 <div id="lista-avisos-monitor" style="margin-bottom: 25px;">
                     <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
                 </div>
@@ -364,7 +370,6 @@
 
         async function cargarDatos() {
             try {
-                // Añadimos un parámetro aleatorio para evitar que el navegador guarde una caché vieja (soluciona incógnito/móviles)
                 let respuesta = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest?r=${Date.now()}`, {
                     headers: { 'X-Master-Key': MASTER_KEY }
                 });
@@ -400,6 +405,22 @@
                 document.getElementById('estado-sync').innerText = "Error de sincronización 🔴";
             }
             renderizar();
+        }
+
+        function pedirClaseLibreSinRegistro() {
+            let nombre = prompt("¡Genial! Introduce tu Nombre y Apellidos para la clase de prueba gratuita:");
+            if(!nombre || nombre.trim() === "") return;
+
+            if(!datosGlobales.avisos) datosGlobales.avisos = [];
+
+            datosGlobales.avisos.push({
+                id: Date.now(),
+                alumno: nombre.trim(),
+                tipo: 'Clase Gratis (Sin Registro)',
+                texto: `${nombre.trim()} ha solicitado una Clase Gratis de prueba sin registro previo.`
+            });
+            guardarDatos();
+            alert("¡Solicitud enviada con éxito! El monitor se pondrá en contacto contigo pronto.");
         }
 
         function registrarNuevoAlumno() {
@@ -444,27 +465,6 @@
         function cerrarSesionAlumno() {
             alumnoActual = null;
             renderizar();
-        }
-
-        function solicitarPrimeraClase() {
-            if(!alumnoActual) {
-                alert("Debes iniciar sesión en tu perfil para solicitar la primera clase.");
-                cambiarSeccion('perfil');
-                return;
-            }
-            if(!datosGlobales.avisos) datosGlobales.avisos = [];
-            
-            let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Primera Clase');
-            if(yaPedido) return alert("Ya tienes una solicitud de primera clase pendiente con el monitor.");
-
-            datosGlobales.avisos.push({
-                id: Date.now(),
-                alumno: alumnoActual.nombre,
-                tipo: 'Primera Clase',
-                texto: `${alumnoActual.nombre} ha solicitado su Primera Clase de prueba.`
-            });
-            guardarDatos();
-            alert("¡Solicitud enviada al monitor correctamente!");
         }
 
         function solicitarRecargaBono() {
@@ -516,7 +516,7 @@
 
             let htmlEntrenamientos = "";
             if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0) {
-                htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
+                htmlEntrenamientos = "<p style='text-align:center; padding:10px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
             } else {
                 datosGlobales.entrenamientos.forEach(ent => {
                     let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
@@ -718,7 +718,6 @@
         }
 
         cargarDatos();
-        // Sincronización automática cada 5 segundos para que refleje cambios entre dispositivos al instante
         setInterval(cargarDatos, 5000);
     </script>
 </body>
