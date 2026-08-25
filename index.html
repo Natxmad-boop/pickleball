@@ -673,10 +673,15 @@
                 globo.style.display = 'none';
             }
 
+            // Guardamos el nombre seleccionado actual para que no se pierda al actualizarse la vista
+            let selectElem = document.getElementById('login-select-nombre');
+            let valorSeleccionadoActual = selectElem ? selectElem.value : "";
+
             let selectHtml = `<option value="">-- Selecciona tu nombre --</option>`;
             if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
                 datosGlobales.alumnos.forEach(al => {
-                    selectHtml += `<option value="${al.nombre}">${al.nombre}</option>`;
+                    let selected = (al.nombre === valorSeleccionadoActual) ? 'selected' : '';
+                    selectHtml += `<option value="${al.nombre}" ${selected}>${al.nombre}</option>`;
                 });
             }
             document.getElementById('login-select-nombre').innerHTML = selectHtml;
