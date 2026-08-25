@@ -3,274 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club de Pickleball | Gestión Profesional</title>
+    <title>Club de Pickleball | Gestión Deportiva</title>
     <style>
         :root {
-            --primary: #090d16;          
-            --primary-accent: #3b82f6;   /* Azul eléctrico moderno */
-            --primary-light: #eff6ff;
-            --bg: #f8fafc;               /* Fondo hiper limpio estilo SaaS moderno */
+            /* PALETA DEPORTIVA: Verde Neón + Azul Marino + Gris Competencia */
+            --primary: #0f172a;           /* Azul Marino Oscuro (Texto principal) */
+            --primary-light: #1e293b;     
+            --primary-accent: #00c897;    /* Verde Neón Deportivo (Botones principales, Acentos) */
+            --btn-hover: #00a87f;        
+            
+            --bg: #f1f5f9;                /* Fondo Gris Claro muy limpio */
             --card-bg: #ffffff;
             --text: #0f172a;
-            --text-light: #64748b;
-            --border: #f1f5f9;
+            --text-light: #475569;
             --border-card: #e2e8f0;
-            --success: #10b981;          /* Esmeralda vibrante */
-            --success-bg: #f0fdf4;
-            --danger: #ef4444;
-            --danger-bg: #fef2f2;
-            --warning: #f59e0b;
+            
+            --success: #10b981;           /* Verde Éxito (Bonos) */
+            --success-bg: #d1fae5;
+            --danger: #ef4444;            /* Rojo Peligro (Borrar) */
+            --danger-bg: #fee2e2;
+            --warning: #f59e0b;           /* Naranja Aviso (Monitor) */
             --warning-bg: #fffbeb;
-            --radius: 16px;
+            
+            --radius: 12px;               /* Bordes ligeramente menos redondeados, más serios */
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: var(--font-family);
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 110px;
+            padding-bottom: 120px; /* Espacio para el menú fijo */
             -webkit-font-smoothing: antialiased;
         }
 
-        /* CABECERA ESTILO APP */
+        /* CABECERA ESTILO "ESTADIO" */
         header {
-            background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+            background: var(--primary);
             color: white;
-            padding: 24px 20px 20px 20px;
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.08);
-            position: relative;
+            padding: 25px 20px 20px 20px;
+            border-bottom: 5px solid var(--primary-accent); /* Línea deportiva en el borde */
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
         header h1 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-size: 1.6rem;
+            font-weight: 800; /* Fuente más gruesa */
+            letter-spacing: -0.8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            text-transform: uppercase;
         }
 
         header p {
-            font-size: 0.85rem;
-            opacity: 0.7;
-            font-weight: 400;
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-weight: 500;
         }
 
-        /* ESTADO DE SYNC MINIMALISTA EN CABECERA */
         .sync-status {
-            font-size: 0.72rem;
-            color: #94a3b8;
-            background: rgba(255, 255, 255, 0.08);
-            padding: 4px 10px;
+            font-size: 0.75rem;
+            color: #ffffff;
+            background: rgba(0, 200, 151, 0.15); /* Tono verde suave en el fondo */
+            padding: 5px 12px;
             border-radius: 20px;
-            font-weight: 500;
-            display: inline-block;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+            border: 1px solid var(--primary-accent);
         }
 
         .container {
-            max-width: 600px;
+            max-width: 640px;
             margin: 0 auto;
-            padding: 20px 16px;
+            padding: 24px 16px;
         }
 
         h2 {
-            font-size: 1.25rem;
+            font-size: 1.4rem;
             color: var(--primary);
-            margin-bottom: 16px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            border-left: 4px solid var(--primary-accent); /* Detalle deportivo en el título */
+            padding-left: 12px;
         }
 
-        /* TARJETAS FLOTANTES MODERNAS */
+        /* TARJETAS DEPORTIVAS CON BORDES LATERALES */
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
             padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02), 0 1px 2px rgba(0, 0, 0, 0.02);
+            margin-bottom: 18px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border-card);
-            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Línea de color vertical deportiva a la izquierda */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 6px;
+            background-color: var(--primary-accent);
         }
 
         .card:hover {
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
-            border-color: #cbd5e1;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
         }
 
         .card h3 {
             color: var(--primary);
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .card p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             color: var(--text-light);
-            margin-bottom: 8px;
-            line-height: 1.5;
+            margin-bottom: 10px;
+            line-height: 1.6;
         }
 
-        /* BOTONES DE ACCIÓN ESTILIZADOS */
+        /* BOTONES DEPORTIVOS */
         button {
             background-color: var(--primary-accent);
-            color: white;
+            color: var(--primary);
             border: none;
-            padding: 12px 18px;
-            border-radius: 12px;
-            font-size: 0.92rem;
-            font-weight: 600;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 10px;
+            margin-top: 12px;
             width: 100%;
-            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         button:hover {
-            background-color: #2563eb;
-            transform: translateY(-1px);
+            background-color: var(--btn-hover);
+            transform: translateY(-2px);
         }
 
         button:active {
-            transform: scale(0.98);
+            transform: translateY(0);
         }
 
         button.danger {
             background-color: var(--danger);
-            box-shadow: 0 2px 6px rgba(239, 68, 68, 0.25);
+            color: white;
         }
-        button.danger:hover { background-color: #dc2626; }
+        button.danger:hover { background-color: #b91c1c; }
 
         button.warning {
             background-color: var(--warning);
-            box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+            color: var(--primary);
         }
         button.warning:hover { background-color: #d97706; }
 
         button.success {
             background-color: var(--success);
-            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.25);
+            color: white;
         }
         button.success:hover { background-color: #059669; }
 
         input, select {
             width: 100%;
-            padding: 12px 14px;
-            margin-top: 6px;
-            margin-bottom: 14px;
-            border: 1px solid var(--border-card);
-            border-radius: 12px;
-            font-size: 0.95rem;
+            padding: 14px 16px;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            border: 2px solid var(--border-card);
+            border-radius: 8px;
+            font-size: 1rem;
             background: #fff;
             color: var(--text);
             outline: none;
-            transition: all 0.2s;
+            transition: border-color 0.2s;
         }
 
         input:focus, select:focus {
             border-color: var(--primary-accent);
-            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
 
-        /* NAVEGACIÓN INFERIOR ESTILO "DOCK" FLOTANTE (4 BOTONES) */
+        /* NAVEGACIÓN INFERIOR (DOCK ESTILO DEPORTIVO) */
         nav {
             position: fixed;
-            bottom: 12px;
-            left: 12px;
-            right: 12px;
-            max-width: 576px;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            max-width: 600px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: var(--primary);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-around;
-            padding: 8px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.04);
-            border-radius: 20px;
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            padding: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border-radius: 12px;
+            border: 2px solid var(--primary-accent);
             z-index: 1000;
         }
 
         nav button {
             background: none;
-            color: var(--text-light);
+            color: #a3b3c6;
             border: none;
-            font-size: 0.68rem;
+            font-size: 0.75rem;
             margin: 0;
-            padding: 8px 4px;
-            font-weight: 500;
-            width: 25%; /* Repartido entre 4 botones */
+            padding: 10px 4px;
+            font-weight: 600;
+            width: 25%;
             box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
-            border-radius: 14px;
-            transition: all 0.2s ease;
+            gap: 4px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
             position: relative;
+            text-transform: none;
         }
 
         nav button span.icon {
-            font-size: 1.3rem;
-            transition: transform 0.2s;
-            position: relative;
+            font-size: 1.6rem;
+            transition: transform 0.3s;
         }
 
         .notification-badge {
             position: absolute;
-            top: -3px;
-            right: 12px;
+            top: -4px;
+            right: 14px;
             background-color: var(--danger);
             color: white;
-            font-size: 0.58rem;
-            font-weight: 700;
-            padding: 2px 5px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 3px 6px;
             border-radius: 10px;
-            border: 2px solid white;
+            border: 2px solid var(--primary);
             display: none;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
         }
 
         nav button.active {
-            color: var(--primary-accent);
-            font-weight: 700;
-            background-color: var(--primary-light);
+            color: var(--primary);
+            background-color: var(--primary-accent);
+            font-weight: 800;
         }
 
         nav button.active span.icon {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
 
         .section {
@@ -279,32 +288,40 @@
 
         .section.active {
             display: block;
-            animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: slideIn 0.3s ease-out;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(15px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
         .badge {
             display: inline-block;
             background: var(--success-bg);
             color: var(--success);
-            padding: 4px 10px;
+            padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
             margin-bottom: 10px;
-            border: 1px solid #d1fae5;
         }
 
         label {
-            font-size: 0.83rem;
-            font-weight: 600;
-            color: #475569;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary-light);
             display: block;
             margin-top: 4px;
+        }
+        
+        #seccion-home .card.success-card {
+            background: linear-gradient(135deg, var(--success-bg), #ecfdf5);
+            border: 2px solid #a7f3d0;
+            position: relative;
+        }
+        #seccion-home .card.success-card::before {
+            background-color: var(--success);
         }
     </style>
 </head>
@@ -312,95 +329,90 @@
 
     <header>
         <div class="header-top">
-            <h1>🏓 Pickleball Club</h1>
-            <span class="sync-status" id="estado-sync">Conectando...</span>
+            <h1>🏓 PICKLEBALL CLUB</h1>
+            <span class="sync-status" id="estado-sync">CONECTANDO...</span>
         </div>
-        <p>Panel de Gestión de Entrenamientos y Bonos</p>
+        <p>GESTIÓN DEPORTIVA INTEGRAL</p>
     </header>
 
     <div class="container">
 
-        <!-- 0. PANTALLA DE INICIO (HOME SELECCIÓN + CLASE DE PRUEBA) -->
         <div id="seccion-home" class="section active">
-            <h2>👋 Bienvenido al Club</h2>
-            <p style="margin-bottom: 20px; color: var(--text-light);">Selecciona cómo deseas acceder a la aplicación:</p>
+            <h2>👋 BIENVENIDO</h2>
+            <p style="margin-bottom: 25px; color: var(--text-light); font-weight: 500;">Selecciona cómo deseas acceder a la aplicación:</p>
             
-            <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer; border: 2px solid var(--primary-accent); background: linear-gradient(135deg, #ffffff, #f0f7ff);">
-                <h3>👤 Entrar como Alumno</h3>
+            <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer;">
+                <h3>👤 ENTRAR COMO ALUMNO</h3>
                 <p>Consulta entrenamientos, torneos o gestiona tu bono personal e inscripciones.</p>
-                <button style="margin-top: 12px; pointer-events: none;">Acceder como Alumno ➔</button>
+                <button style="pointer-events: none;">ACCEDER COMO ALUMNO ➔</button>
             </div>
 
-            <!-- BLOQUE DE CLASE DE PRUEBA DIRECTO EN HOME -->
-            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border: 2px solid #a7f3d0;">
-                <h3 style="color: #065f46;">🎁 ¿Quieres probar el Pickleball?</h3>
-                <p style="color: #047857; margin-bottom: 12px;">¿Nuevo en el club? Solicita tu clase de prueba totalmente gratis y sin compromiso.</p>
+            <div class="card success-card">
+                <h3 style="color: var(--success);">🎁 ¿QUIERES PROBAR EL PICKLEBALL?</h3>
+                <p style="color: #065f46; margin-bottom: 15px; font-weight: 500;">¿Nuevo en el club? Solicita tu clase de prueba totalmente gratis y sin compromiso.</p>
                 
-                <label style="color: #065f46;">Tu Nombre y Apellidos:</label>
+                <label style="color: #065f46;">TU NOMBRE Y APELLIDOS:</label>
                 <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
                 
-                <label style="color: #065f46;">Teléfono de contacto (Opcional):</label>
+                <label style="color: #065f46;">TELÉFONO DE CONTACTO (Opcional):</label>
                 <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
 
-                <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 Solicitar Clase de Prueba</button>
+                <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 SOLICITAR CLASE DE PRUEBA</button>
             </div>
 
-            <div class="card" onclick="entrarComoMonitorSeleccion()" style="cursor: pointer; border: 2px solid var(--warning); background: linear-gradient(135deg, #ffffff, #fffbeb); position: relative;">
+            <div class="card warning" onclick="entrarComoMonitorSeleccion()" style="cursor: pointer; position: relative;">
                 <div style="position: absolute; top: 16px; right: 16px;">
-                    <span id="globo-notificaciones-home" class="notification-badge" style="display:inline-block; position:relative; top:0; right:0; font-size:0.75rem; padding:3px 8px;">0</span>
+                    <span id="globo-notificaciones-home" class="notification-badge" style="display:inline-block; position:relative; top:0; right:0; font-size:0.8rem; padding:4px 8px;">0</span>
                 </div>
-                <h3 style="color: #92400e;">🔑 Entrar como Monitor</h3>
-                <p style="color: #78350f;">Gestiona clases, torneos, altas de alumnos y aprueba recargas de bonos y solicitudes.</p>
-                <button class="warning" style="margin-top: 12px; pointer-events: none;">Acceder como Monitor ➔</button>
+                <h3 style="color: var(--primary);">🔑 ENTRAR COMO MONITOR</h3>
+                <p style="color: var(--primary-light);">Gestiona clases, torneos, altas de alumnos y aprueba recargas de bonos y solicitudes.</p>
+                <button class="warning" style="pointer-events: none;">ACCEDER COMO MONITOR ➔</button>
             </div>
         </div>
         
-        <!-- 1. CLASES -->
         <div id="seccion-entrenamientos" class="section">
-            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
-            <h2>📅 Próximos Entrenamientos</h2>
+            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>📅 PRÓXIMOS ENTRENAMIENTOS</h2>
             <div id="lista-entrenamientos" style="margin-top: 10px;">
                 <p>Cargando entrenamientos...</p>
             </div>
             
             <div class="card" id="panel-crear-entrenamiento" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
-                <h3>➕ Añadir Nuevo Entrenamiento</h3>
+                <h3>➕ AÑADIR NUEVO ENTRENAMIENTO</h3>
                 <label>Título / Nivel:</label>
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
                 <label>Lugar:</label>
                 <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
-                <button onclick="agregarEntrenamiento()">Publicar Entrenamiento</button>
+                <button onclick="agregarEntrenamiento()">PUBLICAR ENTRENAMIENTO</button>
             </div>
         </div>
 
-        <!-- 2. TORNEOS -->
         <div id="seccion-torneos" class="section">
-            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
-            <h2>🏆 Torneos y Competiciones</h2>
+            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>🏆 TORNEOS Y COMPETICIONES</h2>
             <div id="lista-torneos" style="margin-top: 10px;">
                 <p>Cargando torneos...</p>
             </div>
             
             <div class="card" id="panel-crear-torneo" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
-                <h3>➕ Crear Nuevo Torneo</h3>
+                <h3>➕ CREAR NUEVO TORNEO</h3>
                 <label>Nombre del Torneo:</label>
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
                 <label>Lugar:</label>
                 <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
-                <button onclick="agregarTorneo()">Publicar Torneo</button>
+                <button onclick="agregarTorneo()">PUBLICAR TORNEO</button>
             </div>
         </div>
 
-        <!-- 3. MI PERFIL (ALUMNO) -->
         <div id="seccion-perfil" class="section">
-            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
-            <h2>👤 Mi Panel de Alumno</h2>
+            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>👤 MI PANEL DE ALUMNO</h2>
             <div id="panel-no-identificado" class="card">
-                <h3>🔒 Iniciar Sesión</h3>
+                <h3>🔒 INICIAR SESIÓN</h3>
                 <p>Selecciona tu nombre e introduce tu PIN personal para ver tu bono.</p>
                 
                 <label>Selecciona tu Nombre:</label>
@@ -410,55 +422,53 @@
 
                 <label>PIN Personal:</label>
                 <input type="password" id="login-pass" placeholder="Tu PIN secreto">
-                <button onclick="iniciarSesionAlumno()">Acceder a mi Cuenta</button>
+                <button onclick="iniciarSesionAlumno()">ACCEDER A MI CUENTA</button>
             </div>
 
             <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
                 <span class="badge">Sesión Activa</span>
                 <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
-                <p id="info-bono-personal" style="font-size: 1.05rem; color: #047857; margin: 10px 0; font-weight: 600;">🎟️ Clases disponibles: 0</p>
+                <p id="info-bono-personal" style="font-size: 1.05rem; color: #047857; margin: 10px 0; font-weight: 700;">🎟️ Clases disponibles: 0</p>
                 
                 <div style="margin-top: 15px; border-top: 1px solid #d1fae5; padding-top: 15px;">
-                    <button class="success" onclick="solicitarRecargaBono()">🎟️ Solicitar Recarga de Bono (10 clases)</button>
+                    <button class="success" onclick="solicitarRecargaBono()">🎟️ SOLICITAR RECARGA DE BONO (10 CLASES)</button>
                 </div>
 
-                <button class="danger" style="margin-top: 12px;" onclick="cerrarSesionAlumno()">Cerrar Sesión</button>
+                <button class="danger" style="margin-top: 12px;" onclick="cerrarSesionAlumno()">CERRAR SESIÓN</button>
             </div>
         </div>
 
-        <!-- 4. MONITOR -->
         <div id="seccion-monitor" class="section">
-            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
-            <h2>🔑 Panel de Control</h2>
+            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>🔑 PANEL DE CONTROL</h2>
             <div class="card" style="margin-top: 10px;">
                 <p id="estado-modo-monitor" style="margin-bottom: 12px;">Estado actual: <strong style="color:var(--success);">MODO MONITOR ACTIVADO 🔓</strong></p>
             </div>
 
             <div class="card" id="panel-opciones-admin" style="background: var(--warning-bg); border-color: #fef3c7;">
-                <h3 style="color: #92400e;">🚨 Solicitudes de Alumnos y Pruebas</h3>
+                <h3 style="color: #92400e;">🚨 SOLICITUDES DE ALUMNOS Y PRUEBAS</h3>
                 <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
                     <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
                 </div>
 
-                <h3 style="color: #92400e;">➕ Crear Nuevo Alumno</h3>
+                <h3 style="color: #92400e;">➕ CREAR NUEVO ALUMNO</h3>
                 <label>Nombre del Alumno:</label>
                 <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
                 <label>PIN de Acceso:</label>
                 <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
                 <label>Clases iniciales en el Bono:</label>
                 <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
-                <button onclick="registrarNuevoAlumno()" class="warning">Crear Alumno</button>
+                <button onclick="registrarNuevoAlumno()" class="warning">CREAR ALUMNO</button>
 
-                <h3 style="margin-top:25px; color: var(--primary);">👥 Alumnos Registrados</h3>
+                <h3 style="margin-top:25px; color: var(--primary);">👥 ALUMNOS REGISTRADOS</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
 
-                <button class="danger" style="margin-top:30px;" onclick="reiniciarDatosCompletos()">⚠️ Vaciar / Reiniciar Todo</button>
+                <button class="danger" style="margin-top:30px;" onclick="reiniciarDatosCompletos()">⚠️ VACIAR / REINICIAR TODO</button>
             </div>
         </div>
         
     </div>
 
-    <!-- NAVEGACIÓN INFERIOR ESTILO DOCK FLOTANTE (4 BOTONES) -->
     <nav id="barra-navegacion-inferior" style="display: none;">
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
             <span class="icon">📅</span>
@@ -544,16 +554,16 @@
                         if(!datosGlobales.torneos) datosGlobales.torneos = [];
                         if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
                     }
-                    document.getElementById('estado-sync').innerText = "Sincronizado 🟢";
+                    document.getElementById('estado-sync').innerText = "SINCRONIZADO 🟢";
                 }
             } catch(e) {
-                document.getElementById('estado-sync').innerText = "Sin conexión 🔴";
+                document.getElementById('estado-sync').innerText = "SIN CONEXIÓN 🔴";
             }
             renderizar();
         }
 
         async function guardarDatos() {
-            document.getElementById('estado-sync').innerText = "Guardando... ⏳";
+            document.getElementById('estado-sync').innerText = "GUARDANDO... ⏳";
             try {
                 let respuesta = await fetch(API_URL, {
                     method: 'POST',
@@ -561,12 +571,12 @@
                     body: JSON.stringify(datosGlobales)
                 });
                 if(respuesta.ok) {
-                    document.getElementById('estado-sync').innerText = "Sincronizado 🟢";
+                    document.getElementById('estado-sync').innerText = "SINCRONIZADO 🟢";
                 } else {
-                    document.getElementById('estado-sync').innerText = "Error 🔴";
+                    document.getElementById('estado-sync').innerText = "ERROR 🔴";
                 }
             } catch(e) {
-                document.getElementById('estado-sync').innerText = "Error red 🔴";
+                document.getElementById('estado-sync').innerText = "ERROR RED 🔴";
             }
             renderizar();
         }
