@@ -187,6 +187,17 @@
         }
         button.success:hover { background-color: #059669; }
 
+        /* ESTILO MEJORADO PARA EL BOTÓN "VOLVER A SELECCIÓN" (Más legible) */
+        button.btn-volver {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: 2px solid var(--primary-accent);
+        }
+        button.btn-volver:hover {
+            background-color: var(--primary-light);
+            border-color: #ffffff;
+        }
+
         input, select {
             width: 100%;
             padding: 14px 16px;
@@ -232,7 +243,7 @@
             margin: 0;
             padding: 10px 4px;
             font-weight: 600;
-            width: 25%;
+            width: 25%; /* Se adaptará dinámicamente según el rol */
             box-shadow: none;
             display: flex;
             flex-direction: column;
@@ -362,7 +373,7 @@
         </div>
         
         <div id="seccion-entrenamientos" class="section">
-            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>📅 PRÓXIMOS ENTRENAMIENTOS</h2>
             <div id="lista-entrenamientos" style="margin-top: 10px;">
                 <p>Cargando entrenamientos...</p>
@@ -381,7 +392,7 @@
         </div>
 
         <div id="seccion-torneos" class="section">
-            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>🏆 TORNEOS Y COMPETICIONES</h2>
             <div id="lista-torneos" style="margin-top: 10px;">
                 <p>Cargando torneos...</p>
@@ -400,7 +411,7 @@
         </div>
 
         <div id="seccion-perfil" class="section">
-            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>👤 MI PANEL DE ALUMNO</h2>
             <div id="panel-no-identificado" class="card">
                 <h3>🔒 INICIAR SESIÓN</h3>
@@ -430,7 +441,7 @@
         </div>
 
         <div id="seccion-monitor" class="section">
-            <button class="warning" style="margin-bottom: 20px; background-color: var(--primary);" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>🔑 PANEL DE CONTROL</h2>
             <div class="card" style="margin-top: 10px;">
                 <p id="estado-modo-monitor" style="margin-bottom: 12px;">Estado actual: <strong style="color:var(--success);">MODO MONITOR ACTIVADO 🔓</strong></p>
@@ -473,7 +484,7 @@
             <span class="icon">👤</span>
             <span>Perfil</span>
         </button>
-        <button onclick="cambiarSeccion('monitor')" id="nav-monitor">
+        <button onclick="cambiarSeccion('monitor')" id="nav-monitor" style="display: none;">
             <span class="icon">
                 🔑
                 <span id="globo-notificaciones" class="notification-badge">0</span>
@@ -502,25 +513,42 @@
         }
 
         function entrarComoAlumno() {
-            modoMonitorActivo = false; // Bloquea estrictamente el modo monitor
+            modoMonitorActivo = false; 
             document.getElementById('barra-navegacion-inferior').style.display = 'flex';
+            ajustarMenuInferior(); // Oculta el botón de monitor y ajusta el ancho de los botones de alumno
             cambiarSeccion('entrenamientos');
         }
 
         function entrarComoMonitorSeleccion() {
             let pass = prompt("Introduce la contraseña de monitor:");
             if(pass === "1234") {
-                modoMonitorActivo = true; // Activa explícitamente el modo administrador
-                alumnoActual = null;      // Cierra cualquier sesión de alumno previa por seguridad
+                modoMonitorActivo = true; 
+                alumnoActual = null;      
                 document.getElementById('barra-navegacion-inferior').style.display = 'flex';
+                ajustarMenuInferior(); // Muestra el botón de monitor y ajusta a 4 opciones
                 cambiarSeccion('monitor');
             } else if(pass !== null) {
                 alert("Contraseña incorrecta.");
             }
         }
 
+        // FUNCIÓN NUEVA: Controla el ancho y visibilidad de los botones del menú inferior según el rol
+        function ajustarMenuInferior() {
+            let btnMonitor = document.getElementById('nav-monitor');
+            let botonesNav = document.querySelectorAll('nav button');
+            
+            if (modoMonitorActivo) {
+                btnMonitor.style.display = 'flex';
+                botonesNav.forEach(b => b.style.width = '25%'); // 4 botones (25% cada uno)
+            } else {
+                btnMonitor.style.display = 'none';
+                botonesNav.forEach(b => {
+                    if(b.id !== 'nav-monitor') b.style.width = '33.33%'; // 3 botones de alumno (33% cada uno)
+                });
+            }
+        }
+
         function cambiarSeccion(seccion) {
-            // BLOQUEO DE SEGURIDAD: Si intentan entrar a la sección "monitor" sin haber puesto la clave de admin
             if (seccion === 'monitor' && !modoMonitorActivo) {
                 alert("Acceso denegado. Debes iniciar sesión como monitor.");
                 volverAHome();
@@ -639,7 +667,7 @@
             let alumno = datosGlobales.alumnos.find(a => a.nombre === nombre);
             if(alumno && alumno.pass === pass) {
                 alumnoActual = alumno;
-                modoMonitorActivo = false; // Garantiza que un alumno jamás tenga poderes de monitor
+                modoMonitorActivo = false; 
                 alert("¡Bienvenido, " + alumno.nombre + "!");
             } else {
                 alert("Contraseña incorrecta.");
