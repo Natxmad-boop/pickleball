@@ -6,26 +6,22 @@
     <title>Club de Pickleball | Gestión Deportiva</title>
     <style>
         :root {
-            /* PALETA DEPORTIVA: Verde Neón + Azul Marino + Gris Competencia */
-            --primary: #0f172a;           /* Azul Marino Oscuro (Texto principal) */
+            --primary: #0f172a;           
             --primary-light: #1e293b;     
-            --primary-accent: #00c897;    /* Verde Neón Deportivo (Botones principales, Acentos) */
+            --primary-accent: #00c897;    
             --btn-hover: #00a87f;        
-            
-            --bg: #f1f5f9;                /* Fondo Gris Claro muy limpio */
+            --bg: #f1f5f9;                
             --card-bg: #ffffff;
             --text: #0f172a;
             --text-light: #475569;
             --border-card: #e2e8f0;
-            
-            --success: #10b981;           /* Verde Éxito (Bonos) */
+            --success: #10b981;           
             --success-bg: #d1fae5;
-            --danger: #ef4444;            /* Rojo Peligro (Borrar) */
+            --danger: #ef4444;            
             --danger-bg: #fee2e2;
-            --warning: #f59e0b;           /* Naranja Aviso (Monitor) */
+            --warning: #f59e0b;           
             --warning-bg: #fffbeb;
-            
-            --radius: 12px;               /* Bordes ligeramente menos redondeados, más serios */
+            --radius: 12px;               
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -39,16 +35,15 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 120px; /* Espacio para el menú fijo */
+            padding-bottom: 120px;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* CABECERA ESTILO "ESTADIO" */
         header {
             background: var(--primary);
             color: white;
             padding: 25px 20px 20px 20px;
-            border-bottom: 5px solid var(--primary-accent); /* Línea deportiva en el borde */
+            border-bottom: 5px solid var(--primary-accent);
         }
 
         .header-top {
@@ -60,7 +55,7 @@
 
         header h1 {
             font-size: 1.6rem;
-            font-weight: 800; /* Fuente más gruesa */
+            font-weight: 800;
             letter-spacing: -0.8px;
             display: flex;
             align-items: center;
@@ -77,7 +72,7 @@
         .sync-status {
             font-size: 0.75rem;
             color: #ffffff;
-            background: rgba(0, 200, 151, 0.15); /* Tono verde suave en el fondo */
+            background: rgba(0, 200, 151, 0.15);
             padding: 5px 12px;
             border-radius: 20px;
             font-weight: 600;
@@ -99,11 +94,10 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            border-left: 4px solid var(--primary-accent); /* Detalle deportivo en el título */
+            border-left: 4px solid var(--primary-accent);
             padding-left: 12px;
         }
 
-        /* TARJETAS DEPORTIVAS CON BORDES LATERALES */
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
@@ -115,7 +109,6 @@
             overflow: hidden;
         }
 
-        /* Línea de color vertical deportiva a la izquierda */
         .card::before {
             content: '';
             position: absolute;
@@ -147,7 +140,6 @@
             line-height: 1.6;
         }
 
-        /* BOTONES DEPORTIVOS */
         button {
             background-color: var(--primary-accent);
             color: var(--primary);
@@ -213,7 +205,6 @@
             border-color: var(--primary-accent);
         }
 
-        /* NAVEGACIÓN INFERIOR (DOCK ESTILO DEPORTIVO) */
         nav {
             position: fixed;
             bottom: 16px;
@@ -511,7 +502,7 @@
         }
 
         function entrarComoAlumno() {
-            modoMonitorActivo = false;
+            modoMonitorActivo = false; // Bloquea estrictamente el modo monitor
             document.getElementById('barra-navegacion-inferior').style.display = 'flex';
             cambiarSeccion('entrenamientos');
         }
@@ -519,7 +510,8 @@
         function entrarComoMonitorSeleccion() {
             let pass = prompt("Introduce la contraseña de monitor:");
             if(pass === "1234") {
-                modoMonitorActivo = true;
+                modoMonitorActivo = true; // Activa explícitamente el modo administrador
+                alumnoActual = null;      // Cierra cualquier sesión de alumno previa por seguridad
                 document.getElementById('barra-navegacion-inferior').style.display = 'flex';
                 cambiarSeccion('monitor');
             } else if(pass !== null) {
@@ -528,6 +520,13 @@
         }
 
         function cambiarSeccion(seccion) {
+            // BLOQUEO DE SEGURIDAD: Si intentan entrar a la sección "monitor" sin haber puesto la clave de admin
+            if (seccion === 'monitor' && !modoMonitorActivo) {
+                alert("Acceso denegado. Debes iniciar sesión como monitor.");
+                volverAHome();
+                return;
+            }
+
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             
@@ -609,6 +608,7 @@
         }
 
         function registrarNuevoAlumno() {
+            if(!modoMonitorActivo) return alert("Acción no permitida.");
             let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
             let pass = document.getElementById('nuevo-alumno-pass').value.trim();
             let clases = parseInt(document.getElementById('nuevo-alumno-clases').value);
@@ -639,6 +639,7 @@
             let alumno = datosGlobales.alumnos.find(a => a.nombre === nombre);
             if(alumno && alumno.pass === pass) {
                 alumnoActual = alumno;
+                modoMonitorActivo = false; // Garantiza que un alumno jamás tenga poderes de monitor
                 alert("¡Bienvenido, " + alumno.nombre + "!");
             } else {
                 alert("Contraseña incorrecta.");
@@ -674,11 +675,13 @@
         }
 
         function resolverAviso(id) {
+            if(!modoMonitorActivo) return;
             datosGlobales.avisos = datosGlobales.avisos.filter(a => a.id !== id);
             guardarDatos();
         }
 
         function aprobarRecargaBono(nombreAlumno) {
+            if(!modoMonitorActivo) return;
             let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === nombreAlumno);
             if(alumnoBD) {
                 alumnoBD.clasesBono += 10;
@@ -694,6 +697,7 @@
         }
 
         function devolverClase(entrenamientoId, nombreAlumno) {
+            if(!modoMonitorActivo) return;
             if(confirm(`¿Estás seguro de devolver 1 clase a ${nombreAlumno} y eliminarle del entrenamiento?`)) {
                 let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
                 if(ent && ent.inscritos) {
@@ -960,6 +964,7 @@
         }
 
         function agregarEntrenamiento() {
+            if(!modoMonitorActivo) return;
             let titulo = document.getElementById('nuevo-titulo').value;
             let fecha = document.getElementById('nuevo-fecha').value;
             let lugar = document.getElementById('nuevo-lugar').value;
@@ -973,6 +978,7 @@
         }
 
         function borrarEntrenamiento(id) {
+            if(!modoMonitorActivo) return;
             if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
                 datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
                 guardarDatos();
@@ -980,6 +986,7 @@
         }
 
         function agregarTorneo() {
+            if(!modoMonitorActivo) return;
             let titulo = document.getElementById('torneo-titulo').value;
             let fecha = document.getElementById('torneo-fecha').value;
             let lugar = document.getElementById('torneo-lugar').value;
@@ -993,6 +1000,7 @@
         }
 
         function borrarTorneo(id) {
+            if(!modoMonitorActivo) return;
             if(confirm("¿Seguro que quieres borrar este torneo?")) {
                 datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
                 guardarDatos();
@@ -1000,6 +1008,7 @@
         }
 
         function modificarBono(index) {
+            if(!modoMonitorActivo) return;
             let nuevoValor = prompt("Introduce el nuevo número de clases disponibles:", datosGlobales.alumnos[index].clasesBono);
             if(nuevoValor !== null && !isNaN(nuevoValor)) {
                 datosGlobales.alumnos[index].clasesBono = parseInt(nuevoValor);
@@ -1008,6 +1017,7 @@
         }
 
         function borrarAlumno(index) {
+            if(!modoMonitorActivo) return;
             if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
                 datosGlobales.alumnos.splice(index, 1);
                 guardarDatos();
@@ -1015,6 +1025,7 @@
         }
 
         function reiniciarDatosCompletos() {
+            if(!modoMonitorActivo) return;
             if(prompt("Escribe 'BORRAR' para vaciar absolutamente todo:") === 'BORRAR') {
                 datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [] };
                 guardarDatos();
