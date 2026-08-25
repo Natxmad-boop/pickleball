@@ -3,117 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club de Pickleball</title>
+    <title>Club de Pickleball | Gestión Profesional</title>
     <style>
         :root {
-            --primary: #0284c7;
-            --primary-dark: #0369a1;
-            --primary-light: #e0f2fe;
-            --bg: #f8fafc;
+            --primary: #0f172a;          /* Azul pizarra oscuro muy elegante */
+            --primary-accent: #2563eb;   /* Azul eléctrico corporativo */
+            --primary-light: #eff6ff;
+            --bg: #f1f5f9;               /* Fondo gris ultra suave y limpio */
             --card-bg: #ffffff;
-            --text: #0f172a;
+            --text: #1e293b;
             --text-light: #64748b;
             --border: #e2e8f0;
-            --success: #16a34a;
-            --success-bg: #f0fdf4;
+            --success: #059669;          /* Verde esmeralda profesional */
+            --success-bg: #ecfdf5;
             --danger: #dc2626;
             --danger-bg: #fef2f2;
             --warning: #d97706;
             --warning-bg: #fffbeb;
-            --radius: 16px;
+            --radius: 14px;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         }
 
         body {
             background-color: var(--bg);
             color: var(--text);
             padding-bottom: 110px;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
         }
 
         header {
-            background: linear-gradient(135deg, #0284c7, #0f172a);
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             color: white;
-            padding: 30px 20px;
+            padding: 35px 20px;
             text-align: center;
-            box-shadow: 0 4px 20px rgba(2, 132, 199, 0.2);
-            border-bottom-left-radius: 24px;
-            border-bottom-right-radius: 24px;
+            box-shadow: 0 4px 25px rgba(15, 23, 42, 0.15);
+            border-bottom: 3px solid var(--primary-accent);
         }
 
         header h1 {
-            font-size: 1.8rem;
+            font-size: 1.7rem;
             margin-bottom: 6px;
+            font-weight: 700;
             letter-spacing: -0.5px;
-            font-weight: 800;
         }
 
         header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            font-weight: 400;
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-weight: 300;
+            letter-spacing: 0.3px;
         }
 
         .container {
             max-width: 600px;
             margin: 0 auto;
-            padding: 20px 16px;
+            padding: 24px 16px;
         }
 
         h2 {
-            font-size: 1.4rem;
-            color: var(--text);
-            margin-bottom: 15px;
+            font-size: 1.35rem;
+            color: var(--primary);
+            margin-bottom: 18px;
             font-weight: 700;
             letter-spacing: -0.3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 22px;
-            margin-bottom: 16px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            padding: 24px;
+            margin-bottom: 18px;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border);
-            transition: transform 0.2s ease;
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
         }
 
         .card h3 {
-            color: var(--primary-dark);
+            color: var(--primary);
             margin-bottom: 12px;
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-weight: 700;
+            font-weight: 600;
         }
 
         .card p {
-            font-size: 0.95rem;
+            font-size: 0.93rem;
             color: var(--text-light);
             margin-bottom: 10px;
             line-height: 1.5;
         }
 
         button {
-            background-color: var(--primary);
+            background-color: var(--primary-accent);
             color: white;
             border: none;
-            padding: 14px 18px;
-            border-radius: 12px;
-            font-size: 1rem;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.95rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 12px;
             width: 100%;
-            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -121,7 +128,7 @@
         }
 
         button:hover {
-            filter: brightness(1.05);
+            background-color: #1d4ed8;
             transform: translateY(-1px);
         }
 
@@ -131,27 +138,36 @@
 
         button.danger {
             background-color: var(--danger);
-            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+            box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+        }
+        button.danger:hover {
+            background-color: #b91c1c;
         }
 
         button.warning {
             background-color: var(--warning);
-            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.25);
+            box-shadow: 0 2px 4px rgba(217, 119, 6, 0.2);
+        }
+        button.warning:hover {
+            background-color: #b45309;
         }
 
         button.success {
             background-color: var(--success);
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.25);
+            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.2);
+        }
+        button.success:hover {
+            background-color: #047857;
         }
 
         input, select {
             width: 100%;
-            padding: 14px;
+            padding: 12px 14px;
             margin-top: 6px;
             margin-bottom: 16px;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 0.95rem;
             background: #fff;
             color: var(--text);
             outline: none;
@@ -159,11 +175,11 @@
         }
 
         input:focus, select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.12);
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* NAVEGACIÓN INFERIOR GRANDE Y MODERNA */
+        /* NAVEGACIÓN INFERIOR PROFESIONAL */
         nav {
             position: fixed;
             bottom: 0;
@@ -172,8 +188,8 @@
             background: white;
             display: flex;
             justify-content: space-around;
-            padding: 8px 10px 16px 10px;
-            box-shadow: 0 -10px 25px rgba(0,0,0,0.06);
+            padding: 8px 10px 14px 10px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
             border-top: 1px solid var(--border);
             z-index: 1000;
         }
@@ -182,37 +198,36 @@
             background: none;
             color: var(--text-light);
             border: none;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             margin: 0;
-            padding: 8px 4px;
-            font-weight: 600;
+            padding: 6px 4px;
+            font-weight: 500;
             width: 20%;
             box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            border-radius: 12px;
+            gap: 3px;
+            border-radius: 8px;
             transition: all 0.2s ease;
             position: relative;
         }
 
         nav button span.icon {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             transition: transform 0.2s;
             position: relative;
         }
 
-        /* GLOBO DE NOTIFICACIÓN EN MONITOR */
         .notification-badge {
             position: absolute;
-            top: -2px;
-            right: 18px;
+            top: -3px;
+            right: 14px;
             background-color: var(--danger);
             color: white;
-            font-size: 0.65rem;
-            font-weight: 800;
-            padding: 2px 6px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 2px 5px;
             border-radius: 10px;
             border: 2px solid white;
             display: none;
@@ -226,12 +241,13 @@
         }
 
         nav button.active {
-            color: var(--primary);
+            color: var(--primary-accent);
+            font-weight: 600;
             background-color: var(--primary-light);
         }
 
         nav button.active span.icon {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
         .section {
@@ -240,42 +256,43 @@
 
         .section.active {
             display: block;
-            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeIn 0.25s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .sync-status {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-align: center;
             color: var(--text-light);
-            margin: 20px 0;
-            font-weight: 600;
+            margin: 24px 0;
+            font-weight: 500;
             background: white;
-            padding: 10px;
-            border-radius: 30px;
+            padding: 8px 16px;
+            border-radius: 20px;
             border: 1px solid var(--border);
             display: inline-block;
             width: 100%;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
         }
         
         .badge {
             display: inline-block;
-            background: var(--primary-light);
-            color: var(--primary-dark);
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 700;
+            background: var(--success-bg);
+            color: var(--success);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
             margin-bottom: 12px;
+            border: 1px solid #d1fae5;
         }
 
         label {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             font-weight: 600;
             color: var(--text);
             display: block;
@@ -287,19 +304,18 @@
 
     <header>
         <h1>🏓 Club de Pickleball</h1>
-        <p>Gestión inteligente de entrenamientos y bonos</p>
+        <p>Panel de Gestión de Entrenamientos y Bonos</p>
     </header>
 
     <div class="container">
         
-        <!-- 1. CLASES -->
         <div id="seccion-entrenamientos" class="section active">
             <h2>📅 Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 15px;">
                 <p>Cargando entrenamientos...</p>
             </div>
             
-            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 25px; background: #f8fafc; display:none; border: 2px dashed var(--primary);">
+            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 25px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
                 <h3>➕ Añadir Nuevo Entrenamiento</h3>
                 <label>Título / Nivel:</label>
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
@@ -311,14 +327,13 @@
             </div>
         </div>
 
-        <!-- 2. TORNEOS -->
         <div id="seccion-torneos" class="section">
             <h2>🏆 Torneos y Competiciones</h2>
             <div id="lista-torneos" style="margin-top: 15px;">
                 <p>Cargando torneos...</p>
             </div>
             
-            <div class="card" id="panel-crear-torneo" style="margin-top: 25px; background: #f8fafc; display:none; border: 2px dashed var(--primary);">
+            <div class="card" id="panel-crear-torneo" style="margin-top: 25px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
                 <h3>➕ Crear Nuevo Torneo</h3>
                 <label>Nombre del Torneo:</label>
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
@@ -330,24 +345,22 @@
             </div>
         </div>
 
-        <!-- 3. DÍA DE PRUEBA -->
         <div id="seccion-prueba" class="section">
             <h2>🎁 Día de Prueba</h2>
-            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
-                <h3 style="color: #15803d;">🏓 ¡Ven a probar sin compromiso!</h3>
-                <p style="color: #166534; margin-bottom: 15px;">¿Quieres iniciarte en el Pickleball? Solicita tu primera clase totalmente gratis sin necesidad de registrarte.</p>
+            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-color: #a7f3d0;">
+                <h3 style="color: #065f46;">🏓 ¡Ven a probar sin compromiso!</h3>
+                <p style="color: #047857; margin-bottom: 15px;">¿Quieres iniciarte en el Pickleball? Solicita tu primera clase totalmente gratis sin necesidad de registrarte.</p>
                 
-                <label style="color: #166534;">Tu Nombre y Apellidos:</label>
+                <label style="color: #065f46;">Tu Nombre y Apellidos:</label>
                 <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
                 
-                <label style="color: #166534;">Teléfono de contacto (Opcional):</label>
+                <label style="color: #065f46;">Teléfono de contacto (Opcional):</label>
                 <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
 
                 <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 Enviar Solicitud al Monitor</button>
             </div>
         </div>
 
-        <!-- 4. MI PERFIL (ALUMNO) -->
         <div id="seccion-perfil" class="section">
             <h2>👤 Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
@@ -364,12 +377,12 @@
                 <button onclick="iniciarSesionAlumno()">Acceder a mi Cuenta</button>
             </div>
 
-            <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #bbf7d0;">
+            <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
                 <span class="badge">Sesión Activa</span>
-                <h3 id="saludo-alumno" style="color: #15803d;">¡Hola!</h3>
-                <p id="info-bono-personal" style="font-size: 1.1rem; color: #166534; margin: 12px 0; font-weight: 600;">🎟️ Clases disponibles: 0</p>
+                <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
+                <p id="info-bono-personal" style="font-size: 1.05rem; color: #047857; margin: 12px 0; font-weight: 600;">🎟️ Clases disponibles: 0</p>
                 
-                <div style="margin-top: 20px; border-top: 1px solid #dcfce7; padding-top: 15px;">
+                <div style="margin-top: 20px; border-top: 1px solid #d1fae5; padding-top: 15px;">
                     <button class="success" onclick="solicitarRecargaBono()">🎟️ Solicitar Recarga de Bono (10 clases)</button>
                 </div>
 
@@ -377,7 +390,6 @@
             </div>
         </div>
 
-        <!-- 5. MONITOR -->
         <div id="seccion-monitor" class="section">
             <h2>🔑 Panel de Control</h2>
             <div class="card" style="margin-top: 15px;">
@@ -385,22 +397,22 @@
                 <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor</button>
             </div>
 
-            <div class="card" id="panel-opciones-admin" style="display:none; background: var(--warning-bg); border-color: #fde68a;">
-                <h3 style="color: #b45309;">🚨 Solicitudes de Alumnos</h3>
+            <div class="card" id="panel-opciones-admin" style="display:none; background: var(--warning-bg); border-color: #fef3c7;">
+                <h3 style="color: #92400e;">🚨 Solicitudes de Alumnos</h3>
                 <div id="lista-avisos-monitor" style="margin-bottom: 25px;">
                     <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
                 </div>
 
-                <h3 style="color: #b45309;">➕ Crear Nuevo Alumno</h3>
+                <h3 style="color: #92400e;">➕ Crear Nuevo Alumno</h3>
                 <label>Nombre del Alumno:</label>
                 <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
                 <label>PIN de Acceso:</label>
                 <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
                 <label>Clases iniciales en el Bono:</label>
                 <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
-                <button onclick="registrarNuevoAlumno()" class="warning" style="background-color: var(--warning);">Crear Alumno</button>
+                <button onclick="registrarNuevoAlumno()" class="warning">Crear Alumno</button>
 
-                <h3 style="margin-top:30px; color: var(--primary-dark);">👥 Alumnos Registrados</h3>
+                <h3 style="margin-top:30px; color: var(--primary);">👥 Alumnos Registrados</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
 
                 <button class="danger" style="margin-top:35px;" onclick="reiniciarDatosCompletos()">⚠️ Vaciar / Reiniciar Todo</button>
@@ -412,7 +424,6 @@
         </div>
     </div>
 
-    <!-- NAVEGACIÓN INFERIOR GRANDE -->
     <nav>
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
             <span class="icon">📅</span>
@@ -653,7 +664,6 @@
         }
 
         function renderizar() {
-            // Actualizar globo de notificaciones en el icono de Monitor
             let totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
             let globo = document.getElementById('globo-notificaciones');
             if(totalAvisos > 0) {
@@ -765,7 +775,7 @@
                     datosGlobales.avisos.forEach(aviso => {
                         avisosHtml += `
                             <div class="card" style="background: white; border-color: #f59e0b; padding: 16px; margin-bottom: 12px;">
-                                <p style="color: #b45309; font-weight: bold; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
+                                <p style="color: #92400e; font-weight: bold; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
                                 <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 12px;">${aviso.texto}</p>
                                 <button class="success" style="padding: 10px; font-size: 0.9rem;" onclick="resolverAviso(${aviso.id})">✔ Marcar como Atendido</button>
                             </div>
