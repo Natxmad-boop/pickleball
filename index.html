@@ -292,6 +292,7 @@
 
     <div class="container">
         
+        <!-- 1. CLASES -->
         <div id="seccion-entrenamientos" class="section active">
             <h2>📅 Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 15px;">
@@ -310,6 +311,7 @@
             </div>
         </div>
 
+        <!-- 2. TORNEOS -->
         <div id="seccion-torneos" class="section">
             <h2>🏆 Torneos y Competiciones</h2>
             <div id="lista-torneos" style="margin-top: 15px;">
@@ -328,6 +330,7 @@
             </div>
         </div>
 
+        <!-- 3. DÍA DE PRUEBA -->
         <div id="seccion-prueba" class="section">
             <h2>🎁 Día de Prueba</h2>
             <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-color: #86efac;">
@@ -344,6 +347,7 @@
             </div>
         </div>
 
+        <!-- 4. MI PERFIL (ALUMNO) -->
         <div id="seccion-perfil" class="section">
             <h2>👤 Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
@@ -373,6 +377,7 @@
             </div>
         </div>
 
+        <!-- 5. MONITOR -->
         <div id="seccion-monitor" class="section">
             <h2>🔑 Panel de Control</h2>
             <div class="card" style="margin-top: 15px;">
@@ -407,6 +412,7 @@
         </div>
     </div>
 
+    <!-- NAVEGACIÓN INFERIOR GRANDE -->
     <nav>
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
             <span class="icon">📅</span>
@@ -609,6 +615,43 @@
             }
         }
 
+        function desapuntarseEntrenamientoPropio(entrenamientoId) {
+            if(!alumnoActual) {
+                alert("Debes iniciar sesión primero.");
+                cambiarSeccion('perfil');
+                return;
+            }
+            if(confirm("¿Seguro que deseas anular tu asistencia? Se te devolverá 1 clase a tu bono.")) {
+                let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
+                if(ent && ent.inscritos) {
+                    ent.inscritos = ent.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
+                }
+                let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
+                if(alumnoBD) {
+                    alumnoBD.clasesBono += 1;
+                    alumnoActual.clasesBono = alumnoBD.clasesBono;
+                }
+                guardarDatos();
+                alert("✅ Te has desapuntado correctamente y se ha devuelto 1 clase a tu bono.");
+            }
+        }
+
+        function desapuntarseTorneoPropio(torneoId) {
+            if(!alumnoActual) {
+                alert("Debes iniciar sesión primero.");
+                cambiarSeccion('perfil');
+                return;
+            }
+            if(confirm("¿Seguro que deseas anular tu inscripción en este torneo?")) {
+                let tor = datosGlobales.torneos.find(t => t.id === torneoId);
+                if(tor && tor.inscritos) {
+                    tor.inscritos = tor.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
+                }
+                guardarDatos();
+                alert("✅ Te has desapuntado del torneo correctamente.");
+            }
+        }
+
         function renderizar() {
             // Actualizar globo de notificaciones en el icono de Monitor
             let totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
@@ -649,12 +692,21 @@
                     let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
                     let lugarTxt = ent.lugar ? `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p>` : '';
                     
+                    let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
+                    let botonAccion = "";
+
+                    if(estaApuntado) {
+                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">❌ Anular asistencia (Devolver bono)</button>`;
+                    } else {
+                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme a este entrenamiento</button>`;
+                    }
+
                     let listaInscritosHTML = "Nadie apuntado aún";
                     if(ent.inscritos && ent.inscritos.length > 0) {
                         if(modoMonitorActivo) {
                             listaInscritosHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
                             ent.inscritos.forEach(alumnoNombre => {
-                                listaInscritosHTML += `li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver clase</button></li>`.replace('li', '<li');
+                                listaInscritosHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver clase</button></li>`;
                             });
                             listaInscritosHTML += "</ul>";
                         } else {
@@ -668,7 +720,7 @@
                             <p>🕒 <strong>Fecha:</strong> ${ent.fecha}</p>
                             ${lugarTxt}
                             <p>👥 <strong>Inscritos:</strong> ${listaInscritosHTML}</p>
-                            <button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme a este entrenamiento</button>
+                            ${botonAccion}
                             ${btnBorrar}
                         </div>
                     `;
@@ -683,13 +735,23 @@
                 datosGlobales.torneos.forEach(tor => {
                     let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar Torneo</button>` : '';
                     let lugarTorneoTxt = tor.lugar ? `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p>` : '';
+                    
+                    let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
+                    let botonTorneoAccion = "";
+
+                    if(estaApuntadoTorneo) {
+                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">❌ Anular inscripción al torneo</button>`;
+                    } else {
+                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">Apuntarme al Torneo</button>`;
+                    }
+
                     htmlTorneos += `
                         <div class="card">
                             <h3>🏆 ${tor.titulo}</h3>
                             <p>📅 <strong>Fecha:</strong> ${tor.fecha}</p>
                             ${lugarTorneoTxt}
                             <p>👥 <strong>Participantes:</strong> ${tor.inscritos && tor.inscritos.length > 0 ? tor.inscritos.join(', ') : 'Inscripciones abiertas'}</p>
-                            <button onclick="apuntarseTorneo(${tor.id})">Apuntarme al Torneo</button>
+                            ${botonTorneoAccion}
                             ${btnBorrarTorneo}
                         </div>
                     `;
