@@ -319,8 +319,29 @@
     </header>
 
     <div class="container">
+
+        <div id="seccion-home" class="section active">
+            <h2>👋 Bienvenido al Club</h2>
+            <p style="margin-bottom: 20px; color: var(--text-light);">Selecciona cómo deseas acceder a la aplicación:</p>
+            
+            <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer; border: 2px solid var(--primary-accent); background: linear-gradient(135deg, #ffffff, #f0f7ff);">
+                <h3>👤 Entrar como Alumno / Público</h3>
+                <p>Consulta entrenamientos, torneos, solicita clases de prueba gratuitas o gestiona tu bono personal.</p>
+                <button style="margin-top: 12px; pointer-events: none;">Acceder como Alumno ➔</button>
+            </div>
+
+            <div class="card" onclick="entrarComoMonitorSeleccion()" style="cursor: pointer; border: 2px solid var(--warning); background: linear-gradient(135deg, #ffffff, #fffbeb); position: relative;">
+                <div style="position: absolute; top: 16px; right: 16px;">
+                    <span id="globo-notificaciones-home" class="notification-badge" style="display:inline-block; position:relative; top:0; right:0; font-size:0.75rem; padding:3px 8px;">0</span>
+                </div>
+                <h3 style="color: #92400e;">🔑 Entrar como Monitor</h3>
+                <p style="color: #78350f;">Gestiona clases, torneos, altas de alumnos y aprueba recargas de bonos y solicitudes.</p>
+                <button class="warning" style="margin-top: 12px; pointer-events: none;">Acceder como Monitor ➔</button>
+            </div>
+        </div>
         
-        <div id="seccion-entrenamientos" class="section active">
+        <div id="seccion-entrenamientos" class="section">
+            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
             <h2>📅 Próximos Entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 10px;">
                 <p>Cargando entrenamientos...</p>
@@ -339,6 +360,7 @@
         </div>
 
         <div id="seccion-torneos" class="section">
+            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
             <h2>🏆 Torneos y Competiciones</h2>
             <div id="lista-torneos" style="margin-top: 10px;">
                 <p>Cargando torneos...</p>
@@ -357,6 +379,7 @@
         </div>
 
         <div id="seccion-prueba" class="section">
+            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
             <h2>🎁 Día de Prueba</h2>
             <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #ecfdf5); border-color: #a7f3d0;">
                 <h3 style="color: #065f46;">🏓 ¡Ven a probar sin compromiso!</h3>
@@ -373,6 +396,7 @@
         </div>
 
         <div id="seccion-perfil" class="section">
+            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
             <h2>👤 Mi Panel de Alumno</h2>
             <div id="panel-no-identificado" class="card">
                 <h3>🔒 Iniciar Sesión</h3>
@@ -402,13 +426,13 @@
         </div>
 
         <div id="seccion-monitor" class="section">
+            <button class="warning" style="margin-bottom: 16px; background-color: #64748b;" onclick="volverAHome()">🏠 Volver a Selección Principal</button>
             <h2>🔑 Panel de Control</h2>
             <div class="card" style="margin-top: 10px;">
-                <p id="estado-modo-monitor" style="margin-bottom: 12px;">Estado actual: <strong>Modo Alumno / Público</strong></p>
-                <button id="btn-toggle-monitor" onclick="alternarModoMonitor()">Activar Modo Monitor</button>
+                <p id="estado-modo-monitor" style="margin-bottom: 12px;">Estado actual: <strong style="color:var(--success);">MODO MONITOR ACTIVADO 🔓</strong></p>
             </div>
 
-            <div class="card" id="panel-opciones-admin" style="display:none; background: var(--warning-bg); border-color: #fef3c7;">
+            <div class="card" id="panel-opciones-admin" style="background: var(--warning-bg); border-color: #fef3c7;">
                 <h3 style="color: #92400e;">🚨 Solicitudes de Alumnos</h3>
                 <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
                     <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
@@ -432,7 +456,7 @@
         
     </div>
 
-    <nav>
+    <nav id="barra-navegacion-inferior" style="display: none;">
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
             <span class="icon">📅</span>
             <span>Clases</span>
@@ -471,13 +495,42 @@
             avisos: []
         };
 
+        function volverAHome() {
+            modoMonitorActivo = false;
+            document.getElementById('barra-navegacion-inferior').style.display = 'none';
+            cambiarSeccion('home');
+        }
+
+        function entrarComoAlumno() {
+            modoMonitorActivo = false;
+            document.getElementById('barra-navegacion-inferior').style.display = 'flex';
+            cambiarSeccion('entrenamientos');
+        }
+
+        function entrarComoMonitorSeleccion() {
+            let pass = prompt("Introduce la contraseña de monitor:");
+            if(pass === "1234") {
+                modoMonitorActivo = true;
+                document.getElementById('barra-navegacion-inferior').style.display = 'flex';
+                cambiarSeccion('monitor');
+            } else if(pass !== null) {
+                alert("Contraseña incorrecta.");
+            }
+        }
+
         function cambiarSeccion(seccion) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
             
             document.getElementById('seccion-' + seccion).classList.add('active');
-            document.getElementById('nav-' + seccion).classList.add('active');
+            
+            if(seccion !== 'home') {
+                let navId = (seccion === 'monitor') ? 'monitor' : seccion;
+                let btnNav = document.getElementById('nav-' + navId);
+                if(btnNav) btnNav.classList.add('active');
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
+            renderizar();
         }
 
         async function cargarDatos() {
@@ -623,7 +676,6 @@
                 if(alumnoActual && alumnoActual.nombre === nombreAlumno) {
                     alumnoActual.clasesBono = alumnoBD.clasesBono;
                 }
-                // Si había un aviso de recarga pendiente de este alumno, lo marcamos como resuelto automáticamente
                 if(datosGlobales.avisos) {
                     datosGlobales.avisos = datosGlobales.avisos.filter(a => !(a.alumno === nombreAlumno && a.tipo === 'Recarga Bono'));
                 }
@@ -689,15 +741,20 @@
 
         function renderizar() {
             let totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
-            let globo = document.getElementById('globo-notificaciones');
+            
+            let globoNav = document.getElementById('globo-notificaciones');
+            let globoHome = document.getElementById('globo-notificaciones-home');
+            
             if(totalAvisos > 0) {
-                globo.innerText = totalAvisos;
-                globo.style.display = 'inline-block';
+                globoNav.innerText = totalAvisos;
+                globoNav.style.display = 'inline-block';
+                globoHome.innerText = totalAvisos;
+                globoHome.style.display = 'inline-block';
             } else {
-                globo.style.display = 'none';
+                globoNav.style.display = 'none';
+                globoHome.style.display = 'none';
             }
 
-            // Conserva la selección actual del desplegable para evitar que se borre al escribir la contraseña
             let selectElem = document.getElementById('login-select-nombre');
             let valorSeleccionadoActual = selectElem ? selectElem.value : "";
 
@@ -803,7 +860,6 @@
                 if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
                     datosGlobales.avisos.forEach(aviso => {
                         let botonExtraAviso = "";
-                        // Si el aviso es de recarga de bono, añadimos directamente el botón para aprobarlo aquí
                         if(aviso.tipo === 'Recarga Bono') {
                             botonExtraAviso = `<button class="success" style="padding: 10px; font-size: 0.9rem; margin-top: 8px;" onclick="aprobarRecargaBono('${aviso.alumno}')">🎟️ Aprobar y Recargar +10 Clases</button>`;
                         }
@@ -845,7 +901,6 @@
 
             document.getElementById('panel-crear-entrenamiento').style.display = modoMonitorActivo ? 'block' : 'none';
             document.getElementById('panel-crear-torneo').style.display = modoMonitorActivo ? 'block' : 'none';
-            document.getElementById('panel-opciones-admin').style.display = modoMonitorActivo ? 'block' : 'none';
         }
 
         function apuntarseEntrenamiento(id) {
@@ -947,29 +1002,6 @@
             if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
                 datosGlobales.alumnos.splice(index, 1);
                 guardarDatos();
-            }
-        }
-
-        function alternarModoMonitor() {
-            if(!modoMonitorActivo) {
-                let pass = prompt("Introduce la contraseña de monitor:");
-                if(pass === "1234") {
-                    modoMonitorActivo = true;
-                    document.getElementById('estado-modo-monitor').innerHTML = "Estado actual: <strong style='color:var(--success);'>MODO MONITOR ACTIVADO 🔓</strong>";
-                    document.getElementById('btn-toggle-monitor').innerText = "Cerrar Modo Monitor";
-                    document.getElementById('btn-toggle-monitor').className = "danger";
-                    alert("¡Modo monitor activado con éxito!");
-                    renderizar();
-                } else if(pass !== null) {
-                    alert("Contraseña incorrecta.");
-                }
-            } else {
-                modoMonitorActivo = false;
-                document.getElementById('estado-modo-monitor').innerHTML = "Estado actual: <strong>Modo Alumno / Público</strong>";
-                document.getElementById('btn-toggle-monitor').innerText = "Activar Modo Monitor";
-                document.getElementById('btn-toggle-monitor').className = "";
-                alert("Modo monitor desactivado.");
-                renderizar();
             }
         }
 
