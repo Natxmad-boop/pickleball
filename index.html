@@ -215,7 +215,6 @@
             border-color: var(--primary-accent);
         }
 
-        /* Estilo para los checkboxes de términos legales */
         .terms-container {
             display: flex;
             align-items: flex-start;
@@ -440,12 +439,10 @@
             <h2>👤 MI PANEL DE ALUMNO</h2>
             <div id="panel-no-identificado" class="card">
                 <h3>🔒 INICIAR SESIÓN</h3>
-                <p>Selecciona tu nombre e introduce tu PIN personal para ver tu bono.</p>
+                <p>Introduce tu nombre y tu PIN personal para ver tu bono.</p>
                 
-                <label>Selecciona tu Nombre:</label>
-                <select id="login-select-nombre">
-                    <option value="">-- Esperando lista de alumnos --</option>
-                </select>
+                <label>Tu nombre:</label>
+                <input type="text" id="login-input-nombre" placeholder="Ej: Juan Pérez">
 
                 <label>PIN Personal:</label>
                 <input type="password" id="login-pass" placeholder="Tu PIN secreto">
@@ -704,21 +701,21 @@
         }
 
         function iniciarSesionAlumno() {
-            let select = document.getElementById('login-select-nombre');
-            let nombre = select.value;
+            let nombreInput = document.getElementById('login-input-nombre').value.trim();
             let pass = document.getElementById('login-pass').value.trim();
 
-            if(!nombre) return alert("Por favor, selecciona tu nombre de la lista.");
+            if(!nombreInput) return alert("Por favor, introduce tu nombre.");
             if(!pass) return alert("Introduce tu contraseña.");
 
-            let alumno = datosGlobales.alumnos.find(a => a.nombre === nombre);
+            let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
             if(alumno && alumno.pass === pass) {
                 alumnoActual = alumno;
                 modoMonitorActivo = false; 
                 alert("¡Bienvenido, " + alumno.nombre + "!");
             } else {
-                alert("Contraseña incorrecta.");
+                alert("Nombre o contraseña incorrectos.");
             }
+            document.getElementById('login-input-nombre').value = "";
             document.getElementById('login-pass').value = "";
             renderizar();
         }
@@ -843,18 +840,6 @@
                 globoHome.style.display = 'none';
             }
 
-            let selectElem = document.getElementById('login-select-nombre');
-            let valorSeleccionadoActual = selectElem ? selectElem.value : "";
-
-            let selectHtml = `<option value="">-- Selecciona tu nombre --</option>`;
-            if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
-                datosGlobales.alumnos.forEach(al => {
-                    let selected = (al.nombre === valorSeleccionadoActual) ? 'selected' : '';
-                    selectHtml += `<option value="${al.nombre}" ${selected}>${al.nombre}</option>`;
-                });
-            }
-            document.getElementById('login-select-nombre').innerHTML = selectHtml;
-
             if(alumnoActual) {
                 document.getElementById('panel-no-identificado').style.display = 'none';
                 document.getElementById('panel-identificado').style.display = 'block';
@@ -885,17 +870,21 @@
                         botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme a este entrenamiento</button>`;
                     }
 
-                    let listaInscritosHTML = "Nadie apuntado aún";
-                    if(ent.inscritos && ent.inscritos.length > 0) {
-                        if(modoMonitorActivo) {
+                    let listaInscritosHTML = "";
+                    let numInscritos = (ent.inscritos && ent.inscritos.length > 0) ? ent.inscritos.length : 0;
+
+                    if(modoMonitorActivo) {
+                        if(numInscritos > 0) {
                             listaInscritosHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
                             ent.inscritos.forEach(alumnoNombre => {
                                 listaInscritosHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver clase</button></li>`;
                             });
                             listaInscritosHTML += "</ul>";
                         } else {
-                            listaInscritosHTML = ent.inscritos.join(', ');
+                            listaInscritosHTML = "Nadie apuntado aún";
                         }
+                    } else {
+                        listaInscritosHTML = `${numInscritos} personas apuntadas`;
                     }
 
                     htmlEntrenamientos += `
