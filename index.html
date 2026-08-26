@@ -431,7 +431,7 @@
             
             <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer;">
                 <h3>👤 ENTRAR COMO ALUMNO</h3>
-                <p>Consulta entrenamientos, torneos o gestiona tu bono personal e inscripciones.</p>
+                <p>Identifícate con tu nombre y PIN para consultar tus clases, torneos y gestionar tu bono personal.</p>
                 <button style="pointer-events: none;">ACCEDER COMO ALUMNO ➔</button>
             </div>
 
@@ -506,18 +506,7 @@
         <div id="seccion-perfil" class="section">
             <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>👤 MI PANEL DE ALUMNO</h2>
-            <div id="panel-no-identificado" class="card">
-                <h3>🔒 INICIAR SESIÓN</h3>
-                <p>Introduce tu nombre y tu PIN personal para ver tu bono.</p>
-                
-                <label>Tu nombre:</label>
-                <input type="text" id="login-input-nombre" placeholder="Ej: Juan Pérez">
-
-                <label>PIN Personal:</label>
-                <input type="password" id="login-pass" placeholder="Tu PIN secreto">
-                <button onclick="iniciarSesionAlumno()">ACCEDER A MI CUENTA</button>
-            </div>
-
+            
             <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
                 <span class="badge">Sesión Activa</span>
                 <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
@@ -640,15 +629,37 @@
 
         function volverAHome() {
             modoMonitorActivo = false;
+            alumnoActual = null;
             document.getElementById('barra-navegacion-inferior').style.display = 'none';
             cambiarSeccion('home');
         }
 
         function entrarComoAlumno() {
-            modoMonitorActivo = false; 
-            document.getElementById('barra-navegacion-inferior').style.display = 'flex';
-            ajustarMenuInferior(); 
-            cambiarSeccion('entrenamientos');
+            let nombreInput = prompt("Introduce tu nombre:");
+            if(nombreInput === null) return; // Cancelado
+            nombreInput = nombreInput.trim();
+
+            if(!nombreInput) {
+                mostrarToast("Debes introducir tu nombre.", "error");
+                return;
+            }
+
+            let passInput = prompt("Introduce tu PIN personal:");
+            if(passInput === null) return; // Cancelado
+            passInput = passInput.trim();
+
+            let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
+            
+            if(alumno && alumno.pass === passInput) {
+                alumnoActual = alumno;
+                modoMonitorActivo = false; 
+                document.getElementById('barra-navegacion-inferior').style.display = 'flex';
+                ajustarMenuInferior(); 
+                mostrarToast("¡Bienvenido, " + alumno.nombre + "!");
+                cambiarSeccion('entrenamientos');
+            } else {
+                mostrarToast("Nombre o PIN incorrectos.", "error");
+            }
         }
 
         function entrarComoMonitorSeleccion() {
@@ -824,36 +835,16 @@
             mostrarToast("¡Alumno creado con éxito!");
         }
 
-        function iniciarSesionAlumno() {
-            let nombreInput = document.getElementById('login-input-nombre').value.trim();
-            let pass = document.getElementById('login-pass').value.trim();
-
-            if(!nombreInput) return mostrarToast("Por favor, introduce tu nombre.", "error");
-            if(!pass) return mostrarToast("Introduce tu contraseña.", "error");
-
-            let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
-            if(alumno && alumno.pass === pass) {
-                alumnoActual = alumno;
-                modoMonitorActivo = false; 
-                mostrarToast("¡Bienvenido, " + alumno.nombre + "!");
-            } else {
-                mostrarToast("Nombre o contraseña incorrectos.", "error");
-            }
-            document.getElementById('login-input-nombre').value = "";
-            document.getElementById('login-pass').value = "";
-            renderizar();
-        }
-
         function cerrarSesionAlumno() {
             alumnoActual = null;
             mostrarToast("Sesión cerrada correctamente.");
-            renderizar();
+            volverAHome();
         }
 
         function solicitarRecargaBono() {
             if(!alumnoActual) {
                 mostrarToast("Debes iniciar sesión en tu perfil.", "error");
-                cambiarSeccion('perfil');
+                volverAHome();
                 return;
             }
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
@@ -916,7 +907,7 @@
         function desapuntarseEntrenamientoPropio(entrenamientoId) {
             if(!alumnoActual) {
                 mostrarToast("Debes iniciar sesión primero.", "error");
-                cambiarSeccion('perfil');
+                volverAHome();
                 return;
             }
             if(confirm("¿Seguro que deseas anular tu asistencia? Se te devolverá 1 clase a tu bono.")) {
@@ -937,7 +928,7 @@
         function desapuntarseTorneoPropio(torneoId) {
             if(!alumnoActual) {
                 mostrarToast("Debes iniciar sesión primero.", "error");
-                cambiarSeccion('perfil');
+                volverAHome();
                 return;
             }
             if(confirm("¿Seguro que deseas anular tu inscripción en este torneo?")) {
@@ -967,7 +958,6 @@
             }
 
             if(alumnoActual) {
-                document.getElementById('panel-no-identificado').style.display = 'none';
                 document.getElementById('panel-identificado').style.display = 'block';
                 document.getElementById('saludo-alumno').innerText = "¡Hola, " + alumnoActual.nombre + "!";
                 let reg = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
@@ -976,7 +966,6 @@
                 document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>MI BONO:</strong> ${clases} clases disponibles`;
                 document.getElementById('historial-bono-alumno').innerHTML = `📜 <strong>Estado de cuenta:</strong> Al día. Clases listas para reservar entrenamientos o torneos.`;
             } else {
-                document.getElementById('panel-no-identificado').style.display = 'block';
                 document.getElementById('panel-identificado').style.display = 'none';
             }
 
@@ -1126,8 +1115,7 @@
 
         function apuntarseEntrenamiento(id) {
             if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.", "warning");
-                cambiarSeccion('perfil');
+                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
                 return;
             }
 
@@ -1156,8 +1144,7 @@
 
         function apuntarseTorneo(id) {
             if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.", "warning");
-                cambiarSeccion('perfil');
+                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
                 return;
             }
             let tor = datosGlobales.torneos.find(t => t.id === id);
