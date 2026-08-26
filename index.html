@@ -980,12 +980,29 @@
                         botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">APUNTARME</button>`;
                     }
 
+                    let listaInscritosTorneoHTML = "";
+                    let numInscritosTorneo = (tor.inscritos && tor.inscritos.length > 0) ? tor.inscritos.length : 0;
+
+                    if(modoMonitorActivo) {
+                        if(numInscritosTorneo > 0) {
+                            listaInscritosTorneoHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
+                            tor.inscritos.forEach(alumnoNombre => {
+                                listaInscritosTorneoHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre}</li>`;
+                            });
+                            listaInscritosTorneoHTML += "</ul>";
+                        } else {
+                            listaInscritosTorneoHTML = "Nadie apuntado aún";
+                        }
+                    } else {
+                        listaInscritosTorneoHTML = `${numInscritosTorneo} personas apuntadas`;
+                    }
+
                     htmlTorneos += `
                         <div class="card">
                             <h3>🏆 ${tor.titulo}</h3>
                             <p>📅 <strong>Fecha:</strong> ${tor.fecha}</p>
                             ${lugarTorneoTxt}
-                            <p>👥 <strong>Participantes:</strong> ${tor.inscritos && tor.inscritos.length > 0 ? tor.inscritos.join(', ') : 'Inscripciones abiertas'}</p>
+                            <p>👥 <strong>Participantes:</strong> ${listaInscritosTorneoHTML}</p>
                             ${botonTorneoAccion}
                             ${btnBorrarTorneo}
                         </div>
