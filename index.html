@@ -10,7 +10,7 @@
             --primary-light: #1e293b;     
             --primary-accent: #00c897;    
             --btn-hover: #00a87f;        
-            --bg: #f1f5f9;                
+            --bg: #f8fafc;                
             --card-bg: #ffffff;
             --text: #0f172a;
             --text-light: #475569;
@@ -21,7 +21,7 @@
             --danger-bg: #fee2e2;
             --warning: #f59e0b;           
             --warning-bg: #fffbeb;
-            --radius: 12px;               
+            --radius: 16px;               
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -35,28 +35,29 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 120px;
+            padding-bottom: 130px;
             -webkit-font-smoothing: antialiased;
         }
 
         header {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            padding: 25px 20px 20px 20px;
+            padding: 28px 20px 22px 20px;
             border-bottom: 5px solid var(--primary-accent);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 800;
-            letter-spacing: -0.8px;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -64,19 +65,21 @@
         }
 
         header p {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             opacity: 0.9;
-            font-weight: 500;
+            font-weight: 600;
+            letter-spacing: 0.3px;
         }
 
         .sync-status {
             font-size: 0.75rem;
             color: #ffffff;
-            background: rgba(0, 200, 151, 0.15);
-            padding: 5px 12px;
+            background: rgba(0, 200, 151, 0.2);
+            padding: 6px 14px;
             border-radius: 20px;
-            font-weight: 600;
+            font-weight: 700;
             border: 1px solid var(--primary-accent);
+            letter-spacing: 0.5px;
         }
 
         .container {
@@ -86,27 +89,28 @@
         }
 
         h2 {
-            font-size: 1.4rem;
+            font-size: 1.45rem;
             color: var(--primary);
             margin-bottom: 20px;
             font-weight: 800;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-left: 4px solid var(--primary-accent);
+            gap: 12px;
+            border-left: 5px solid var(--primary-accent);
             padding-left: 12px;
         }
 
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 20px;
-            margin-bottom: 18px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border-card);
             position: relative;
             overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
         .card::before {
@@ -120,23 +124,23 @@
         }
 
         .card:hover {
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.08);
         }
 
         .card h3 {
             color: var(--primary);
             margin-bottom: 12px;
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 700;
+            gap: 10px;
+            font-weight: 800;
         }
 
         .card p {
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: var(--text-light);
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             line-height: 1.6;
         }
 
@@ -144,25 +148,27 @@
             background-color: var(--primary-accent);
             color: var(--primary);
             border: none;
-            padding: 14px 20px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 700;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 800;
             cursor: pointer;
             transition: all 0.2s ease;
-            margin-top: 12px;
+            margin-top: 14px;
             width: 100%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
+            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.25);
         }
 
         button:hover {
             background-color: var(--btn-hover);
             transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 200, 151, 0.35);
         }
 
         button:active {
@@ -172,62 +178,77 @@
         button.danger {
             background-color: var(--danger);
             color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
         }
-        button.danger:hover { background-color: #b91c1c; }
+        button.danger:hover { 
+            background-color: #b91c1c; 
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+        }
 
         button.warning {
             background-color: var(--warning);
             color: var(--primary);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
         }
-        button.warning:hover { background-color: #d97706; }
+        button.warning:hover { 
+            background-color: #d97706; 
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+        }
 
         button.success {
             background-color: var(--success);
             color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
         }
-        button.success:hover { background-color: #059669; }
+        button.success:hover { 
+            background-color: #059669; 
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
 
         button.btn-volver {
             background-color: var(--primary);
             color: #ffffff;
             border: 2px solid var(--primary-accent);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
         }
         button.btn-volver:hover {
             background-color: var(--primary-light);
             border-color: #ffffff;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
         }
 
         input, select {
             width: 100%;
-            padding: 14px 16px;
+            padding: 16px 18px;
             margin-top: 8px;
             margin-bottom: 16px;
             border: 2px solid var(--border-card);
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 12px;
+            font-size: 1.05rem;
             background: #fff;
             color: var(--text);
             outline: none;
-            transition: border-color 0.2s;
+            transition: all 0.2s ease;
         }
 
         input:focus, select:focus {
             border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px rgba(0, 200, 151, 0.15);
         }
 
         .terms-container {
             display: flex;
             align-items: flex-start;
-            gap: 10px;
-            margin-top: 10px;
-            margin-bottom: 16px;
-            font-size: 0.85rem;
-            line-height: 1.4;
+            gap: 12px;
+            margin-top: 12px;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            line-height: 1.5;
             color: var(--text-light);
         }
         .terms-container input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             margin-top: 2px;
             accent-color: var(--primary-accent);
             cursor: pointer;
@@ -241,13 +262,13 @@
             max-width: 600px;
             margin: 0 auto;
             background: var(--primary);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             display: flex;
             justify-content: space-around;
             padding: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            border-radius: 12px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            border-radius: 16px;
             border: 2px solid var(--primary-accent);
             z-index: 1000;
         }
@@ -256,20 +277,21 @@
             background: none;
             color: #a3b3c6;
             border: none;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             margin: 0;
             padding: 10px 4px;
-            font-weight: 600;
+            font-weight: 700;
             width: 25%;
             box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            border-radius: 8px;
+            border-radius: 10px;
             transition: all 0.3s ease;
             position: relative;
             text-transform: none;
+            letter-spacing: normal;
         }
 
         nav button span.icon {
@@ -283,9 +305,9 @@
             right: 14px;
             background-color: var(--danger);
             color: white;
-            font-size: 0.65rem;
+            font-size: 0.7rem;
             font-weight: 800;
-            padding: 3px 6px;
+            padding: 3px 7px;
             border-radius: 10px;
             border: 2px solid var(--primary);
             display: none;
@@ -295,6 +317,7 @@
             color: var(--primary);
             background-color: var(--primary-accent);
             font-weight: 800;
+            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.3);
         }
 
         nav button.active span.icon {
@@ -311,27 +334,29 @@
         }
 
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(15px); }
-            to { opacity: 1; transform: translateX(0); }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .badge {
             display: inline-block;
             background: var(--success-bg);
             color: var(--success);
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 10px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
         }
 
         label {
-            font-size: 0.85rem;
-            font-weight: 700;
+            font-size: 0.9rem;
+            font-weight: 800;
             color: var(--primary-light);
             display: block;
-            margin-top: 4px;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
         }
         
         #seccion-home .card.success-card {
@@ -351,14 +376,14 @@
             <h1>🏓 PICKLEBALL CLUB</h1>
             <span class="sync-status" id="estado-sync">CONECTANDO...</span>
         </div>
-        <p>GESTIÓN DEPORTIVA INTEGRAL</p>
+        <p>Tu club. Tus clases. Tu juego.</p>
     </header>
 
     <div class="container">
 
         <div id="seccion-home" class="section active">
             <h2>👋 BIENVENIDO</h2>
-            <p style="margin-bottom: 25px; color: var(--text-light); font-weight: 500;">Selecciona cómo deseas acceder a la aplicación:</p>
+            <p style="margin-bottom: 25px; color: var(--text-light); font-weight: 600;">Selecciona cómo deseas acceder a la aplicación:</p>
             
             <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer;">
                 <h3>👤 ENTRAR COMO ALUMNO</h3>
@@ -367,8 +392,8 @@
             </div>
 
             <div class="card success-card">
-                <h3 style="color: var(--success);">🎁 ¿QUIERES PROBAR EL PICKLEBALL?</h3>
-                <p style="color: #065f46; margin-bottom: 15px; font-weight: 500;">¿Nuevo en el club? Solicita tu clase de prueba totalmente gratis y sin compromiso.</p>
+                <h3 style="color: var(--success);">🎁 ¿NUEVO EN EL CLUB?</h3>
+                <p style="color: #065f46; margin-bottom: 15px; font-weight: 600;">Prueba una clase gratis y sin compromiso.</p>
                 
                 <label style="color: #065f46;">TU NOMBRE Y APELLIDOS:</label>
                 <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
@@ -411,7 +436,7 @@
                 <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
                 <label>Lugar:</label>
                 <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
-                <button onclick="agregarEntrenamiento()">PUBLICAR ENTRENAMIENTO</button>
+                <button onclick="agregarEntrenamiento()">CREAR CLASE</button>
             </div>
         </div>
 
@@ -430,7 +455,7 @@
                 <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
                 <label>Lugar:</label>
                 <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
-                <button onclick="agregarTorneo()">PUBLICAR TORNEO</button>
+                <button onclick="agregarTorneo()">CREAR CLASE</button>
             </div>
         </div>
 
@@ -452,29 +477,20 @@
             <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
                 <span class="badge">Sesión Activa</span>
                 <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
-                <p id="info-bono-personal" style="font-size: 1.05rem; color: #047857; margin: 10px 0; font-weight: 700;">🎟️ Clases disponibles: 0</p>
+                <p id="info-bono-personal" style="font-size: 1.1rem; color: #047857; margin: 12px 0; font-weight: 800;">🎟️ MI BONO: 0 clases</p>
                 
                 <div style="margin-top: 15px; border-top: 1px solid #d1fae5; padding-top: 15px;">
-                    <button class="success" onclick="solicitarRecargaBono()">🎟️ SOLICITAR RECARGA DE BONO (10 CLASES)</button>
+                    <button class="success" onclick="solicitarRecargaBono()">SOLICITAR RECARGA</button>
                 </div>
 
                 <button class="danger" style="margin-top: 12px;" onclick="cerrarSesionAlumno()">CERRAR SESIÓN</button>
             </div>
         </div>
 
-        <div id="seccion-monitor" class="section">
+        <div id="seccion-alumnos" class="section">
             <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
-            <h2>🔑 PANEL DE CONTROL</h2>
-            <div class="card" style="margin-top: 10px;">
-                <p id="estado-modo-monitor" style="margin-bottom: 12px;">Estado actual: <strong style="color:var(--success);">MODO MONITOR ACTIVADO 🔓</strong></p>
-            </div>
-
-            <div class="card" id="panel-opciones-admin" style="background: var(--warning-bg); border-color: #fef3c7;">
-                <h3 style="color: #92400e;">🚨 SOLICITUDES DE ALUMNOS Y PRUEBAS</h3>
-                <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
-                    <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
-                </div>
-
+            <h2>👥 GESTIÓN DE ALUMNOS</h2>
+            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
                 <h3 style="color: #92400e;">➕ CREAR NUEVO ALUMNO</h3>
                 <label>Nombre del Alumno:</label>
                 <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
@@ -492,10 +508,21 @@
 
                 <button onclick="registrarNuevoAlumno()" class="warning">CREAR ALUMNO</button>
 
-                <h3 style="margin-top:25px; color: var(--primary);">👥 ALUMNOS REGISTRADOS</h3>
+                <h3 style="margin-top:30px; color: var(--primary);">👥 ALUMNOS REGISTRADOS</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
+            </div>
+        </div>
 
-                <button class="danger" style="margin-top:30px;" onclick="reiniciarDatosCompletos()">⚠️ VACIAR / REINICIAR TODO</button>
+        <div id="seccion-gestion" class="section">
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>⚙️ PANEL DE GESTIÓN</h2>
+            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
+                <h3 style="color: #92400e;">🚨 SOLICITUDES DE ALUMNOS Y PRUEBAS</h3>
+                <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
+                    <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
+                </div>
+
+                <button class="danger" style="margin-top:20px;" onclick="reiniciarDatosCompletos()">⚠️ VACIAR / REINICIAR TODO</button>
             </div>
         </div>
         
@@ -514,12 +541,25 @@
             <span class="icon">👤</span>
             <span>Perfil</span>
         </button>
-        <button onclick="cambiarSeccion('monitor')" id="nav-monitor" style="display: none;">
+        
+        <button onclick="cambiarSeccion('entrenamientos')" id="nav-monitor-clases" style="display: none;">
+            <span class="icon">📅</span>
+            <span>Clases</span>
+        </button>
+        <button onclick="cambiarSeccion('torneos')" id="nav-monitor-torneos" style="display: none;">
+            <span class="icon">🏆</span>
+            <span>Torneos</span>
+        </button>
+        <button onclick="cambiarSeccion('alumnos')" id="nav-monitor-alumnos" style="display: none;">
+            <span class="icon">👥</span>
+            <span>Alumnos</span>
+        </button>
+        <button onclick="cambiarSeccion('gestion')" id="nav-monitor-gestion" style="display: none;">
             <span class="icon">
-                🔑
+                ⚙️
                 <span id="globo-notificaciones" class="notification-badge">0</span>
             </span>
-            <span>Monitor</span>
+            <span>Gestión</span>
         </button>
     </nav>
 
@@ -556,29 +596,49 @@
                 alumnoActual = null;      
                 document.getElementById('barra-navegacion-inferior').style.display = 'flex';
                 ajustarMenuInferior(); 
-                cambiarSeccion('monitor');
+                cambiarSeccion('entrenamientos');
             } else if(pass !== null) {
                 alert("Contraseña incorrecta.");
             }
         }
 
         function ajustarMenuInferior() {
-            let btnMonitor = document.getElementById('nav-monitor');
-            let botonesNav = document.querySelectorAll('nav button');
+            let btnAlumnoClases = document.getElementById('nav-entrenamientos');
+            let btnAlumnoTorneos = document.getElementById('nav-torneos');
+            let btnAlumnoPerfil = document.getElementById('nav-perfil');
             
+            let btnMonitorClases = document.getElementById('nav-monitor-clases');
+            let btnMonitorTorneos = document.getElementById('nav-monitor-torneos');
+            let btnMonitorAlumnos = document.getElementById('nav-monitor-alumnos');
+            let btnMonitorGestion = document.getElementById('nav-monitor-gestion');
+
             if (modoMonitorActivo) {
-                btnMonitor.style.display = 'flex';
-                botonesNav.forEach(b => b.style.width = '25%'); 
+                btnAlumnoClases.style.display = 'none';
+                btnAlumnoTorneos.style.display = 'none';
+                btnAlumnoPerfil.style.display = 'none';
+
+                btnMonitorClases.style.display = 'flex';
+                btnMonitorTorneos.style.display = 'flex';
+                btnMonitorAlumnos.style.display = 'flex';
+                btnMonitorGestion.style.display = 'flex';
+
+                [btnMonitorClases, btnMonitorTorneos, btnMonitorAlumnos, btnMonitorGestion].forEach(b => b.style.width = '25%');
             } else {
-                btnMonitor.style.display = 'none';
-                botonesNav.forEach(b => {
-                    if(b.id !== 'nav-monitor') b.style.width = '33.33%'; 
-                });
+                btnMonitorClases.style.display = 'none';
+                btnMonitorTorneos.style.display = 'none';
+                btnMonitorAlumnos.style.display = 'none';
+                btnMonitorGestion.style.display = 'none';
+
+                btnAlumnoClases.style.display = 'flex';
+                btnAlumnoTorneos.style.display = 'flex';
+                btnAlumnoPerfil.style.display = 'flex';
+
+                [btnAlumnoClases, btnAlumnoTorneos, btnAlumnoPerfil].forEach(b => b.style.width = '33.33%');
             }
         }
 
         function cambiarSeccion(seccion) {
-            if (seccion === 'monitor' && !modoMonitorActivo) {
+            if ((seccion === 'alumnos' || seccion === 'gestion') && !modoMonitorActivo) {
                 alert("Acceso denegado. Debes iniciar sesión como monitor.");
                 volverAHome();
                 return;
@@ -590,8 +650,10 @@
             document.getElementById('seccion-' + seccion).classList.add('active');
             
             if(seccion !== 'home') {
-                let navId = (seccion === 'monitor') ? 'monitor' : seccion;
-                let btnNav = document.getElementById('nav-' + navId);
+                let btnNav = document.getElementById('nav-' + seccion);
+                if(!btnNav && modoMonitorActivo) {
+                    btnNav = document.getElementById('nav-monitor-' + seccion);
+                }
                 if(btnNav) btnNav.classList.add('active');
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -847,7 +909,7 @@
                 let reg = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
                 let clases = reg ? reg.clasesBono : 0;
                 alumnoActual.clasesBono = clases;
-                document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>Clases disponibles en tu bono:</strong> ${clases}`;
+                document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>MI BONO:</strong> ${clases} clases disponibles`;
             } else {
                 document.getElementById('panel-no-identificado').style.display = 'block';
                 document.getElementById('panel-identificado').style.display = 'none';
@@ -865,9 +927,9 @@
                     let botonAccion = "";
 
                     if(estaApuntado) {
-                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">❌ Anular asistencia (Devolver bono)</button>`;
+                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">ANULAR ASISTENCIA</button>`;
                     } else {
-                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme a este entrenamiento</button>`;
+                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">APUNTARME</button>`;
                     }
 
                     let listaInscritosHTML = "";
@@ -913,9 +975,9 @@
                     let botonTorneoAccion = "";
 
                     if(estaApuntadoTorneo) {
-                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">❌ Anular inscripción al torneo</button>`;
+                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">ANULAR ASISTENCIA</button>`;
                     } else {
-                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">Apuntarme al Torneo</button>`;
+                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">APUNTARME</button>`;
                     }
 
                     htmlTorneos += `
