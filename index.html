@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club de Pickleball | Gestión Deportiva</title>
+    <title>Club de Pickleball | Pro</title>
     <style>
         :root {
-            --primary: #0f172a;           
-            --primary-light: #1e293b;     
-            --primary-accent: #00c897;    
-            --btn-hover: #00a87f;        
-            --bg: #f8fafc;                
-            --card-bg: #ffffff;
-            --text: #0f172a;
-            --text-light: #475569;
-            --border-card: #e2e8f0;
-            --success: #10b981;           
-            --success-bg: #d1fae5;
-            --danger: #ef4444;            
-            --danger-bg: #fee2e2;
-            --warning: #f59e0b;           
-            --warning-bg: #fffbeb;
-            --radius: 16px;               
+            --bg-dark: #111827;         
+            --card-dark: rgba(31, 41, 55, 0.75); 
+            --border-dark: rgba(75, 85, 99, 0.4); 
+            
+            --accent: #00e6ac;          
+            --accent-glow: rgba(0, 230, 172, 0.4); 
+            
+            --text-main: #f3f4f6;       
+            --text-muted: #9ca3af;      
+            
+            --success-glow: rgba(16, 185, 129, 0.3);
+            --warning-glow: rgba(245, 158, 11, 0.3);
+            --danger-glow: rgba(239, 68, 68, 0.3);
+
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-sm: 10px;
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -30,16 +31,29 @@
             margin: 0;
             padding: 0;
             font-family: var(--font-family);
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding-bottom: 130px;
-            -webkit-font-smoothing: antialiased;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding-bottom: 140px;
+            overflow-x: hidden;
         }
 
-        /* Sistema de Toasts (Alertas flotantes modernas) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, var(--accent-glow) 0%, transparent 60%);
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+
         #toast-container {
             position: fixed;
             top: 20px;
@@ -48,288 +62,292 @@
             z-index: 9999;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             width: 90%;
             max-width: 400px;
             pointer-events: none;
         }
         .toast {
-            background: var(--primary);
-            color: #fff;
-            padding: 14px 18px;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            background: var(--card-dark);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border-dark);
+            color: var(--text-main);
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
             font-size: 0.95rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
             pointer-events: auto;
-            animation: fadeInDown 0.3s ease, fadeOutUp 0.3s ease 2.7s forwards;
-            border-left: 5px solid var(--primary-accent);
+            animation: slideInDown 0.4s ease-out, fadeOut 0.5s ease 3s forwards;
+            border-left: 5px solid transparent;
         }
-        .toast.success { border-left-color: var(--success); }
-        .toast.error { border-left-color: var(--danger); }
-        .toast.warning { border-left-color: var(--warning); }
+        .toast.success { border-left-color: #10b981; box-shadow: 0 5px 20px var(--success-glow); }
+        .toast.error { border-left-color: #ef4444; box-shadow: 0 5px 20px var(--danger-glow); }
+        .toast.warning { border-left-color: #f59e0b; box-shadow: 0 5px 20px var(--warning-glow); }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-15px); }
+        @keyframes slideInDown {
+            from { opacity: 0; transform: translateY(-30px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        @keyframes fadeOutUp {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-15px); }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
         }
 
         header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 28px 20px 22px 20px;
-            border-bottom: 5px solid var(--primary-accent);
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(15px);
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
-
         header h1 {
             font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            font-weight: 900;
+            letter-spacing: -0.8px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             text-transform: uppercase;
+            background: linear-gradient(to right, #ffffff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 10px var(--accent-glow));
         }
-
-        header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-
         .sync-status {
-            font-size: 0.75rem;
-            color: #ffffff;
-            background: rgba(0, 200, 151, 0.2);
-            padding: 6px 14px;
+            font-size: 0.7rem;
+            color: var(--accent);
+            background: rgba(0, 230, 172, 0.1);
+            padding: 5px 12px;
             border-radius: 20px;
-            font-weight: 700;
-            border: 1px solid var(--primary-accent);
+            font-weight: 800;
+            border: 1px solid var(--border-dark);
             letter-spacing: 0.5px;
+        }
+        header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 500;
         }
 
         .container {
-            max-width: 640px;
+            max-width: 680px;
             margin: 0 auto;
-            padding: 24px 16px;
+            padding: 30px 16px;
         }
 
         h2 {
-            font-size: 1.45rem;
-            color: var(--primary);
-            margin-bottom: 20px;
+            font-size: 1.8rem;
+            color: var(--text-main);
+            margin-bottom: 28px;
             font-weight: 800;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            border-left: 5px solid var(--primary-accent);
-            padding-left: 12px;
+            gap: 14px;
         }
 
         .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 22px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
-            border: 1px solid var(--border-card);
+            background: var(--card-dark);
+            backdrop-filter: blur(15px);
+            border-radius: var(--radius-xl);
+            padding: 26px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-dark);
             position: relative;
             overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 6px;
-            background-color: var(--primary-accent);
-        }
-
         .card:hover {
-            box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.08);
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            border-color: rgba(0, 230, 172, 0.3);
         }
-
         .card h3 {
-            color: var(--primary);
-            margin-bottom: 12px;
-            font-size: 1.25rem;
+            color: var(--text-main);
+            margin-bottom: 14px;
+            font-size: 1.35rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-weight: 800;
         }
-
         .card p {
             font-size: 1rem;
-            color: var(--text-light);
-            margin-bottom: 12px;
-            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.7;
+        }
+
+        #seccion-home .card:nth-child(2) {
+            border-left: 4px solid #10b981;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(31, 41, 55, 0.8));
+        }
+        #seccion-home .card:nth-child(3) {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .weather-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            margin-top: 12px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-dark);
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+        .weather-icon {
+            font-size: 1.6rem;
         }
 
         button {
-            background-color: var(--primary-accent);
-            color: var(--primary);
+            background-color: var(--accent);
+            color: var(--bg-dark);
             border: none;
-            padding: 16px 20px;
-            border-radius: 12px;
-            font-size: 1.05rem;
-            font-weight: 800;
+            padding: 18px 26px;
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            font-weight: 900;
             cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 14px;
+            transition: all 0.3s ease;
+            margin-top: 18px;
             width: 100%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.25);
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px var(--accent-glow);
         }
-
         button:hover {
-            background-color: var(--btn-hover);
+            background-color: #1affc6;
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 200, 151, 0.35);
+            box-shadow: 0 8px 20px var(--accent-glow);
         }
-
         button:active {
             transform: translateY(0);
         }
 
         button.danger {
-            background-color: var(--danger);
+            background-color: #ef4444;
             color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+            box-shadow: 0 4px 15px var(--danger-glow);
         }
-        button.danger:hover { 
-            background-color: #b91c1c; 
-            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
-        }
-
+        button.danger:hover { background-color: #dc2626; box-shadow: 0 8px 20px var(--danger-glow); }
+        
         button.warning {
-            background-color: var(--warning);
-            color: var(--primary);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+            background-color: #f59e0b;
+            color: var(--bg-dark);
+            box-shadow: 0 4px 15px var(--warning-glow);
         }
-        button.warning:hover { 
-            background-color: #d97706; 
-            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
-        }
+        button.warning:hover { background-color: #d97706; box-shadow: 0 8px 20px var(--warning-glow); }
 
         button.success {
-            background-color: var(--success);
+            background-color: #10b981;
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+            box-shadow: 0 4px 15px var(--success-glow);
         }
-        button.success:hover { 
-            background-color: #059669; 
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
-        }
+        button.success:hover { background-color: #059669; box-shadow: 0 8px 20px var(--success-glow); }
 
         button.btn-volver {
-            background-color: var(--primary);
-            color: #ffffff;
-            border: 2px solid var(--primary-accent);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 16px 24px;
         }
         button.btn-volver:hover {
-            background-color: var(--primary-light);
-            border-color: #ffffff;
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+            background: var(--accent);
+            color: var(--bg-dark);
         }
 
         input, select {
             width: 100%;
-            padding: 16px 18px;
-            margin-top: 8px;
-            margin-bottom: 16px;
-            border: 2px solid var(--border-card);
-            border-radius: 12px;
-            font-size: 1.05rem;
-            background: #fff;
-            color: var(--text);
+            padding: 18px 20px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-dark);
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            background: rgba(0,0,0,0.25);
+            color: var(--text-main);
             outline: none;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
-
         input:focus, select:focus {
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 0 4px rgba(0, 200, 151, 0.15);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+            background: rgba(0,0,0,0.15);
         }
 
         .terms-container {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
-            margin-top: 12px;
-            margin-bottom: 18px;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: var(--text-light);
+            gap: 14px;
+            margin-top: 16px;
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text-muted);
         }
         .terms-container input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
-            margin-top: 2px;
-            accent-color: var(--primary-accent);
+            width: 24px;
+            height: 24px;
+            margin-top: 4px;
+            accent-color: var(--accent);
             cursor: pointer;
         }
 
         nav {
             position: fixed;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            max-width: 600px;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            max-width: 640px;
             margin: 0 auto;
-            background: var(--primary);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(20px);
             display: flex;
             justify-content: space-around;
             padding: 10px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-            border-radius: 16px;
-            border: 2px solid var(--primary-accent);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-dark);
             z-index: 1000;
         }
 
         nav button {
             background: none;
-            color: #a3b3c6;
+            color: var(--text-muted);
             border: none;
             font-size: 0.8rem;
             margin: 0;
-            padding: 10px 4px;
+            padding: 12px 6px;
             font-weight: 700;
             width: 25%;
             box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
-            border-radius: 10px;
+            gap: 6px;
+            border-radius: var(--radius-lg);
             transition: all 0.3s ease;
             position: relative;
             text-transform: none;
@@ -343,71 +361,61 @@
 
         .notification-badge {
             position: absolute;
-            top: -4px;
-            right: 14px;
-            background-color: var(--danger);
+            top: 2px;
+            right: 18px;
+            background-color: #ef4444;
             color: white;
             font-size: 0.7rem;
-            font-weight: 800;
-            padding: 3px 7px;
-            border-radius: 10px;
-            border: 2px solid var(--primary);
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 12px;
+            border: 2px solid var(--bg-dark);
             display: none;
         }
 
         nav button.active {
-            color: var(--primary);
-            background-color: var(--primary-accent);
-            font-weight: 800;
-            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.3);
+            color: var(--bg-dark);
+            background-color: var(--accent);
+            font-weight: 900;
+            box-shadow: 0 0 20px var(--accent-glow);
         }
 
         nav button.active span.icon {
-            transform: scale(1.15);
+            transform: scale(1.2);
         }
 
         .section {
             display: none;
         }
-
         .section.active {
             display: block;
-            animation: slideIn 0.3s ease-out;
+            animation: fadeIn 0.4s ease-out;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
         .badge {
             display: inline-block;
-            background: var(--success-bg);
-            color: var(--success);
-            padding: 6px 14px;
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding: 6px 16px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 800;
-            margin-bottom: 12px;
-            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         label {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 800;
-            color: var(--primary-light);
+            color: var(--text-main);
             display: block;
-            margin-top: 6px;
+            margin-top: 10px;
             letter-spacing: 0.3px;
-        }
-        
-        #seccion-home .card.success-card {
-            background: linear-gradient(135deg, var(--success-bg), #ecfdf5);
-            border: 2px solid #a7f3d0;
-            position: relative;
-        }
-        #seccion-home .card.success-card::before {
-            background-color: var(--success);
         }
     </style>
 </head>
@@ -427,7 +435,7 @@
 
         <div id="seccion-home" class="section active">
             <h2>👋 BIENVENIDO</h2>
-            <p style="margin-bottom: 25px; color: var(--text-light); font-weight: 600;">Selecciona cómo deseas acceder a la aplicación:</p>
+            <p style="margin-bottom: 25px; color: var(--text-muted); font-weight: 600;">Selecciona cómo deseas acceder:</p>
             
             <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer;">
                 <h3>👤 ENTRAR COMO ALUMNO</h3>
@@ -435,89 +443,89 @@
                 <button style="pointer-events: none;">ACCEDER COMO ALUMNO ➔</button>
             </div>
 
-            <div class="card success-card">
-                <h3 style="color: var(--success);">🎁 ¿NUEVO EN EL CLUB?</h3>
-                <p style="color: #065f46; margin-bottom: 15px; font-weight: 600;">Prueba una clase gratis y sin compromiso.</p>
+            <div class="card">
+                <h3 style="color: #34d399;">🎁 ¿NUEVO EN EL CLUB?</h3>
+                <p style="color: var(--text-muted); margin-bottom: 15px; font-weight: 600;">Prueba una clase gratis y sin compromiso.</p>
                 
-                <label style="color: #065f46;">TU NOMBRE Y APELLIDOS:</label>
+                <label>TU NOMBRE Y APELLIDOS:</label>
                 <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
                 
-                <label style="color: #065f46;">TELÉFONO DE CONTACTO (Opcional):</label>
+                <label>TELÉFONO DE CONTACTO (Opcional):</label>
                 <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
 
                 <div class="terms-container">
                     <input type="checkbox" id="check-rgpd-prueba">
-                    <label for="check-rgpd-prueba" style="color: #065f46; font-weight: normal; display: inline;">
-                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: #047857; font-weight: bold;">política de protección de datos</a> y el tratamiento de mis datos.
+                    <label for="check-rgpd-prueba" style="color: var(--text-muted); font-weight: normal; display: inline;">
+                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba.', 'warning'); return false;" style="color: var(--accent); font-weight: bold;">política de protección de datos</a>.
                     </label>
                 </div>
 
                 <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 SOLICITAR CLASE DE PRUEBA</button>
             </div>
 
-            <div class="card warning" onclick="entrarComoMonitorSeleccion()" style="cursor: pointer; position: relative;">
+            <div class="card warning" onclick="entrarComoMonitorSeleccion()" style="cursor: pointer;">
                 <div style="position: absolute; top: 16px; right: 16px;">
-                    <span id="globo-notificaciones-home" class="notification-badge" style="display:inline-block; position:relative; top:0; right:0; font-size:0.8rem; padding:4px 8px;">0</span>
+                    <span id="globo-notificaciones-home" class="notification-badge" style="display:inline-block; position:relative; top:0; right:0;">0</span>
                 </div>
-                <h3 style="color: var(--primary);">🔑 ENTRAR COMO MONITOR</h3>
-                <p style="color: var(--primary-light);">Gestiona clases, torneos, altas de alumnos y aprueba recargas de bonos y solicitudes.</p>
+                <h3 style="color: #fbbf24;">🔑 ENTRAR COMO MONITOR</h3>
+                <p style="color: var(--text-muted);">Gestiona clases, torneos, altas de alumnos y solicitudes.</p>
                 <button class="warning" style="pointer-events: none;">ACCEDER COMO MONITOR ➔</button>
             </div>
         </div>
         
         <div id="seccion-entrenamientos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>📅 PRÓXIMOS ENTRENAMIENTOS</h2>
-            <div id="lista-entrenamientos" style="margin-top: 10px;">
+            <div id="lista-entrenamientos">
                 <p>Cargando entrenamientos...</p>
             </div>
             
-            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
+            <div class="card" id="panel-crear-entrenamiento" style="display:none; border: 2px dashed var(--border-dark);">
                 <h3>➕ AÑADIR NUEVO ENTRENAMIENTO</h3>
                 <label>Título / Nivel:</label>
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
-                <label>Lugar:</label>
-                <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
+                <label>Lugar (Incluye la ciudad para el tiempo, ej: Madrid, Barcelona...):</label>
+                <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal - Madrid">
                 <button onclick="agregarEntrenamiento()">CREAR CLASE</button>
             </div>
         </div>
 
         <div id="seccion-torneos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>🏆 TORNEOS Y COMPETICIONES</h2>
-            <div id="lista-torneos" style="margin-top: 10px;">
+            <div id="lista-torneos">
                 <p>Cargando torneos...</p>
             </div>
             
-            <div class="card" id="panel-crear-torneo" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
+            <div class="card" id="panel-crear-torneo" style="display:none; border: 2px dashed var(--border-dark);">
                 <h3>➕ CREAR NUEVO TORNEO</h3>
                 <label>Nombre del Torneo:</label>
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
-                <label>Lugar:</label>
-                <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
-                <button onclick="agregarTorneo()">CREAR CLASE</button>
+                <label>Lugar (Incluye la ciudad para el tiempo):</label>
+                <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis - Valencia">
+                <button onclick="agregarTorneo()">CREAR TORNEO</button>
             </div>
         </div>
 
         <div id="seccion-perfil" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>👤 MI PANEL DE ALUMNO</h2>
             
-            <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
+            <div id="panel-identificado" class="card" style="display:none; border-color: #10b981;">
                 <span class="badge">Sesión Activa</span>
-                <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
-                <p id="info-bono-personal" style="font-size: 1.1rem; color: #047857; margin: 12px 0; font-weight: 800;">🎟️ MI BONO: 0 clases</p>
+                <h3 id="saludo-alumno" style="color: #34d399;">¡Hola!</h3>
+                <p id="info-bono-personal" style="font-size: 1.1rem; color: #34d399; margin: 12px 0; font-weight: 800;">🎟️ MI BONO: 0 clases</p>
                 
-                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 15px; font-size: 0.85rem; color: #065f46; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 8px;">
+                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 15px; font-size: 0.85rem; color: var(--text-muted); background: rgba(0,0,0,0.2); padding: 12px; border-radius: var(--radius-sm);">
                     📜 <strong>Historial reciente:</strong> Cuenta activa correctamente sincronizada.
                 </div>
 
-                <div style="margin-top: 15px; border-top: 1px solid #d1fae5; padding-top: 15px;">
-                    <button class="success" onclick="solicitarRecargaBono()">SOLICITAR RECARGA</button>
+                <div style="margin-top: 15px; border-top: 1px solid var(--border-dark); padding-top: 15px;">
+                    <button class="success" onclick="solicitarRecargaBono()">SOLICITAR RECARGA DE BONO</button>
                 </div>
 
                 <button class="danger" style="margin-top: 12px;" onclick="cerrarSesionAlumno()">CERRAR SESIÓN</button>
@@ -525,10 +533,10 @@
         </div>
 
         <div id="seccion-alumnos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>👥 GESTIÓN DE ALUMNOS</h2>
-            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
-                <h3 style="color: #92400e;">➕ CREAR NUEVO ALUMNO</h3>
+            <div class="card" style="border-color: #f59e0b;">
+                <h3 style="color: #fbbf24;">➕ CREAR NUEVO ALUMNO</h3>
                 <label>Nombre del Alumno:</label>
                 <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
                 <label>PIN de Acceso:</label>
@@ -538,25 +546,25 @@
 
                 <div class="terms-container">
                     <input type="checkbox" id="check-rgpd-alumno" checked>
-                    <label for="check-rgpd-alumno" style="color: #92400e; font-weight: normal; display: inline;">
-                        Confirmo que el alumno ha sido informado y ha dado su consentimiento para el tratamiento de sus datos deportivos.
+                    <label for="check-rgpd-alumno" style="color: var(--text-muted); font-weight: normal; display: inline;">
+                        Confirmo que el alumno ha dado su consentimiento para el tratamiento de datos.
                     </label>
                 </div>
 
                 <button onclick="registrarNuevoAlumno()" class="warning">CREAR ALUMNO</button>
 
-                <h3 style="margin-top:30px; color: var(--primary);">👥 ALUMNOS REGISTRADOS</h3>
+                <h3 style="margin-top:30px; color: var(--text-main);">👥 ALUMNOS REGISTRADOS</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
             </div>
         </div>
 
         <div id="seccion-gestion" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
             <h2>⚙️ PANEL DE GESTIÓN</h2>
-            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
-                <h3 style="color: #92400e;">🚨 SOLICITUDES DE ALUMNOS Y PRUEBAS</h3>
+            <div class="card" style="border-color: #f59e0b;">
+                <h3 style="color: #fbbf24;">🚨 SOLICITUDES PENDIENTES</h3>
                 <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
-                    <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
+                    <p style="color: var(--text-muted);">No hay solicitudes pendientes.</p>
                 </div>
 
                 <button class="danger" style="margin-top:20px;" onclick="reiniciarDatosCompletos()">⚠️ VACIAR / REINICIAR TODO</button>
@@ -605,6 +613,7 @@
         
         let modoMonitorActivo = false;
         let alumnoActual = null; 
+        let cacheClima = {};
         
         let datosGlobales = {
             entrenamientos: [],
@@ -613,7 +622,6 @@
             avisos: []
         };
 
-        // Función UX para mostrar notificaciones flotantes sin bloquear la app
         function mostrarToast(mensaje, tipo = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -627,6 +635,43 @@
             setTimeout(() => { toast.remove(); }, 3000);
         }
 
+        // Función para consultar el tiempo según la ciudad detectada en el texto del lugar
+        async function obtenerClimaLugar(lugarTexto) {
+            if(!lugarTexto) return null;
+            let partes = lugarTexto.split('-');
+            let ciudad = partes.length > 1 ? partes[partes.length - 1].trim() : lugarTexto.trim();
+            
+            if(cacheClima[ciudad]) return cacheClima[ciudad];
+
+            try {
+                let geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(ciudad)}&count=1&language=es&format=json`);
+                let geoData = await geoRes.json();
+                if(!geoData.results || geoData.results.length === 0) return null;
+
+                let { latitude, longitude, name } = geoData.results[0];
+                let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&timezone=auto`);
+                let weatherData = await weatherRes.json();
+
+                if(!weatherData.current) return null;
+
+                let temp = Math.round(weatherData.current.temperature_2m);
+                let code = weatherData.current.weather_code;
+                let icono = "☀️";
+                let desc = "Soleado";
+
+                if (code >= 1 && code <= 3) { desc = "Nublado"; icono = "⛅"; }
+                else if (code >= 51 && code <= 67) { desc = "Lluvia"; icono = "🌧️"; }
+                else if (code >= 71 && code <= 77) { desc = "Nieve"; icono = "❄️"; }
+                else if (code >= 95) { desc = "Tormenta"; icono = "⚡"; }
+
+                let resultado = { ciudad: name, temp, icono, desc };
+                cacheClima[ciudad] = resultado;
+                return resultado;
+            } catch(e) {
+                return null;
+            }
+        }
+
         function volverAHome() {
             modoMonitorActivo = false;
             alumnoActual = null;
@@ -636,7 +681,7 @@
 
         function entrarComoAlumno() {
             let nombreInput = prompt("Introduce tu nombre:");
-            if(nombreInput === null) return; // Cancelado
+            if(nombreInput === null) return;
             nombreInput = nombreInput.trim();
 
             if(!nombreInput) {
@@ -645,7 +690,7 @@
             }
 
             let passInput = prompt("Introduce tu PIN personal:");
-            if(passInput === null) return; // Cancelado
+            if(passInput === null) return;
             passInput = passInput.trim();
 
             let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
@@ -712,7 +757,7 @@
 
         function cambiarSeccion(seccion) {
             if ((seccion === 'alumnos' || seccion === 'gestion') && !modoMonitorActivo) {
-                mostrarToast("Acceso denegado. Debes iniciar sesión como monitor.", "error");
+                mostrarToast("Acceso denegado.", "error");
                 volverAHome();
                 return;
             }
@@ -778,17 +823,15 @@
             let aceptoRgpd = document.getElementById('check-rgpd-prueba').checked;
 
             if(!nombre) {
-                mostrarToast("Por favor, introduce al menos tu nombre y apellidos.", "error");
+                mostrarToast("Introduce tu nombre y apellidos.", "error");
                 return;
             }
-
             if(!aceptoRgpd) {
                 mostrarToast("⚠️ Debes aceptar la política de protección de datos.", "warning");
                 return;
             }
 
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
-
             let textoAviso = `${nombre} ha solicitado una Clase de Prueba gratuita.`;
             if(telefono) textoAviso += ` (Contacto: ${telefono})`;
 
@@ -803,26 +846,21 @@
             document.getElementById('input-nombre-prueba').value = "";
             document.getElementById('input-telefono-prueba').value = "";
             document.getElementById('check-rgpd-prueba').checked = false;
-            mostrarToast("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso.");
+            mostrarToast("¡Solicitud enviada con éxito!");
         }
 
         function registrarNuevoAlumno() {
-            if(!modoMonitorActivo) return mostrarToast("Acción no permitida.", "error");
+            if(!modoMonitorActivo) return;
             let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
             let pass = document.getElementById('nuevo-alumno-pass').value.trim();
             let clases = parseInt(document.getElementById('nuevo-alumno-clases').value);
             let aceptoRgpd = document.getElementById('check-rgpd-alumno').checked;
             
             if(isNaN(clases)) clases = 10;
-
-            if(!nombre || !pass) return mostrarToast("Escribe el nombre y la contraseña del alumno", "error");
-            
-            if(!aceptoRgpd) {
-                return mostrarToast("⚠️ Debes confirmar el consentimiento de protección de datos.", "warning");
-            }
+            if(!nombre || !pass) return mostrarToast("Escribe nombre y contraseña", "error");
+            if(!aceptoRgpd) return mostrarToast("⚠️ Debes confirmar el consentimiento.", "warning");
 
             if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
-
             let existe = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombre.toLowerCase());
             if(existe) return mostrarToast("Ya existe un alumno con ese nombre.", "error");
 
@@ -830,27 +868,22 @@
             document.getElementById('nuevo-alumno-nombre').value = "";
             document.getElementById('nuevo-alumno-pass').value = "";
             document.getElementById('nuevo-alumno-clases').value = "10";
-            document.getElementById('check-rgpd-alumno').checked = true;
             guardarDatos();
             mostrarToast("¡Alumno creado con éxito!");
         }
 
         function cerrarSesionAlumno() {
             alumnoActual = null;
-            mostrarToast("Sesión cerrada correctamente.");
+            mostrarToast("Sesión cerrada.");
             volverAHome();
         }
 
         function solicitarRecargaBono() {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión en tu perfil.", "error");
-                volverAHome();
-                return;
-            }
+            if(!alumnoActual) return;
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
 
             let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono');
-            if(yaPedido) return mostrarToast("Ya tienes una solicitud de recarga pendiente.", "warning");
+            if(yaPedido) return mostrarToast("Ya tienes una solicitud pendiente.", "warning");
 
             datosGlobales.avisos.push({
                 id: Date.now(),
@@ -859,7 +892,7 @@
                 texto: `${alumnoActual.nombre} solicita recargar su Bono de 10 clases.`
             });
             guardarDatos();
-            mostrarToast("¡Aviso de recarga enviado al monitor correctamente!");
+            mostrarToast("¡Aviso enviado al monitor!");
         }
 
         function resolverAviso(id) {
@@ -887,7 +920,7 @@
 
         function devolverClase(entrenamientoId, nombreAlumno) {
             if(!modoMonitorActivo) return;
-            if(confirm(`¿Estás seguro de devolver 1 clase a ${nombreAlumno} y eliminarle del entrenamiento?`)) {
+            if(confirm(`¿Devolver 1 clase a ${nombreAlumno}?`)) {
                 let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
                 if(ent && ent.inscritos) {
                     ent.inscritos = ent.inscritos.filter(nombre => nombre !== nombreAlumno);
@@ -900,17 +933,13 @@
                     }
                 }
                 guardarDatos();
-                mostrarToast(`✅ Clase devuelta a ${nombreAlumno}.`);
+                mostrarToast(`✅ Clase devuelta.`);
             }
         }
 
         function desapuntarseEntrenamientoPropio(entrenamientoId) {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero.", "error");
-                volverAHome();
-                return;
-            }
-            if(confirm("¿Seguro que deseas anular tu asistencia? Se te devolverá 1 clase a tu bono.")) {
+            if(!alumnoActual) return;
+            if(confirm("¿Anular tu asistencia? Se te devolverá 1 clase.")) {
                 let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
                 if(ent && ent.inscritos) {
                     ent.inscritos = ent.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
@@ -921,29 +950,24 @@
                     alumnoActual.clasesBono = alumnoBD.clasesBono;
                 }
                 guardarDatos();
-                mostrarToast("✅ Asistencia anulada y clase devuelta a tu bono.");
+                mostrarToast("✅ Asistencia anulada y clase devuelta.");
             }
         }
 
         function desapuntarseTorneoPropio(torneoId) {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero.", "error");
-                volverAHome();
-                return;
-            }
-            if(confirm("¿Seguro que deseas anular tu inscripción en este torneo?")) {
+            if(!alumnoActual) return;
+            if(confirm("¿Anular inscripción en este torneo?")) {
                 let tor = datosGlobales.torneos.find(t => t.id === torneoId);
                 if(tor && tor.inscritos) {
                     tor.inscritos = tor.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
                 }
                 guardarDatos();
-                mostrarToast("✅ Te has desapuntado del torneo.");
+                mostrarToast("✅ Inscripción anulada.");
             }
         }
 
-        function renderizar() {
+        async function renderizar() {
             let totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
-            
             let globoNav = document.getElementById('globo-notificaciones');
             let globoHome = document.getElementById('globo-notificaciones-home');
             
@@ -964,41 +988,42 @@
                 let clases = reg ? reg.clasesBono : 0;
                 alumnoActual.clasesBono = clases;
                 document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>MI BONO:</strong> ${clases} clases disponibles`;
-                document.getElementById('historial-bono-alumno').innerHTML = `📜 <strong>Estado de cuenta:</strong> Al día. Clases listas para reservar entrenamientos o torneos.`;
             } else {
                 document.getElementById('panel-identificado').style.display = 'none';
             }
 
+            // Render Entrenamientos
             let htmlEntrenamientos = "";
             if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0) {
-                htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
+                htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-muted);'>No hay entrenamientos programados.</p>";
             } else {
-                datosGlobales.entrenamientos.forEach(ent => {
+                for(let ent of datosGlobales.entrenamientos) {
                     let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
                     let lugarTxt = ent.lugar ? `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p>` : '';
                     
-                    let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
-                    let botonAccion = "";
-
-                    if(estaApuntado) {
-                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">ANULAR ASISTENCIA</button>`;
-                    } else {
-                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">APUNTARME</button>`;
+                    let climaHTML = "";
+                    if(ent.lugar) {
+                        let clima = await obtenerClimaLugar(ent.lugar);
+                        if(clima) {
+                            climaHTML = `<div class="weather-box"><span class="weather-icon">${clima.icono}</span> <span>Tiempo en ${clima.ciudad}: <strong>${clima.temp}°C, ${clima.desc}</strong></span></div>`;
+                        }
                     }
 
-                    let listaInscritosHTML = "";
-                    let numInscritos = (ent.inscritos && ent.inscritos.length > 0) ? ent.inscritos.length : 0;
+                    let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
+                    let botonAccion = estaApuntado ? 
+                        `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">ANULAR ASISTENCIA</button>` :
+                        `<button onclick="apuntarseEntrenamiento(${ent.id})">APUNTARME (-1 CLASE)</button>`;
 
+                    let numInscritos = (ent.inscritos && ent.inscritos.length > 0) ? ent.inscritos.length : 0;
+                    let listaInscritosHTML = "";
                     if(modoMonitorActivo) {
                         if(numInscritos > 0) {
                             listaInscritosHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
                             ent.inscritos.forEach(alumnoNombre => {
-                                listaInscritosHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver clase</button></li>`;
+                                listaInscritosHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver</button></li>`;
                             });
                             listaInscritosHTML += "</ul>";
-                        } else {
-                            listaInscritosHTML = "Nadie apuntado aún";
-                        }
+                        } else { listaInscritosHTML = "Nadie apuntado aún"; }
                     } else {
                         listaInscritosHTML = `${numInscritos} personas apuntadas`;
                     }
@@ -1008,60 +1033,55 @@
                             <h3>🏓 ${ent.titulo}</h3>
                             <p>🕒 <strong>Fecha:</strong> ${ent.fecha}</p>
                             ${lugarTxt}
+                            ${climaHTML}
                             <p>👥 <strong>Inscritos:</strong> ${listaInscritosHTML}</p>
                             ${botonAccion}
                             ${btnBorrar}
                         </div>
                     `;
-                });
+                }
             }
             document.getElementById('lista-entrenamientos').innerHTML = htmlEntrenamientos;
 
+            // Render Torneos
             let htmlTorneos = "";
             if(!datosGlobales.torneos || datosGlobales.torneos.length === 0) {
-                htmlTorneos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay torneos programados actualmente.</p>";
+                htmlTorneos = "<p style='text-align:center; padding:20px; color:var(--text-muted);'>No hay torneos programados.</p>";
             } else {
-                datosGlobales.torneos.forEach(tor => {
+                for(let tor of datosGlobales.torneos) {
                     let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar Torneo</button>` : '';
                     let lugarTorneoTxt = tor.lugar ? `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p>` : '';
                     
-                    let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
-                    let botonTorneoAccion = "";
-
-                    if(estaApuntadoTorneo) {
-                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">ANULAR ASISTENCIA</button>`;
-                    } else {
-                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">APUNTARME</button>`;
-                    }
-
-                    let listaInscritosTorneoHTML = "";
-                    let numInscritosTorneo = (tor.inscritos && tor.inscritos.length > 0) ? tor.inscritos.length : 0;
-
-                    if(modoMonitorActivo) {
-                        if(numInscritosTorneo > 0) {
-                            listaInscritosTorneoHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
-                            tor.inscritos.forEach(alumnoNombre => {
-                                listaInscritosTorneoHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre}</li>`;
-                            });
-                            listaInscritosTorneoHTML += "</ul>";
-                        } else {
-                            listaInscritosTorneoHTML = "Nadie apuntado aún";
+                    let climaTorneoHTML = "";
+                    if(tor.lugar) {
+                        let climaT = await obtenerClimaLugar(tor.lugar);
+                        if(climaT) {
+                            climaTorneoHTML = `<div class="weather-box"><span class="weather-icon">${climaT.icono}</span> <span>Tiempo en ${climaT.ciudad}: <strong>${climaT.temp}°C, ${climaT.desc}</strong></span></div>`;
                         }
-                    } else {
-                        listaInscritosTorneoHTML = `${numInscritosTorneo} personas apuntadas`;
                     }
+
+                    let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
+                    let botonTorneoAccion = estaApuntadoTorneo ?
+                        `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">ANULAR INSCRIPCIÓN</button>` :
+                        `<button onclick="apuntarseTorneo(${tor.id})">APUNTARME AL TORNEO</button>`;
+
+                    let numInscritosTorneo = (tor.inscritos && tor.inscritos.length > 0) ? tor.inscritos.length : 0;
+                    let listaInscritosTorneoHTML = modoMonitorActivo && numInscritosTorneo > 0 ? 
+                        "<ul style='margin-left: 20px; margin-top: 5px;'>" + tor.inscritos.map(n => `<li style='margin-bottom: 4px;'>${n}</li>`).join('') + "</ul>" : 
+                        `${numInscritosTorneo} participantes`;
 
                     htmlTorneos += `
                         <div class="card">
                             <h3>🏆 ${tor.titulo}</h3>
                             <p>📅 <strong>Fecha:</strong> ${tor.fecha}</p>
                             ${lugarTorneoTxt}
+                            ${climaTorneoHTML}
                             <p>👥 <strong>Participantes:</strong> ${listaInscritosTorneoHTML}</p>
                             ${botonTorneoAccion}
                             ${btnBorrarTorneo}
                         </div>
                     `;
-                });
+                }
             }
             document.getElementById('lista-torneos').innerHTML = htmlTorneos;
 
@@ -1069,22 +1089,18 @@
                 let avisosHtml = "";
                 if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
                     datosGlobales.avisos.forEach(aviso => {
-                        let botonExtraAviso = "";
-                        if(aviso.tipo === 'Recarga Bono') {
-                            botonExtraAviso = `<button class="success" style="padding: 10px; font-size: 0.9rem; margin-top: 8px;" onclick="aprobarRecargaBono('${aviso.alumno}')">🎟️ Añadir bono</button>`;
-                        }
-                        
+                        let btnExtra = aviso.tipo === 'Recarga Bono' ? `<button class="success" style="padding: 10px; font-size: 0.9rem; margin-top: 8px;" onclick="aprobarRecargaBono('${aviso.alumno}')">🎟️ Aprobar recarga</button>` : '';
                         avisosHtml += `
-                            <div class="card" style="background: white; border-color: #f59e0b; padding: 16px; margin-bottom: 12px;">
-                                <p style="color: #92400e; font-weight: bold; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
-                                <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 8px;">${aviso.texto}</p>
-                                ${botonExtraAviso}
-                                <button class="danger" style="padding: 8px; font-size: 0.85rem; margin-top: 6px; background-color: #64748b;" onclick="resolverAviso(${aviso.id})">✖ Descartar aviso</button>
+                            <div class="card" style="background: rgba(0,0,0,0.3); border-color: #f59e0b; padding: 16px; margin-bottom: 12px;">
+                                <p style="color: #fbbf24; font-weight: bold; margin-bottom: 6px;">⚠️ ${aviso.tipo}</p>
+                                <p style="color: var(--text-main); font-size: 0.95rem; margin-bottom: 8px;">${aviso.texto}</p>
+                                ${btnExtra}
+                                <button class="danger" style="padding: 8px; font-size: 0.85rem; margin-top: 6px; background-color: #4b5563;" onclick="resolverAviso(${aviso.id})">✖ Descartar</button>
                             </div>
                         `;
                     });
                 } else {
-                    avisosHtml = `<p style="color: var(--text-light); font-size: 0.9rem;">No hay avisos pendientes.</p>`;
+                    avisosHtml = `<p style="color: var(--text-muted); font-size: 0.9rem;">No hay avisos pendientes.</p>`;
                 }
                 document.getElementById('lista-avisos-monitor').innerHTML = avisosHtml;
 
@@ -1092,19 +1108,19 @@
                 if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
                     datosGlobales.alumnos.forEach((al, idx) => {
                         listaAdminHtml += `
-                            <div class="card" style="padding:14px; margin-bottom:12px; background:white;">
-                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
-                                <p style="margin-bottom:10px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
-                                <button class="success" style="padding: 9px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
+                            <div class="card" style="padding:14px; margin-bottom:12px; background:rgba(0,0,0,0.2);">
+                                <p style="font-weight:bold; color:var(--text-main); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-muted);">(PIN: ${al.pass})</span></p>
+                                <p style="margin-bottom:10px;">🎟️ Bono: <strong>${al.clasesBono} clases</strong></p>
+                                <button class="success" style="padding: 9px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir 10 clases</button>
                                 <div style="display:flex; gap:10px;">
-                                    <button onclick="modificarBono(${idx})" style="padding:8px 12px; font-size:0.9rem; margin-top:0;">Editar Clases</button>
+                                    <button onclick="modificarBono(${idx})" style="padding:8px 12px; font-size:0.9rem; margin-top:0;">Editar</button>
                                     <button class="danger" style="padding:8px 12px; font-size:0.9rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
                                 </div>
                             </div>
                         `;
                     });
                 } else {
-                    listaAdminHtml = `<p style="color:var(--text-light)">No hay alumnos dados de alta todavía.</p>`;
+                    listaAdminHtml = `<p style="color:var(--text-muted)">No hay alumnos registrados.</p>`;
                 }
                 document.getElementById('lista-alumnos-admin').innerHTML = listaAdminHtml;
             }
@@ -1115,17 +1131,14 @@
 
         function apuntarseEntrenamiento(id) {
             if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
+                mostrarToast("Inicia sesión primero.", "warning");
                 return;
             }
-
             let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
-
             if(!alumnoBD || alumnoBD.clasesBono <= 0) {
-                mostrarToast("❌ No te quedan clases en tu bono. Solicita una recarga.", "error");
+                mostrarToast("❌ No te quedan clases en tu bono.", "error");
                 return;
             }
-
             let ent = datosGlobales.entrenamientos.find(e => e.id === id);
             if(ent) {
                 if(!ent.inscritos) ent.inscritos = [];
@@ -1133,18 +1146,15 @@
                     ent.inscritos.push(alumnoActual.nombre);
                     alumnoBD.clasesBono -= 1;
                     alumnoActual.clasesBono = alumnoBD.clasesBono;
-
                     guardarDatos();
-                    mostrarToast("✅ ¡Apuntado con éxito! Se ha descontado 1 clase.");
-                } else { 
-                    mostrarToast("Ya estás apuntado a este entrenamiento.", "warning"); 
-                }
+                    mostrarToast("✅ ¡Apuntado con éxito! Se descontó 1 clase.");
+                } else { mostrarToast("Ya estás apuntado.", "warning"); }
             }
         }
 
         function apuntarseTorneo(id) {
             if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
+                mostrarToast("Inicia sesión primero.", "warning");
                 return;
             }
             let tor = datosGlobales.torneos.find(t => t.id === id);
@@ -1154,7 +1164,7 @@
                     tor.inscritos.push(alumnoActual.nombre);
                     guardarDatos();
                     mostrarToast("¡Apuntado al torneo con éxito!");
-                } else { mostrarToast("Ya estás apuntado a este torneo.", "warning"); }
+                } else { mostrarToast("Ya estás apuntado.", "warning"); }
             }
         }
 
@@ -1163,19 +1173,19 @@
             let titulo = document.getElementById('nuevo-titulo').value;
             let fecha = document.getElementById('nuevo-fecha').value;
             let lugar = document.getElementById('nuevo-lugar').value;
-            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
+            if(!titulo || !fecha) return mostrarToast("Rellena título y fecha", "error");
             if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
             datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             document.getElementById('nuevo-titulo').value = "";
             document.getElementById('nuevo-fecha').value = "";
             document.getElementById('nuevo-lugar').value = "";
             guardarDatos();
-            mostrarToast("Clase creada correctamente.");
+            mostrarToast("Clase creada.");
         }
 
         function borrarEntrenamiento(id) {
             if(!modoMonitorActivo) return;
-            if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
+            if(confirm("¿Borrar entrenamiento?")) {
                 datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
                 guardarDatos();
                 mostrarToast("Entrenamiento borrado.");
@@ -1187,19 +1197,19 @@
             let titulo = document.getElementById('torneo-titulo').value;
             let fecha = document.getElementById('torneo-fecha').value;
             let lugar = document.getElementById('torneo-lugar').value;
-            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
+            if(!titulo || !fecha) return mostrarToast("Rellena título y fecha", "error");
             if(!datosGlobales.torneos) datosGlobales.torneos = [];
             datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             document.getElementById('torneo-titulo').value = "";
             document.getElementById('torneo-fecha').value = "";
             document.getElementById('torneo-lugar').value = "";
             guardarDatos();
-            mostrarToast("Torneo creado correctamente.");
+            mostrarToast("Torneo creado.");
         }
 
         function borrarTorneo(id) {
             if(!modoMonitorActivo) return;
-            if(confirm("¿Seguro que quieres borrar este torneo?")) {
+            if(confirm("¿Borrar torneo?")) {
                 datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
                 guardarDatos();
                 mostrarToast("Torneo borrado.");
@@ -1208,17 +1218,17 @@
 
         function modificarBono(index) {
             if(!modoMonitorActivo) return;
-            let nuevoValor = prompt("Introduce el nuevo número de clases disponibles:", datosGlobales.alumnos[index].clasesBono);
+            let nuevoValor = prompt("Nuevo número de clases:", datosGlobales.alumnos[index].clasesBono);
             if(nuevoValor !== null && !isNaN(nuevoValor)) {
                 datosGlobales.alumnos[index].clasesBono = parseInt(nuevoValor);
                 guardarDatos();
-                mostrarToast("Bono modificado correctamente.");
+                mostrarToast("Bono modificado.");
             }
         }
 
         function borrarAlumno(index) {
             if(!modoMonitorActivo) return;
-            if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
+            if(confirm("¿Eliminar alumno?")) {
                 datosGlobales.alumnos.splice(index, 1);
                 guardarDatos();
                 mostrarToast("Alumno eliminado.");
@@ -1227,7 +1237,7 @@
 
         function reiniciarDatosCompletos() {
             if(!modoMonitorActivo) return;
-            if(prompt("Escribe 'BORRAR' para vaciar absolutamente todo:") === 'BORRAR') {
+            if(prompt("Escribe 'BORRAR' para vaciar todo:") === 'BORRAR') {
                 datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [] };
                 guardarDatos();
                 mostrarToast("Datos reiniciados.", "warning");
@@ -1235,7 +1245,7 @@
         }
 
         cargarDatos();
-        setInterval(cargarDatos, 5005);
+        setInterval(cargarDatos, 5000);
     </script>
 </body>
 </html>
