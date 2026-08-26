@@ -187,7 +187,6 @@
         }
         button.success:hover { background-color: #059669; }
 
-        /* ESTILO MEJORADO PARA EL BOTÓN "VOLVER A SELECCIÓN" (Más legible) */
         button.btn-volver {
             background-color: var(--primary);
             color: #ffffff;
@@ -214,6 +213,25 @@
 
         input:focus, select:focus {
             border-color: var(--primary-accent);
+        }
+
+        /* Estilo para los checkboxes de términos legales */
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 10px;
+            margin-bottom: 16px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            color: var(--text-light);
+        }
+        .terms-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            accent-color: var(--primary-accent);
+            cursor: pointer;
         }
 
         nav {
@@ -243,7 +261,7 @@
             margin: 0;
             padding: 10px 4px;
             font-weight: 600;
-            width: 25%; /* Se adaptará dinámicamente según el rol */
+            width: 25%;
             box-shadow: none;
             display: flex;
             flex-direction: column;
@@ -359,6 +377,13 @@
                 <label style="color: #065f46;">TELÉFONO DE CONTACTO (Opcional):</label>
                 <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
 
+                <div class="terms-container">
+                    <input type="checkbox" id="check-rgpd-prueba">
+                    <label for="check-rgpd-prueba" style="color: #065f46; font-weight: normal; display: inline;">
+                        Acepto la <a href="#" onclick="alert('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.'); return false;" style="color: #047857; font-weight: bold;">política de protección de datos</a> y el tratamiento de mis datos.
+                    </label>
+                </div>
+
                 <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 SOLICITAR CLASE DE PRUEBA</button>
             </div>
 
@@ -460,6 +485,14 @@
                 <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
                 <label>Clases iniciales en el Bono:</label>
                 <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
+
+                <div class="terms-container">
+                    <input type="checkbox" id="check-rgpd-alumno" checked>
+                    <label for="check-rgpd-alumno" style="color: #92400e; font-weight: normal; display: inline;">
+                        Confirmo que el alumno ha sido informado y ha dado su consentimiento para el tratamiento de sus datos deportivos.
+                    </label>
+                </div>
+
                 <button onclick="registrarNuevoAlumno()" class="warning">CREAR ALUMNO</button>
 
                 <h3 style="margin-top:25px; color: var(--primary);">👥 ALUMNOS REGISTRADOS</h3>
@@ -515,7 +548,7 @@
         function entrarComoAlumno() {
             modoMonitorActivo = false; 
             document.getElementById('barra-navegacion-inferior').style.display = 'flex';
-            ajustarMenuInferior(); // Oculta el botón de monitor y ajusta el ancho de los botones de alumno
+            ajustarMenuInferior(); 
             cambiarSeccion('entrenamientos');
         }
 
@@ -525,25 +558,24 @@
                 modoMonitorActivo = true; 
                 alumnoActual = null;      
                 document.getElementById('barra-navegacion-inferior').style.display = 'flex';
-                ajustarMenuInferior(); // Muestra el botón de monitor y ajusta a 4 opciones
+                ajustarMenuInferior(); 
                 cambiarSeccion('monitor');
             } else if(pass !== null) {
                 alert("Contraseña incorrecta.");
             }
         }
 
-        // FUNCIÓN NUEVA: Controla el ancho y visibilidad de los botones del menú inferior según el rol
         function ajustarMenuInferior() {
             let btnMonitor = document.getElementById('nav-monitor');
             let botonesNav = document.querySelectorAll('nav button');
             
             if (modoMonitorActivo) {
                 btnMonitor.style.display = 'flex';
-                botonesNav.forEach(b => b.style.width = '25%'); // 4 botones (25% cada uno)
+                botonesNav.forEach(b => b.style.width = '25%'); 
             } else {
                 btnMonitor.style.display = 'none';
                 botonesNav.forEach(b => {
-                    if(b.id !== 'nav-monitor') b.style.width = '33.33%'; // 3 botones de alumno (33% cada uno)
+                    if(b.id !== 'nav-monitor') b.style.width = '33.33%'; 
                 });
             }
         }
@@ -611,9 +643,15 @@
         function pedirClaseLibreSinRegistro() {
             let nombre = document.getElementById('input-nombre-prueba').value.trim();
             let telefono = document.getElementById('input-telefono-prueba').value.trim();
+            let aceptoRgpd = document.getElementById('check-rgpd-prueba').checked;
 
             if(!nombre) {
                 alert("Por favor, introduce al menos tu nombre y apellidos.");
+                return;
+            }
+
+            if(!aceptoRgpd) {
+                alert("⚠️ Debes aceptar la política de protección de datos para solicitar la clase de prueba.");
                 return;
             }
 
@@ -632,6 +670,7 @@
             guardarDatos();
             document.getElementById('input-nombre-prueba').value = "";
             document.getElementById('input-telefono-prueba').value = "";
+            document.getElementById('check-rgpd-prueba').checked = false;
             alert("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso.");
         }
 
@@ -640,9 +679,16 @@
             let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
             let pass = document.getElementById('nuevo-alumno-pass').value.trim();
             let clases = parseInt(document.getElementById('nuevo-alumno-clases').value);
+            let aceptoRgpd = document.getElementById('check-rgpd-alumno').checked;
+            
             if(isNaN(clases)) clases = 10;
 
             if(!nombre || !pass) return alert("Escribe el nombre y la contraseña del alumno");
+            
+            if(!aceptoRgpd) {
+                return alert("⚠️ Debes confirmar el consentimiento de protección de datos del alumno para registrarlo.");
+            }
+
             if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
 
             let existe = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombre.toLowerCase());
@@ -652,6 +698,7 @@
             document.getElementById('nuevo-alumno-nombre').value = "";
             document.getElementById('nuevo-alumno-pass').value = "";
             document.getElementById('nuevo-alumno-clases').value = "10";
+            document.getElementById('check-rgpd-alumno').checked = true;
             guardarDatos();
             alert("¡Alumno creado con éxito!");
         }
