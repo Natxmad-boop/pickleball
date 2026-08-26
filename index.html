@@ -39,6 +39,48 @@
             -webkit-font-smoothing: antialiased;
         }
 
+        /* Sistema de Toasts (Alertas flotantes modernas) */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            max-width: 400px;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--primary);
+            color: #fff;
+            padding: 14px 18px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            animation: fadeInDown 0.3s ease, fadeOutUp 0.3s ease 2.7s forwards;
+            border-left: 5px solid var(--primary-accent);
+        }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOutUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-15px); }
+        }
+
         header {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
@@ -371,6 +413,8 @@
 </head>
 <body>
 
+    <div id="toast-container"></div>
+
     <header>
         <div class="header-top">
             <h1>🏓 PICKLEBALL CLUB</h1>
@@ -404,7 +448,7 @@
                 <div class="terms-container">
                     <input type="checkbox" id="check-rgpd-prueba">
                     <label for="check-rgpd-prueba" style="color: #065f46; font-weight: normal; display: inline;">
-                        Acepto la <a href="#" onclick="alert('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.'); return false;" style="color: #047857; font-weight: bold;">política de protección de datos</a> y el tratamiento de mis datos.
+                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: #047857; font-weight: bold;">política de protección de datos</a> y el tratamiento de mis datos.
                     </label>
                 </div>
 
@@ -479,6 +523,10 @@
                 <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
                 <p id="info-bono-personal" style="font-size: 1.1rem; color: #047857; margin: 12px 0; font-weight: 800;">🎟️ MI BONO: 0 clases</p>
                 
+                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 15px; font-size: 0.85rem; color: #065f46; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 8px;">
+                    📜 <strong>Historial reciente:</strong> Cuenta activa correctamente sincronizada.
+                </div>
+
                 <div style="margin-top: 15px; border-top: 1px solid #d1fae5; padding-top: 15px;">
                     <button class="success" onclick="solicitarRecargaBono()">SOLICITAR RECARGA</button>
                 </div>
@@ -576,6 +624,20 @@
             avisos: []
         };
 
+        // Función UX para mostrar notificaciones flotantes sin bloquear la app
+        function mostrarToast(mensaje, tipo = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            let icono = '✅';
+            if(tipo === 'error') icono = '❌';
+            if(tipo === 'warning') icono = '⚠️';
+            
+            toast.innerHTML = `<span>${icono}</span> <span>${mensaje}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
         function volverAHome() {
             modoMonitorActivo = false;
             document.getElementById('barra-navegacion-inferior').style.display = 'none';
@@ -598,7 +660,7 @@
                 ajustarMenuInferior(); 
                 cambiarSeccion('entrenamientos');
             } else if(pass !== null) {
-                alert("Contraseña incorrecta.");
+                mostrarToast("Contraseña incorrecta.", "error");
             }
         }
 
@@ -639,7 +701,7 @@
 
         function cambiarSeccion(seccion) {
             if ((seccion === 'alumnos' || seccion === 'gestion') && !modoMonitorActivo) {
-                alert("Acceso denegado. Debes iniciar sesión como monitor.");
+                mostrarToast("Acceso denegado. Debes iniciar sesión como monitor.", "error");
                 volverAHome();
                 return;
             }
@@ -705,12 +767,12 @@
             let aceptoRgpd = document.getElementById('check-rgpd-prueba').checked;
 
             if(!nombre) {
-                alert("Por favor, introduce al menos tu nombre y apellidos.");
+                mostrarToast("Por favor, introduce al menos tu nombre y apellidos.", "error");
                 return;
             }
 
             if(!aceptoRgpd) {
-                alert("⚠️ Debes aceptar la política de protección de datos para solicitar la clase de prueba.");
+                mostrarToast("⚠️ Debes aceptar la política de protección de datos.", "warning");
                 return;
             }
 
@@ -730,11 +792,11 @@
             document.getElementById('input-nombre-prueba').value = "";
             document.getElementById('input-telefono-prueba').value = "";
             document.getElementById('check-rgpd-prueba').checked = false;
-            alert("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso.");
+            mostrarToast("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso.");
         }
 
         function registrarNuevoAlumno() {
-            if(!modoMonitorActivo) return alert("Acción no permitida.");
+            if(!modoMonitorActivo) return mostrarToast("Acción no permitida.", "error");
             let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
             let pass = document.getElementById('nuevo-alumno-pass').value.trim();
             let clases = parseInt(document.getElementById('nuevo-alumno-clases').value);
@@ -742,16 +804,16 @@
             
             if(isNaN(clases)) clases = 10;
 
-            if(!nombre || !pass) return alert("Escribe el nombre y la contraseña del alumno");
+            if(!nombre || !pass) return mostrarToast("Escribe el nombre y la contraseña del alumno", "error");
             
             if(!aceptoRgpd) {
-                return alert("⚠️ Debes confirmar el consentimiento de protección de datos del alumno para registrarlo.");
+                return mostrarToast("⚠️ Debes confirmar el consentimiento de protección de datos.", "warning");
             }
 
             if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
 
             let existe = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombre.toLowerCase());
-            if(existe) return alert("Ya existe un alumno con ese nombre.");
+            if(existe) return mostrarToast("Ya existe un alumno con ese nombre.", "error");
 
             datosGlobales.alumnos.push({ nombre, pass, clasesBono: clases });
             document.getElementById('nuevo-alumno-nombre').value = "";
@@ -759,23 +821,23 @@
             document.getElementById('nuevo-alumno-clases').value = "10";
             document.getElementById('check-rgpd-alumno').checked = true;
             guardarDatos();
-            alert("¡Alumno creado con éxito!");
+            mostrarToast("¡Alumno creado con éxito!");
         }
 
         function iniciarSesionAlumno() {
             let nombreInput = document.getElementById('login-input-nombre').value.trim();
             let pass = document.getElementById('login-pass').value.trim();
 
-            if(!nombreInput) return alert("Por favor, introduce tu nombre.");
-            if(!pass) return alert("Introduce tu contraseña.");
+            if(!nombreInput) return mostrarToast("Por favor, introduce tu nombre.", "error");
+            if(!pass) return mostrarToast("Introduce tu contraseña.", "error");
 
             let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
             if(alumno && alumno.pass === pass) {
                 alumnoActual = alumno;
                 modoMonitorActivo = false; 
-                alert("¡Bienvenido, " + alumno.nombre + "!");
+                mostrarToast("¡Bienvenido, " + alumno.nombre + "!");
             } else {
-                alert("Nombre o contraseña incorrectos.");
+                mostrarToast("Nombre o contraseña incorrectos.", "error");
             }
             document.getElementById('login-input-nombre').value = "";
             document.getElementById('login-pass').value = "";
@@ -784,19 +846,20 @@
 
         function cerrarSesionAlumno() {
             alumnoActual = null;
+            mostrarToast("Sesión cerrada correctamente.");
             renderizar();
         }
 
         function solicitarRecargaBono() {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión en tu perfil.");
+                mostrarToast("Debes iniciar sesión en tu perfil.", "error");
                 cambiarSeccion('perfil');
                 return;
             }
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
 
             let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono');
-            if(yaPedido) return alert("Ya tienes una solicitud de recarga pendiente con el monitor.");
+            if(yaPedido) return mostrarToast("Ya tienes una solicitud de recarga pendiente.", "warning");
 
             datosGlobales.avisos.push({
                 id: Date.now(),
@@ -805,13 +868,14 @@
                 texto: `${alumnoActual.nombre} solicita recargar su Bono de 10 clases.`
             });
             guardarDatos();
-            alert("¡Aviso de recarga enviado al monitor correctamente!");
+            mostrarToast("¡Aviso de recarga enviado al monitor correctamente!");
         }
 
         function resolverAviso(id) {
             if(!modoMonitorActivo) return;
             datosGlobales.avisos = datosGlobales.avisos.filter(a => a.id !== id);
             guardarDatos();
+            mostrarToast("Aviso descartado.");
         }
 
         function aprobarRecargaBono(nombreAlumno) {
@@ -826,7 +890,7 @@
                     datosGlobales.avisos = datosGlobales.avisos.filter(a => !(a.alumno === nombreAlumno && a.tipo === 'Recarga Bono'));
                 }
                 guardarDatos();
-                alert(`✅ ¡Bono recargado con éxito! Se han sumado 10 clases a ${nombreAlumno}. Ahora tiene ${alumnoBD.clasesBono} clases.`);
+                mostrarToast(`✅ ¡Bono recargado! Se sumaron 10 clases a ${nombreAlumno}.`);
             }
         }
 
@@ -845,13 +909,13 @@
                     }
                 }
                 guardarDatos();
-                alert(`✅ Clase devuelta con éxito a ${nombreAlumno}. Ahora tiene ${alumnoBD ? alumnoBD.clasesBono : '?'} clases.`);
+                mostrarToast(`✅ Clase devuelta a ${nombreAlumno}.`);
             }
         }
 
         function desapuntarseEntrenamientoPropio(entrenamientoId) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero.");
+                mostrarToast("Debes iniciar sesión primero.", "error");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -866,13 +930,13 @@
                     alumnoActual.clasesBono = alumnoBD.clasesBono;
                 }
                 guardarDatos();
-                alert("✅ Te has desapuntado correctamente y se ha devuelto 1 clase a tu bono.");
+                mostrarToast("✅ Asistencia anulada y clase devuelta a tu bono.");
             }
         }
 
         function desapuntarseTorneoPropio(torneoId) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero.");
+                mostrarToast("Debes iniciar sesión primero.", "error");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -882,7 +946,7 @@
                     tor.inscritos = tor.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
                 }
                 guardarDatos();
-                alert("✅ Te has desapuntado del torneo correctamente.");
+                mostrarToast("✅ Te has desapuntado del torneo.");
             }
         }
 
@@ -910,6 +974,7 @@
                 let clases = reg ? reg.clasesBono : 0;
                 alumnoActual.clasesBono = clases;
                 document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>MI BONO:</strong> ${clases} clases disponibles`;
+                document.getElementById('historial-bono-alumno').innerHTML = `📜 <strong>Estado de cuenta:</strong> Al día. Clases listas para reservar entrenamientos o torneos.`;
             } else {
                 document.getElementById('panel-no-identificado').style.display = 'block';
                 document.getElementById('panel-identificado').style.display = 'none';
@@ -1061,7 +1126,7 @@
 
         function apuntarseEntrenamiento(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.");
+                mostrarToast("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.", "warning");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -1069,7 +1134,7 @@
             let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
 
             if(!alumnoBD || alumnoBD.clasesBono <= 0) {
-                alert("❌ No te quedan clases en tu bono. Solicita una recarga desde la pestaña 'Perfil' antes de apuntarte.");
+                mostrarToast("❌ No te quedan clases en tu bono. Solicita una recarga.", "error");
                 return;
             }
 
@@ -1082,16 +1147,16 @@
                     alumnoActual.clasesBono = alumnoBD.clasesBono;
 
                     guardarDatos();
-                    alert("✅ ¡Te has apuntado correctamente! Se ha descontado 1 clase de tu bono.");
+                    mostrarToast("✅ ¡Apuntado con éxito! Se ha descontado 1 clase.");
                 } else { 
-                    alert("Ya estás apuntado a este entrenamiento."); 
+                    mostrarToast("Ya estás apuntado a este entrenamiento.", "warning"); 
                 }
             }
         }
 
         function apuntarseTorneo(id) {
             if(!alumnoActual) {
-                alert("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.");
+                mostrarToast("Debes iniciar sesión primero en la pestaña 'Perfil' para apuntarte.", "warning");
                 cambiarSeccion('perfil');
                 return;
             }
@@ -1101,8 +1166,8 @@
                 if(!tor.inscritos.includes(alumnoActual.nombre)) {
                     tor.inscritos.push(alumnoActual.nombre);
                     guardarDatos();
-                    alert("¡Apuntado al torneo con éxito!");
-                } else { alert("Ya estás apuntado a este torneo."); }
+                    mostrarToast("¡Apuntado al torneo con éxito!");
+                } else { mostrarToast("Ya estás apuntado a este torneo.", "warning"); }
             }
         }
 
@@ -1111,13 +1176,14 @@
             let titulo = document.getElementById('nuevo-titulo').value;
             let fecha = document.getElementById('nuevo-fecha').value;
             let lugar = document.getElementById('nuevo-lugar').value;
-            if(!titulo || !fecha) return alert("Rellena el título y la fecha");
+            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
             if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
             datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             document.getElementById('nuevo-titulo').value = "";
             document.getElementById('nuevo-fecha').value = "";
             document.getElementById('nuevo-lugar').value = "";
             guardarDatos();
+            mostrarToast("Clase creada correctamente.");
         }
 
         function borrarEntrenamiento(id) {
@@ -1125,6 +1191,7 @@
             if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
                 datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
                 guardarDatos();
+                mostrarToast("Entrenamiento borrado.");
             }
         }
 
@@ -1133,13 +1200,14 @@
             let titulo = document.getElementById('torneo-titulo').value;
             let fecha = document.getElementById('torneo-fecha').value;
             let lugar = document.getElementById('torneo-lugar').value;
-            if(!titulo || !fecha) return alert("Rellena el título y la fecha");
+            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
             if(!datosGlobales.torneos) datosGlobales.torneos = [];
             datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             document.getElementById('torneo-titulo').value = "";
             document.getElementById('torneo-fecha').value = "";
             document.getElementById('torneo-lugar').value = "";
             guardarDatos();
+            mostrarToast("Torneo creado correctamente.");
         }
 
         function borrarTorneo(id) {
@@ -1147,6 +1215,7 @@
             if(confirm("¿Seguro que quieres borrar este torneo?")) {
                 datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
                 guardarDatos();
+                mostrarToast("Torneo borrado.");
             }
         }
 
@@ -1156,6 +1225,7 @@
             if(nuevoValor !== null && !isNaN(nuevoValor)) {
                 datosGlobales.alumnos[index].clasesBono = parseInt(nuevoValor);
                 guardarDatos();
+                mostrarToast("Bono modificado correctamente.");
             }
         }
 
@@ -1164,6 +1234,7 @@
             if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
                 datosGlobales.alumnos.splice(index, 1);
                 guardarDatos();
+                mostrarToast("Alumno eliminado.");
             }
         }
 
@@ -1172,6 +1243,7 @@
             if(prompt("Escribe 'BORRAR' para vaciar absolutamente todo:") === 'BORRAR') {
                 datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [] };
                 guardarDatos();
+                mostrarToast("Datos reiniciados.", "warning");
             }
         }
 
