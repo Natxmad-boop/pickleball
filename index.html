@@ -1082,7 +1082,7 @@
                     datosGlobales.avisos.forEach(aviso => {
                         let botonExtraAviso = "";
                         if(aviso.tipo === 'Recarga Bono') {
-                            botonExtraAviso = `<button class="success" style="padding: 10px; font-size: 0.9rem; margin-top: 8px;" onclick="aprobarRecargaBono('${aviso.alumno}')">🎟️ Aprobar y Recargar +10 Clases</button>`;
+                            botonExtraAviso = `<button class="success" style="padding: 10px; font-size: 0.9rem; margin-top: 8px;" onclick="aprobarRecargaBono('${aviso.alumno}')">🎟️ Añadir bono</button>`;
                         }
                         
                         avisosHtml += `
@@ -1106,7 +1106,7 @@
                             <div class="card" style="padding:14px; margin-bottom:12px; background:white;">
                                 <p style="font-weight:bold; color:var(--text); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
                                 <p style="margin-bottom:10px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
-                                <button class="success" style="padding: 9px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir 10 clases al bono</button>
+                                <button class="success" style="padding: 9px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
                                 <div style="display:flex; gap:10px;">
                                     <button onclick="modificarBono(${idx})" style="padding:8px 12px; font-size:0.9rem; margin-top:0;">Editar Clases</button>
                                     <button class="danger" style="padding:8px 12px; font-size:0.9rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
