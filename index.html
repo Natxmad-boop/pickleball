@@ -202,18 +202,18 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 10px 14px;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 12px 16px;
             border-radius: var(--radius-sm);
             margin-top: 12px;
             margin-bottom: 16px;
-            border: 1px solid var(--border-dark);
-            font-size: 0.9rem;
+            border: 1px solid rgba(0, 230, 172, 0.3);
+            font-size: 0.95rem;
             font-weight: 700;
             color: #ffffff;
         }
         .weather-icon {
-            font-size: 1.6rem;
+            font-size: 1.8rem;
         }
 
         button {
@@ -486,8 +486,8 @@
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
-                <label>Lugar (Incluye la ciudad para el tiempo, ej: Madrid, Barcelona...):</label>
-                <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal - Madrid">
+                <label>Lugar (Incluye la ciudad separada por guion, ej: Pista - Madrid):</label>
+                <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Central - Madrid">
                 <button onclick="agregarEntrenamiento()">CREAR CLASE</button>
             </div>
         </div>
@@ -505,7 +505,7 @@
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
                 <label>Fecha y Hora:</label>
                 <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
-                <label>Lugar (Incluye la ciudad para el tiempo):</label>
+                <label>Lugar (Incluye la ciudad separada por guion, ej: Club - Valencia):</label>
                 <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis - Valencia">
                 <button onclick="agregarTorneo()">CREAR TORNEO</button>
             </div>
@@ -635,7 +635,6 @@
             setTimeout(() => { toast.remove(); }, 3000);
         }
 
-        // Función para consultar el tiempo según la ciudad detectada en el texto del lugar
         async function obtenerClimaLugar(lugarTexto) {
             if(!lugarTexto) return null;
             let partes = lugarTexto.split('-');
@@ -660,6 +659,7 @@
                 let desc = "Soleado";
 
                 if (code >= 1 && code <= 3) { desc = "Nublado"; icono = "⛅"; }
+                else if (code >= 45 && code <= 48) { desc = "Niebla"; icono = "🌫️"; }
                 else if (code >= 51 && code <= 67) { desc = "Lluvia"; icono = "🌧️"; }
                 else if (code >= 71 && code <= 77) { desc = "Nieve"; icono = "❄️"; }
                 else if (code >= 95) { desc = "Tormenta"; icono = "⚡"; }
@@ -1005,7 +1005,7 @@
                     if(ent.lugar) {
                         let clima = await obtenerClimaLugar(ent.lugar);
                         if(clima) {
-                            climaHTML = `<div class="weather-box"><span class="weather-icon">${clima.icono}</span> <span>Tiempo en ${clima.ciudad}: <strong>${clima.temp}°C, ${clima.desc}</strong></span></div>`;
+                            climaHTML = `<div class="weather-box"><span class="weather-icon">${clima.icono}</span> <span>Pronóstico en ${clima.ciudad}: <strong>${clima.temp}°C, ${clima.desc}</strong></span></div>`;
                         }
                     }
 
@@ -1056,7 +1056,7 @@
                     if(tor.lugar) {
                         let climaT = await obtenerClimaLugar(tor.lugar);
                         if(climaT) {
-                            climaTorneoHTML = `<div class="weather-box"><span class="weather-icon">${climaT.icono}</span> <span>Tiempo en ${climaT.ciudad}: <strong>${climaT.temp}°C, ${climaT.desc}</strong></span></div>`;
+                            climaTorneoHTML = `<div class="weather-box"><span class="weather-icon">${climaT.icono}</span> <span>Pronóstico en ${climaT.ciudad}: <strong>${climaT.temp}°C, ${climaT.desc}</strong></span></div>`;
                         }
                     }
 
@@ -1170,17 +1170,28 @@
 
         function agregarEntrenamiento() {
             if(!modoMonitorActivo) return;
-            let titulo = document.getElementById('nuevo-titulo').value;
-            let fecha = document.getElementById('nuevo-fecha').value;
-            let lugar = document.getElementById('nuevo-lugar').value;
+            let titulo = document.getElementById('nuevo-titulo').value.trim();
+            let fecha = document.getElementById('nuevo-fecha').value.trim();
+            let lugar = document.getElementById('nuevo-lugar').value.trim();
             if(!titulo || !fecha) return mostrarToast("Rellena título y fecha", "error");
+            
             if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
             datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
+            
+            // NUEVO: Generar aviso automático para los alumnos
+            if(!datosGlobales.avisos) datosGlobales.avisos = [];
+            datosGlobales.avisos.push({
+                id: Date.now() + 1,
+                alumno: "Club",
+                tipo: '📅 Nueva Clase Programada',
+                texto: `Se ha publicado el entrenamiento "${titulo}" para el ${fecha}.`
+            });
+
             document.getElementById('nuevo-titulo').value = "";
             document.getElementById('nuevo-fecha').value = "";
             document.getElementById('nuevo-lugar').value = "";
             guardarDatos();
-            mostrarToast("Clase creada.");
+            mostrarToast("Clase creada y aviso enviado.");
         }
 
         function borrarEntrenamiento(id) {
@@ -1194,17 +1205,28 @@
 
         function agregarTorneo() {
             if(!modoMonitorActivo) return;
-            let titulo = document.getElementById('torneo-titulo').value;
-            let fecha = document.getElementById('torneo-fecha').value;
-            let lugar = document.getElementById('torneo-lugar').value;
+            let titulo = document.getElementById('torneo-titulo').value.trim();
+            let fecha = document.getElementById('torneo-fecha').value.trim();
+            let lugar = document.getElementById('torneo-lugar').value.trim();
             if(!titulo || !fecha) return mostrarToast("Rellena título y fecha", "error");
+            
             if(!datosGlobales.torneos) datosGlobales.torneos = [];
             datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
+            
+            // NUEVO: Generar aviso automático para los alumnos
+            if(!datosGlobales.avisos) datosGlobales.avisos = [];
+            datosGlobales.avisos.push({
+                id: Date.now() + 1,
+                alumno: "Club",
+                tipo: '🏆 Nuevo Torneo Disponible',
+                texto: `Se ha abierto la inscripción para el torneo "${titulo}" (${fecha}).`
+            });
+
             document.getElementById('torneo-titulo').value = "";
             document.getElementById('torneo-fecha').value = "";
             document.getElementById('torneo-lugar').value = "";
             guardarDatos();
-            mostrarToast("Torneo creado.");
+            mostrarToast("Torneo creado y aviso enviado.");
         }
 
         function borrarTorneo(id) {
@@ -1212,7 +1234,7 @@
             if(confirm("¿Borrar torneo?")) {
                 datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
                 guardarDatos();
-                mostrarToast("Torneo borrado.");
+                mostrarToast("Entrenamiento borrado.");
             }
         }
 
