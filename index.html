@@ -1178,7 +1178,6 @@
             if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
             datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             
-            // NUEVO: Generar aviso automático para los alumnos
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
             datosGlobales.avisos.push({
                 id: Date.now() + 1,
@@ -1213,7 +1212,6 @@
             if(!datosGlobales.torneos) datosGlobales.torneos = [];
             datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
             
-            // NUEVO: Generar aviso automático para los alumnos
             if(!datosGlobales.avisos) datosGlobales.avisos = [];
             datosGlobales.avisos.push({
                 id: Date.now() + 1,
