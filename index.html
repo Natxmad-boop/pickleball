@@ -3,50 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de Pickleball</title>
+    <title>Club de Pickleball | Pro</title>
     <style>
+        :root {
+            --bg-dark: #111827;
+            --card-dark: rgba(31, 41, 55, 0.8);
+            --border-dark: rgba(75, 85, 99, 0.4);
+            --accent: #00e6ac;
+            --accent-glow: rgba(0, 230, 172, 0.3);
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: system-ui, -apple-system, sans-serif;
-            background-color: #111827;
-            color: #f3f4f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 1rem;
+        }
+
+        header {
             text-align: center;
+            padding: 2rem 1rem;
         }
-        .card {
-            background: rgba(31, 41, 55, 0.7);
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(75, 85, 99, 0.4);
-        }
+
         h1 {
-            color: #00e6ac;
+            color: var(--accent);
+            font-size: 2rem;
             margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px var(--accent-glow);
         }
-        button {
-            background-color: #00e6ac;
-            color: #111827;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            font-weight: bold;
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: var(--card-dark);
+            border: 1px solid var(--border-dark);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: var(--accent);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-dark);
+            padding-bottom: 0.5rem;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        li:last-child {
+            border-bottom: none;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            background-color: var(--accent);
+            color: var(--bg-dark);
+            text-align: center;
+            padding: 0.75rem;
             border-radius: 0.5rem;
-            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
             margin-top: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: opacity 0.2s;
         }
-        button:hover {
+
+        .btn:hover {
             opacity: 0.9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
         }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>¡Hola, Natxmad! 🎾</h1>
-        <p>Si ves esta página, el sistema de subida funciona correctamente.</p>
-        <button onclick="alert('¡Todo conectado con éxito!')">Púlsame</button>
+
+    <header>
+        <h1>Club de Pickleball Pro</h1>
+        <p class="subtitle">Tu espacio para jugar, aprender y competir</p>
+    </header>
+
+    <div class="container">
+        <section class="card">
+            <h2>🎾 Próximos Horarios y Pistas</h2>
+            <ul>
+                <li><span>Pista Central (Indoor)</span> <strong>Disponible</strong></li>
+                <li><span>Pista 2 (Outdoor)</span> <strong>Ocupada</strong></li>
+                <li><span>Pista 3 (Entreno)</span> <strong>Disponible</strong></li>
+            </ul>
+            <button class="btn" onclick="alert('¡Reserva solicitada con éxito!')">Reservar Pista</button>
+        </section>
+
+        <section class="card">
+            <h2>🏆 Torneo de Verano</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Inscríbete ya en la categoría dobles mixtos. Plazas limitadas.</p>
+            <button class="btn" onclick="alert('¡Inscripción abierta próximamente!')">Inscribirme</button>
+        </section>
     </div>
+
+    <footer>
+        <p>&copy; 2026 Club de Pickleball. Todos los derechos reservados.</p>
+    </footer>
+
 </body>
 </html>
