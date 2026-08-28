@@ -3,34 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club de Pickleball | Pro</title>
+    <title>Club de Pickleball | Gestión Deportiva</title>
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --card-dark: #1e293b;
-            --border-dark: #334155;
-            --accent: #00c897;
-            --accent-hover: #00a87f;
-            --accent-glow: rgba(0, 200, 151, 0.25);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --primary: #0f172a;           
+            --primary-light: #1e293b;     
+            --primary-accent: #00c897;    
+            --btn-hover: #00a87f;        
+            --bg: #f8fafc;                
+            --card-bg: #ffffff;
+            --text: #0f172a;
+            --text-light: #475569;
+            --border-card: #e2e8f0;
+            --success: #10b981;           
+            --success-bg: #d1fae5;
+            --danger: #ef4444;            
+            --danger-bg: #fee2e2;
+            --warning: #f59e0b;           
+            --warning-bg: #fffbeb;
+            --radius: 16px;               
+            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-        
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: var(--font-family);
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.6;
-            padding: 1.5rem 1rem 3rem 1rem;
+            background-color: var(--bg);
+            color: var(--text);
+            padding-bottom: 130px;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* Sistema de Alertas Flotantes (Toasts) */
         #toast-container {
             position: fixed;
             top: 20px;
@@ -41,15 +49,15 @@
             flex-direction: column;
             gap: 10px;
             width: 90%;
-            max-width: 380px;
+            max-width: 400px;
             pointer-events: none;
         }
         .toast {
-            background: var(--card-dark);
-            color: var(--text-main);
+            background: var(--primary);
+            color: #fff;
             padding: 14px 18px;
             border-radius: 12px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             font-size: 0.95rem;
             font-weight: 600;
             display: flex;
@@ -57,9 +65,11 @@
             gap: 12px;
             pointer-events: auto;
             animation: fadeInDown 0.3s ease, fadeOutUp 0.3s ease 2.7s forwards;
-            border-left: 5px solid var(--accent);
-            border: 1px solid var(--border-dark);
+            border-left: 5px solid var(--primary-accent);
         }
+        .toast.success { border-left-color: var(--success); }
+        .toast.error { border-left-color: var(--danger); }
+        .toast.warning { border-left-color: var(--warning); }
 
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-15px); }
@@ -71,171 +81,333 @@
         }
 
         header {
-            text-align: center;
-            padding: 2.5rem 1rem 2rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 28px 20px 22px 20px;
+            border-bottom: 5px solid var(--primary-accent);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
         }
 
-        h1 {
-            color: var(--accent);
-            font-size: 2.2rem;
-            font-weight: 800;
-            margin-bottom: 0.5rem;
-            letter-spacing: -0.5px;
-            text-shadow: 0 0 20px var(--accent-glow);
-        }
-
-        p.subtitle {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-            font-weight: 500;
-        }
-
-        .container {
-            max-width: 680px;
-            margin: 0 auto;
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .card {
-            background: var(--card-dark);
-            border: 1px solid var(--border-dark);
-            border-radius: 16px;
-            padding: 1.75rem;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.4);
-        }
-
-        .card h2 {
-            color: var(--accent);
-            font-size: 1.35rem;
-            margin-bottom: 1.25rem;
-            border-bottom: 1px solid var(--border-dark);
-            padding-bottom: 0.75rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        li {
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border-dark);
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 1.05rem;
+            margin-bottom: 6px;
         }
 
-        li:last-child {
-            border-bottom: none;
-        }
-
-        .badge-disponible {
-            background: rgba(16, 185, 129, 0.15);
-            color: #34d399;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .badge-ocupada {
-            background: rgba(239, 68, 68, 0.15);
-            color: #f87171;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .btn {
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            width: 100%;
-            background-color: var(--accent);
-            color: #0f172a;
-            text-align: center;
-            padding: 0.9rem;
-            border-radius: 12px;
-            font-weight: 800;
-            text-decoration: none;
-            margin-top: 1.25rem;
-            border: none;
-            cursor: pointer;
+            gap: 10px;
             text-transform: uppercase;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .sync-status {
+            font-size: 0.75rem;
+            color: #ffffff;
+            background: rgba(0, 200, 151, 0.2);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: 700;
+            border: 1px solid var(--primary-accent);
             letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px var(--accent-glow);
-            transition: background-color 0.2s, transform 0.1s;
         }
 
-        .btn:hover {
-            background-color: var(--accent-hover);
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+            padding: 24px 16px;
         }
 
-        .btn:active {
-            transform: scale(0.98);
+        h2 {
+            font-size: 1.45rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 5px solid var(--primary-accent);
+            padding-left: 12px;
         }
 
-        footer {
-            text-align: center;
-            padding: 3rem 1rem 1rem 1rem;
-            color: var(--text-muted);
-            font-size: 0.875rem;
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--border-card);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 6px;
+            background-color: var(--primary-accent);
+        }
+
+        .card:hover {
+            box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 12px;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 800;
+        }
+
+        .card p {
+            font-size: 1rem;
+            color: var(--text-light);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        button {
+            background-color: var(--primary-accent);
+            color: var(--primary);
+            border: none;
+            padding: 16px 20px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 14px;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.25);
+        }
+
+        button:hover {
+            background-color: var(--btn-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 200, 151, 0.35);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.danger {
+            background-color: var(--danger);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+        }
+        button.danger:hover { 
+            background-color: #b91c1c; 
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
+        }
+
+        button.warning {
+            background-color: var(--warning);
+            color: var(--primary);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+        }
+        button.warning:hover { 
+            background-color: #d97706; 
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
+        }
+
+        button.success {
+            background-color: var(--success);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+        }
+        button.success:hover { 
+            background-color: #059669; 
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
+        }
+
+        button.btn-volver {
+            background-color: var(--primary);
+            color: #ffffff;
+            border: 2px solid var(--primary-accent);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+        }
+        button.btn-volver:hover {
+            background-color: var(--primary-light);
+            border-color: #ffffff;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 16px 18px;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            border: 2px solid var(--border-card);
+            border-radius: 12px;
+            font-size: 1.05rem;
+            background: #fff;
+            color: var(--text);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px rgba(0, 200, 151, 0.15);
+        }
+
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-top: 12px;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: var(--text-light);
+        }
+        .terms-container input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-top: 2px;
+            accent-color: var(--primary-accent);
+            cursor: pointer;
+        }
+
+        nav {
+            position: fixed;
+            bottom: 16px;
+            left: 16px;
+            right: 16px;
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--primary);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+            border-radius: 16px;
+            border: 2px solid var(--primary-accent);
+            z-index: 1000;
+        }
+
+        nav button {
+            background: none;
+            color: #a3b3c6;
+            border: none;
+            font-size: 0.8rem;
+            margin: 0;
+            padding: 10px 4px;
+            font-weight: 700;
+            width: 25%;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        nav button span.icon {
+            font-size: 1.6rem;
+            transition: transform 0.3s;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: 14px;
+            background-color: var(--danger);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 7px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+            display: none;
+        }
+
+        nav button.active {
+            color: var(--primary);
+            background-color: var(--primary-accent);
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.3);
+        }
+
+        nav button.active span.icon {
+            transform: scale(1.15);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .badge {
+            display: inline-block;
+            background: var(--success-bg);
+            color: var(--success);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: 0.5px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            font-weight: 800;
+            color: var(--primary-light);
+            display: block;
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+        
+        #seccion-home .card.success-card {
+            background: linear-gradient(135deg, var(--success-bg), #ecfdf5);
+            border: 2px solid #a7f3d0;
+            position: relative;
+        }
+        #seccion-home .card.success-card::before {
+            background-color: var(--success);
         }
     </style>
 </head>
 <body>
-
-    <div id="toast-container"></div>
-
-    <header>
-        <h1>🏓 CLUB DE PICKLEBALL PRO</h1>
-        <p class="subtitle">Tu espacio para jugar, aprender y competir</p>
-    </header>
-
-    <div class="container">
-        <section class="card">
-            <h2>🎾 Próximos Horarios y Pistas</h2>
-            <ul>
-                <li><span>Pista Central (Indoor)</span> <span class="badge-disponible">Disponible</span></li>
-                <li><span>Pista 2 (Outdoor)</span> <span class="badge-ocupada">Ocupada</span></li>
-                <li><span>Pista 3 (Entreno)</span> <span class="badge-disponible">Disponible</span></li>
-            </ul>
-            <button class="btn" onclick="mostrarToast('✅ ¡Reserva de pista solicitada con éxito!')">Reservar Pista</button>
-        </section>
-
-        <section class="card">
-            <h2>🏆 Torneo de Verano</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">Inscríbete ya en la categoría dobles mixtos. Plazas limitadas para los socios del club.</p>
-            <button class="btn" onclick="mostrarToast('🏆 ¡Inscripción al torneo registrada correctamente!')">Inscribirme</button>
-        </section>
-    </div>
-
-    <footer>
-        <p>&copy; 2026 Club de Pickleball Pro. Todos los derechos reservados.</p>
-    </footer>
-
-    <script>
-        function mostrarToast(mensaje) {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            toast.innerHTML = `<span>${mensaje}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
-        }
-    </script>
-
-</body>
-</html>
