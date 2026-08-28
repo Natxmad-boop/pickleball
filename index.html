@@ -411,3 +411,829 @@
     </style>
 </head>
 <body>
+
+    <div id="toast-container"></div>
+
+    <header>
+        <div class="header-top">
+            <h1>🏓 PICKLEBALL CLUB</h1>
+            <span class="sync-status" id="estado-sync">CONECTANDO...</span>
+        </div>
+        <p>Tu club. Tus clases. Tu juego.</p>
+    </header>
+
+    <div class="container">
+
+        <div id="seccion-home" class="section active">
+            <h2>👋 BIENVENIDO</h2>
+            <p style="margin-bottom: 25px; color: var(--text-light); font-weight: 600;">Selecciona cómo deseas acceder a la aplicación:</p>
+            
+            <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer;">
+                <h3>👤 ENTRAR COMO ALUMNO</h3>
+                <p>Identifícate con tu nombre y PIN para consultar tus clases, torneos y gestionar tu bono personal.</p>
+                <button style="pointer-events: none;">ACCEDER COMO ALUMNO ➔</button>
+            </div>
+
+            <div class="card success-card">
+                <h3 style="color: var(--success);">🎁 ¿NUEVO EN EL CLUB?</h3>
+                <p style="color: #065f46; margin-bottom: 15px; font-weight: 600;">Prueba una clase gratis y sin compromiso.</p>
+                
+                <label style="color: #065f46;">TU NOMBRE Y APELLIDOS:</label>
+                <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
+                
+                <label style="color: #065f46;">TELÉFONO DE CONTACTO (Opcional):</label>
+                <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
+
+                <div class="terms-container">
+                    <input type="checkbox" id="check-rgpd-prueba">
+                    <label for="check-rgpd-prueba" style="color: #065f46; font-weight: normal; display: inline;">
+                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: #047857; font-weight: bold;">política de protección de datos</a> y el tratamiento de mis datos.
+                    </label>
+                </div>
+
+                <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 SOLICITAR CLASE DE PRUEBA</button>
+            </div>
+
+            <div class="card warning" onclick="entrarComoMonitorSeleccion()" style="cursor: pointer; position: relative;">
+                <div style="position: absolute; top: 16px; right: 16px;">
+                    <span id="globo-notificaciones-home" class="notification-badge" style="display:inline-block; position:relative; top:0; right:0; font-size:0.8rem; padding:4px 8px;">0</span>
+                </div>
+                <h3 style="color: var(--primary);">🔑 ENTRAR COMO MONITOR</h3>
+                <p style="color: var(--primary-light);">Gestiona clases, torneos, altas de alumnos y aprueba recargas de bonos y solicitudes.</p>
+                <button class="warning" style="pointer-events: none;">ACCEDER COMO MONITOR ➔</button>
+            </div>
+        </div>
+        
+        <div id="seccion-entrenamientos" class="section">
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>📅 PRÓXIMOS ENTRENAMIENTOS</h2>
+            <div id="lista-entrenamientos" style="margin-top: 10px;">
+                <p>Cargando entrenamientos...</p>
+            </div>
+            
+            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
+                <h3>➕ AÑADIR NUEVO ENTRENAMIENTO</h3>
+                <label>Título / Nivel:</label>
+                <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
+                <label>Fecha y Hora:</label>
+                <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
+                <label>Lugar:</label>
+                <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
+                <button onclick="agregarEntrenamiento()">CREAR CLASE</button>
+            </div>
+        </div>
+
+        <div id="seccion-torneos" class="section">
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>🏆 TORNEOS Y COMPETICIONES</h2>
+            <div id="lista-torneos" style="margin-top: 10px;">
+                <p>Cargando torneos...</p>
+            </div>
+            
+            <div class="card" id="panel-crear-torneo" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
+                <h3>➕ CREAR NUEVO TORNEO</h3>
+                <label>Nombre del Torneo:</label>
+                <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
+                <label>Fecha y Hora:</label>
+                <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
+                <label>Lugar:</label>
+                <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
+                <button onclick="agregarTorneo()">CREAR CLASE</button>
+            </div>
+        </div>
+
+        <div id="seccion-perfil" class="section">
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>👤 MI PANEL DE ALUMNO</h2>
+            
+            <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
+                <span class="badge">Sesión Activa</span>
+                <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
+                <p id="info-bono-personal" style="font-size: 1.1rem; color: #047857; margin: 12px 0; font-weight: 800;">🎟️ MI BONO: 0 clases</p>
+                
+                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 15px; font-size: 0.85rem; color: #065f46; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 8px;">
+                    📜 <strong>Historial reciente:</strong> Cuenta activa correctamente sincronizada.
+                </div>
+
+                <div style="margin-top: 15px; border-top: 1px solid #d1fae5; padding-top: 15px;">
+                    <button class="success" onclick="solicitarRecargaBono()">SOLICITAR RECARGA</button>
+                </div>
+
+                <button class="danger" style="margin-top: 12px;" onclick="cerrarSesionAlumno()">CERRAR SESIÓN</button>
+            </div>
+        </div>
+
+        <div id="seccion-alumnos" class="section">
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>👥 GESTIÓN DE ALUMNOS</h2>
+            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
+                <h3 style="color: #92400e;">➕ CREAR NUEVO ALUMNO</h3>
+                <label>Nombre del Alumno:</label>
+                <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
+                <label>PIN de Acceso:</label>
+                <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
+                <label>Clases iniciales en el Bono:</label>
+                <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
+
+                <div class="terms-container">
+                    <input type="checkbox" id="check-rgpd-alumno" checked>
+                    <label for="check-rgpd-alumno" style="color: #92400e; font-weight: normal; display: inline;">
+                        Confirmo que el alumno ha sido informado y ha dado su consentimiento para el tratamiento de sus datos deportivos.
+                    </label>
+                </div>
+
+                <button onclick="registrarNuevoAlumno()" class="warning">CREAR ALUMNO</button>
+
+                <h3 style="margin-top:30px; color: var(--primary);">👥 ALUMNOS REGISTRADOS</h3>
+                <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
+            </div>
+        </div>
+
+        <div id="seccion-gestion" class="section">
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <h2>⚙️ PANEL DE GESTIÓN</h2>
+            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
+                <h3 style="color: #92400e;">🚨 SOLICITUDES DE ALUMNOS Y PRUEBAS</h3>
+                <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
+                    <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
+                </div>
+
+                <button class="danger" style="margin-top:20px;" onclick="reiniciarDatosCompletos()">⚠️ VACIAR / REINICIAR TODO</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <nav id="barra-navegacion-inferior" style="display: none;">
+        <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
+            <span class="icon">📅</span>
+            <span>Clases</span>
+        </button>
+        <button onclick="cambiarSeccion('torneos')" id="nav-torneos">
+            <span class="icon">🏆</span>
+            <span>Torneos</span>
+        </button>
+        <button onclick="cambiarSeccion('perfil')" id="nav-perfil">
+            <span class="icon">👤</span>
+            <span>Perfil</span>
+        </button>
+        
+        <button onclick="cambiarSeccion('entrenamientos')" id="nav-monitor-clases" style="display: none;">
+            <span class="icon">📅</span>
+            <span>Clases</span>
+        </button>
+        <button onclick="cambiarSeccion('torneos')" id="nav-monitor-torneos" style="display: none;">
+            <span class="icon">🏆</span>
+            <span>Torneos</span>
+        </button>
+        <button onclick="cambiarSeccion('alumnos')" id="nav-monitor-alumnos" style="display: none;">
+            <span class="icon">👥</span>
+            <span>Alumnos</span>
+        </button>
+        <button onclick="cambiarSeccion('gestion')" id="nav-monitor-gestion" style="display: none;">
+            <span class="icon">
+                ⚙️
+                <span id="globo-notificaciones" class="notification-badge">0</span>
+            </span>
+            <span>Gestión</span>
+        </button>
+    </nav>
+
+    <script>
+        const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
+        
+        let modoMonitorActivo = false;
+        let alumnoActual = null; 
+        
+        let datosGlobales = {
+            entrenamientos: [],
+            torneos: [],
+            alumnos: [],
+            avisos: []
+        };
+
+        function mostrarToast(mensaje, tipo = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${tipo}`;
+            let icono = '✅';
+            if(tipo === 'error') icono = '❌';
+            if(tipo === 'warning') icono = '⚠️';
+            
+            toast.innerHTML = `<span>${icono}</span> <span>${mensaje}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        function volverAHome() {
+            modoMonitorActivo = false;
+            alumnoActual = null;
+            document.getElementById('barra-navegacion-inferior').style.display = 'none';
+            cambiarSeccion('home');
+        }
+
+        function entrarComoAlumno() {
+            let nombreInput = prompt("Introduce tu nombre:");
+            if(nombreInput === null) return;
+            nombreInput = nombreInput.trim();
+
+            if(!nombreInput) {
+                mostrarToast("Debes introducir tu nombre.", "error");
+                return;
+            }
+
+            let passInput = prompt("Introduce tu PIN personal:");
+            if(passInput === null) return;
+            passInput = passInput.trim();
+
+            let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
+            
+            if(alumno && alumno.pass === passInput) {
+                alumnoActual = alumno;
+                modoMonitorActivo = false; 
+                document.getElementById('barra-navegacion-inferior').style.display = 'flex';
+                ajustarMenuInferior(); 
+                mostrarToast("¡Bienvenido, " + alumno.nombre + "!");
+                cambiarSeccion('entrenamientos');
+            } else {
+                mostrarToast("Nombre o PIN incorrectos.", "error");
+            }
+        }
+
+        function entrarComoMonitorSeleccion() {
+            let pass = prompt("Introduce la contraseña de monitor:");
+            if(pass === "1234") {
+                modoMonitorActivo = true; 
+                alumnoActual = null;      
+                document.getElementById('barra-navegacion-inferior').style.display = 'flex';
+                ajustarMenuInferior(); 
+                cambiarSeccion('entrenamientos');
+            } else if(pass !== null) {
+                mostrarToast("Contraseña incorrecta.", "error");
+            }
+        }
+
+        function ajustarMenuInferior() {
+            let btnAlumnoClases = document.getElementById('nav-entrenamientos');
+            let btnAlumnoTorneos = document.getElementById('nav-torneos');
+            let btnAlumnoPerfil = document.getElementById('nav-perfil');
+            
+            let btnMonitorClases = document.getElementById('nav-monitor-clases');
+            let btnMonitorTorneos = document.getElementById('nav-monitor-torneos');
+            let btnMonitorAlumnos = document.getElementById('nav-monitor-alumnos');
+            let btnMonitorGestion = document.getElementById('nav-monitor-gestion');
+
+            if (modoMonitorActivo) {
+                btnAlumnoClases.style.display = 'none';
+                btnAlumnoTorneos.style.display = 'none';
+                btnAlumnoPerfil.style.display = 'none';
+
+                btnMonitorClases.style.display = 'flex';
+                btnMonitorTorneos.style.display = 'flex';
+                btnMonitorAlumnos.style.display = 'flex';
+                btnMonitorGestion.style.display = 'flex';
+
+                [btnMonitorClases, btnMonitorTorneos, btnMonitorAlumnos, btnMonitorGestion].forEach(b => b.style.width = '25%');
+            } else {
+                btnMonitorClases.style.display = 'none';
+                btnMonitorTorneos.style.display = 'none';
+                btnMonitorAlumnos.style.display = 'none';
+                btnMonitorGestion.style.display = 'none';
+
+                btnAlumnoClases.style.display = 'flex';
+                btnAlumnoTorneos.style.display = 'flex';
+                btnAlumnoPerfil.style.display = 'flex';
+
+                [btnAlumnoClases, btnAlumnoTorneos, btnAlumnoPerfil].forEach(b => b.style.width = '33.33%');
+            }
+        }
+
+        function cambiarSeccion(seccion) {
+            if ((seccion === 'alumnos' || seccion === 'gestion') && !modoMonitorActivo) {
+                mostrarToast("Acceso denegado. Debes iniciar sesión como monitor.", "error");
+                volverAHome();
+                return;
+            }
+
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            
+            document.getElementById('seccion-' + seccion).classList.add('active');
+            
+            if(seccion !== 'home') {
+                let btnNav = document.getElementById('nav-' + seccion);
+                if(!btnNav && modoMonitorActivo) {
+                    btnNav = document.getElementById('nav-monitor-' + seccion);
+                }
+                if(btnNav) btnNav.classList.add('active');
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            renderizar();
+        }
+
+        async function cargarDatos() {
+            try {
+                let respuesta = await fetch(API_URL);
+                if(respuesta.ok) {
+                    let json = await respuesta.json();
+                    if(json) {
+                        datosGlobales = json;
+                        if(!datosGlobales.avisos) datosGlobales.avisos = [];
+                        if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
+                        if(!datosGlobales.torneos) datosGlobales.torneos = [];
+                        if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
+                    }
+                    document.getElementById('estado-sync').innerText = "SINCRONIZADO 🟢";
+                }
+            } catch(e) {
+                document.getElementById('estado-sync').innerText = "SIN CONEXIÓN 🔴";
+            }
+            renderizar();
+        }
+
+        async function guardarDatos() {
+            document.getElementById('estado-sync').innerText = "GUARDANDO... ⏳";
+            try {
+                let respuesta = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datosGlobales)
+                });
+                if(respuesta.ok) {
+                    document.getElementById('estado-sync').innerText = "SINCRONIZADO 🟢";
+                } else {
+                    document.getElementById('estado-sync').innerText = "ERROR 🔴";
+                }
+            } catch(e) {
+                document.getElementById('estado-sync').innerText = "ERROR RED 🔴";
+            }
+            renderizar();
+        }
+
+        function pedirClaseLibreSinRegistro() {
+            let nombre = document.getElementById('input-nombre-prueba').value.trim();
+            let telefono = document.getElementById('input-telefono-prueba').value.trim();
+            let aceptoRgpd = document.getElementById('check-rgpd-prueba').checked;
+
+            if(!nombre) {
+                mostrarToast("Por favor, introduce al menos tu nombre y apellidos.", "error");
+                return;
+            }
+
+            if(!aceptoRgpd) {
+                mostrarToast("⚠️ Debes aceptar la política de protección de datos.", "warning");
+                return;
+            }
+
+            if(!datosGlobales.avisos) datosGlobales.avisos = [];
+
+            let textoAviso = `${nombre} ha solicitado una Clase de Prueba gratuita.`;
+            if(telefono) textoAviso += ` (Contacto: ${telefono})`;
+
+            datosGlobales.avisos.push({
+                id: Date.now(),
+                alumno: nombre,
+                tipo: 'Clase de Prueba (Sin Registro)',
+                texto: textoAviso
+            });
+
+            guardarDatos();
+            document.getElementById('input-nombre-prueba').value = "";
+            document.getElementById('input-telefono-prueba').value = "";
+            document.getElementById('check-rgpd-prueba').checked = false;
+            mostrarToast("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso.");
+        }
+
+        function registrarNuevoAlumno() {
+            if(!modoMonitorActivo) return mostrarToast("Acción no permitida.", "error");
+            let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
+            let pass = document.getElementById('nuevo-alumno-pass').value.trim();
+            let clases = parseInt(document.getElementById('nuevo-alumno-clases').value);
+            let aceptoRgpd = document.getElementById('check-rgpd-alumno').checked;
+            
+            if(isNaN(clases)) clases = 10;
+
+            if(!nombre || !pass) return mostrarToast("Escribe el nombre y la contraseña del alumno", "error");
+            
+            if(!aceptoRgpd) {
+                return mostrarToast("⚠️ Debes confirmar el consentimiento de protección de datos.", "warning");
+            }
+
+            if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
+
+            let existe = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombre.toLowerCase());
+            if(existe) return mostrarToast("Ya existe un alumno con ese nombre.", "error");
+
+            datosGlobales.alumnos.push({ nombre, pass, clasesBono: clases });
+            document.getElementById('nuevo-alumno-nombre').value = "";
+            document.getElementById('nuevo-alumno-pass').value = "";
+            document.getElementById('nuevo-alumno-clases').value = "10";
+            document.getElementById('check-rgpd-alumno').checked = true;
+            guardarDatos();
+            mostrarToast("¡Alumno creado con éxito!");
+        }
+
+        function cerrarSesionAlumno() {
+            alumnoActual = null;
+            mostrarToast("Sesión cerrada correctamente.");
+            volverAHome();
+        }
+
+        function solicitarRecargaBono() {
+            if(!alumnoActual) {
+                mostrarToast("Debes iniciar sesión en tu perfil.", "error");
+                volverAHome();
+                return;
+            }
+            if(!datosGlobales.avisos) datosGlobales.avisos = [];
+
+            let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono');
+            if(yaPedido) return mostrarToast("Ya tienes una solicitud de recarga pendiente.", "warning");
+
+            datosGlobales.avisos.push({
+                id: Date.now(),
+                alumno: alumnoActual.nombre,
+                tipo: 'Recarga Bono',
+                texto: `${alumnoActual.nombre} solicita recargar su Bono de 10 clases.`
+            });
+            guardarDatos();
+            mostrarToast("¡Aviso de recarga enviado al monitor correctamente!");
+        }
+
+        function resolverAviso(id) {
+            if(!modoMonitorActivo) return;
+            datosGlobales.avisos = datosGlobales.avisos.filter(a => a.id !== id);
+            guardarDatos();
+            mostrarToast("Aviso descartado.");
+        }
+
+        function aprobarRecargaBono(nombreAlumno) {
+            if(!modoMonitorActivo) return;
+            let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === nombreAlumno);
+            if(alumnoBD) {
+                alumnoBD.clasesBono += 10;
+                if(alumnoActual && alumnoActual.nombre === nombreAlumno) {
+                    alumnoActual.clasesBono = alumnoBD.clasesBono;
+                }
+                if(datosGlobales.avisos) {
+                    datosGlobales.avisos = datosGlobales.avisos.filter(a => !(a.alumno === nombreAlumno && a.tipo === 'Recarga Bono'));
+                }
+                guardarDatos();
+                mostrarToast(`✅ ¡Bono recargado! Se sumaron 10 clases a ${nombreAlumno}.`);
+            }
+        }
+
+        function devolverClase(entrenamientoId, nombreAlumno) {
+            if(!modoMonitorActivo) return;
+            if(confirm(`¿Estás seguro de devolver 1 clase a ${nombreAlumno} y eliminarle del entrenamiento?`)) {
+                let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
+                if(ent && ent.inscritos) {
+                    ent.inscritos = ent.inscritos.filter(nombre => nombre !== nombreAlumno);
+                }
+                let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === nombreAlumno);
+                if(alumnoBD) {
+                    alumnoBD.clasesBono += 1;
+                    if(alumnoActual && alumnoActual.nombre === nombreAlumno) {
+                        alumnoActual.clasesBono = alumnoBD.clasesBono;
+                    }
+                }
+                guardarDatos();
+                mostrarToast(`✅ Clase devuelta a ${nombreAlumno}.`);
+            }
+        }
+
+        function desapuntarseEntrenamientoPropio(entrenamientoId) {
+            if(!alumnoActual) {
+                mostrarToast("Debes iniciar sesión primero.", "error");
+                volverAHome();
+                return;
+            }
+            if(confirm("¿Seguro que deseas anular tu asistencia? Se te devolverá 1 clase a tu bono.")) {
+                let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
+                if(ent && ent.inscritos) {
+                    ent.inscritos = ent.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
+                }
+                let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
+                if(alumnoBD) {
+                    alumnoBD.clasesBono += 1;
+                    alumnoActual.clasesBono = alumnoBD.clasesBono;
+                }
+                guardarDatos();
+                mostrarToast("✅ Asistencia anulada y clase devuelta a tu bono.");
+            }
+        }
+
+        function desapuntarseTorneoPropio(torneoId) {
+            if(!alumnoActual) {
+                mostrarToast("Debes iniciar sesión primero.", "error");
+                volverAHome();
+                return;
+            }
+            if(confirm("¿Seguro que deseas anular tu inscripción en este torneo?")) {
+                let tor = datosGlobales.torneos.find(t => t.id === torneoId);
+                if(tor && tor.inscritos) {
+                    tor.inscritos = tor.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
+                }
+                guardarDatos();
+                mostrarToast("✅ Te has desapuntado del torneo.");
+            }
+        }
+
+        function renderizar() {
+            let totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
+            
+            let globoNav = document.getElementById('globo-notificaciones');
+            let globoHome = document.getElementById('globo-notificaciones-home');
+            
+            if(totalAvisos > 0) {
+                globoNav.innerText = totalAvisos;
+                globoNav.style.display = 'inline-block';
+                globoHome.innerText = totalAvisos;
+                globoHome.style.display = 'inline-block';
+            } else {
+                globoNav.style.display = 'none';
+                globoHome.style.display = 'none';
+            }
+
+            if(alumnoActual) {
+                document.getElementById('panel-identificado').style.display = 'block';
+                document.getElementById('saludo-alumno').innerText = "¡Hola, " + alumnoActual.nombre + "!";
+                let reg = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
+                let clases = reg ? reg.clasesBono : 0;
+                alumnoActual.clasesBono = clases;
+                document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>MI BONO:</strong> ${clases} clases disponibles`;
+                document.getElementById('historial-bono-alumno').innerHTML = `📜 <strong>Estado de cuenta:</strong> Al día. Clases listas para reservar entrenamientos o torneos.`;
+            } else {
+                document.getElementById('panel-identificado').style.display = 'none';
+            }
+
+            let htmlEntrenamientos = "";
+            if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0) {
+                htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
+            } else {
+                datosGlobales.entrenamientos.forEach(ent => {
+                    let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
+                    let lugarTxt = ent.lugar ? `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p>` : '';
+                    
+                    let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
+                    let botonAccion = "";
+
+                    if(estaApuntado) {
+                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">ANULAR ASISTENCIA</button>`;
+                    } else {
+                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">APUNTARME</button>`;
+                    }
+
+                    let listaInscritosHTML = "";
+                    let numInscritos = (ent.inscritos && ent.inscritos.length > 0) ? ent.inscritos.length : 0;
+
+                    if(modoMonitorActivo) {
+                        if(numInscritos > 0) {
+                            listaInscritosHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
+                            ent.inscritos.forEach(alumnoNombre => {
+                                listaInscritosHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver clase</button></li>`;
+                            });
+                            listaInscritosHTML += "</ul>";
+                        } else {
+                            listaInscritosHTML = "Nadie apuntado aún";
+                        }
+                    } else {
+                        listaInscritosHTML = `${numInscritos} personas apuntadas`;
+                    }
+
+                    htmlEntrenamientos += `
+                        <div class="card">
+                            <h3>🏓 ${ent.titulo}</h3>
+                            <p>🕒 <strong>Fecha:</strong> ${ent.fecha}</p>
+                            ${lugarTxt}
+                            <p>👥 <strong>Inscritos:</strong> ${listaInscritosHTML}</p>
+                            ${botonAccion}
+                            ${btnBorrar}
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('lista-entrenamientos').innerHTML = htmlEntrenamientos;
+
+            let htmlTorneos = "";
+            if(!datosGlobales.torneos || datosGlobales.torneos.length === 0) {
+                htmlTorneos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay torneos programados actualmente.</p>";
+            } else {
+                datosGlobales.torneos.forEach(tor => {
+                    let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar Torneo</button>` : '';
+                    let lugarTorneoTxt = tor.lugar ? `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p>` : '';
+                    
+                    let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
+                    let botonTorneoAccion = "";
+
+                    if(estaApuntadoTorneo) {
+                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">ANULAR ASISTENCIA</button>`;
+                    } else {
+                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">APUNTARME</button>`;
+                    }
+
+                    let listaInscritosTorneoHTML = "";
+                    let numInscritosTorneo = (tor.inscritos && tor.inscritos.length > 0) ? tor.inscritos.length : 0;
+
+                    if(modoMonitorActivo) {
+                        if(numInscritosTorneo > 0) {
+                            listaInscritosTorneoHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
+                            tor.inscritos.forEach(alumnoNombre => {
+                                listaInscritosTorneoHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre}</li>`;
+                            });
+                            listaInscritosTorneoHTML += "</ul>";
+                        } else {
+                            listaInscritosTorneoHTML = "Nadie apuntado aún";
+                        }
+                    } else {
+                        listaInscritosTorneoHTML = `${numInscritosTorneo} personas apuntadas`;
+                    }
+
+                    htmlTorneos += `
+                        <div class="card">
+                            <h3>🏆 ${tor.titulo}</h3>
+                            <p>📅 <strong>Fecha:</strong> ${tor.fecha}</p>
+                            ${lugarTorneoTxt}
+                            <p>👥 <strong>Participantes:</strong> ${listaInscritosTorneoHTML}</p>
+                            ${botonTorneoAccion}
+                            ${btnBorrarTorneo}
+                        </div>
+                    `;
+                });
+            }
+            document.getElementById('lista-torneos').innerHTML = htmlTorneos;
+
+            if(modoMonitorActivo) {
+                let avisosHtml = "";
+                if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
+                    datosGlobales.avisos.forEach(aviso => {
+                        let botonExtraAviso = "";
+                        if(aviso.tipo === 'Recarga Bono') {
+                            botonExtraAviso = `<button class="success" style="padding: 10px; font-size: 0.9rem; margin-top: 8px;" onclick="aprobarRecargaBono('${aviso.alumno}')">🎟️ Añadir bono</button>`;
+                        }
+                        
+                        avisosHtml += `
+                            <div class="card" style="background: white; border-color: #f59e0b; padding: 16px; margin-bottom: 12px;">
+                                <p style="color: #92400e; font-weight: bold; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
+                                <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 8px;">${aviso.texto}</p>
+                                ${botonExtraAviso}
+                                <button class="danger" style="padding: 8px; font-size: 0.85rem; margin-top: 6px; background-color: #64748b;" onclick="resolverAviso(${aviso.id})">✖ Descartar aviso</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    avisosHtml = `<p style="color: var(--text-light); font-size: 0.9rem;">No hay avisos pendientes.</p>`;
+                }
+                document.getElementById('lista-avisos-monitor').innerHTML = avisosHtml;
+
+                let listaAdminHtml = "";
+                if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
+                    datosGlobales.alumnos.forEach((al, idx) => {
+                        listaAdminHtml += `
+                            <div class="card" style="padding:14px; margin-bottom:12px; background:white;">
+                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
+                                <p style="margin-bottom:10px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
+                                <button class="success" style="padding: 9px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
+                                <div style="display:flex; gap:10px;">
+                                    <button onclick="modificarBono(${idx})" style="padding:8px 12px; font-size:0.9rem; margin-top:0;">Editar Clases</button>
+                                    <button class="danger" style="padding:8px 12px; font-size:0.9rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    listaAdminHtml = `<p style="color:var(--text-light)">No hay alumnos dados de alta todavía.</p>`;
+                }
+                document.getElementById('lista-alumnos-admin').innerHTML = listaAdminHtml;
+            }
+
+            document.getElementById('panel-crear-entrenamiento').style.display = modoMonitorActivo ? 'block' : 'none';
+            document.getElementById('panel-crear-torneo').style.display = modoMonitorActivo ? 'block' : 'none';
+        }
+
+        function apuntarseEntrenamiento(id) {
+            if(!alumnoActual) {
+                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
+                return;
+            }
+
+            let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
+
+            if(!alumnoBD || alumnoBD.clasesBono <= 0) {
+                mostrarToast("❌ No te quedan clases en tu bono. Solicita una recarga.", "error");
+                return;
+            }
+
+            let ent = datosGlobales.entrenamientos.find(e => e.id === id);
+            if(ent) {
+                if(!ent.inscritos) ent.inscritos = [];
+                if(!ent.inscritos.includes(alumnoActual.nombre)) {
+                    ent.inscritos.push(alumnoActual.nombre);
+                    alumnoBD.clasesBono -= 1;
+                    alumnoActual.clasesBono = alumnoBD.clasesBono;
+
+                    guardarDatos();
+                    mostrarToast("✅ ¡Apuntado con éxito! Se ha descontado 1 clase.");
+                } else { 
+                    mostrarToast("Ya estás apuntado a este entrenamiento.", "warning"); 
+                }
+            }
+        }
+
+        function apuntarseTorneo(id) {
+            if(!alumnoActual) {
+                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
+                return;
+            }
+            let tor = datosGlobales.torneos.find(t => t.id === id);
+            if(tor) {
+                if(!tor.inscritos) tor.inscritos = [];
+                if(!tor.inscritos.includes(alumnoActual.nombre)) {
+                    tor.inscritos.push(alumnoActual.nombre);
+                    guardarDatos();
+                    mostrarToast("¡Apuntado al torneo con éxito!");
+                } else { mostrarToast("Ya estás apuntado a este torneo.", "warning"); }
+            }
+        }
+
+        function agregarEntrenamiento() {
+            if(!modoMonitorActivo) return;
+            let titulo = document.getElementById('nuevo-titulo').value;
+            let fecha = document.getElementById('nuevo-fecha').value;
+            let lugar = document.getElementById('nuevo-lugar').value;
+            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
+            if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
+            datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
+            document.getElementById('nuevo-titulo').value = "";
+            document.getElementById('nuevo-fecha').value = "";
+            document.getElementById('nuevo-lugar').value = "";
+            guardarDatos();
+            mostrarToast("Clase creada correctamente.");
+        }
+
+        function borrarEntrenamiento(id) {
+            if(!modoMonitorActivo) return;
+            if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
+                datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
+                guardarDatos();
+                mostrarToast("Entrenamiento borrado.");
+            }
+        }
+
+        function agregarTorneo() {
+            if(!modoMonitorActivo) return;
+            let titulo = document.getElementById('torneo-titulo').value;
+            let fecha = document.getElementById('torneo-fecha').value;
+            let lugar = document.getElementById('torneo-lugar').value;
+            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
+            if(!datosGlobales.torneos) datosGlobales.torneos = [];
+            datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
+            document.getElementById('torneo-titulo').value = "";
+            document.getElementById('torneo-fecha').value = "";
+            document.getElementById('torneo-lugar').value = "";
+            guardarDatos();
+            mostrarToast("Torneo creado correctamente.");
+        }
+
+        function borrarTorneo(id) {
+            if(!modoMonitorActivo) return;
+            if(confirm("¿Seguro que quieres borrar este torneo?")) {
+                datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
+                guardarDatos();
+                mostrarToast("Torneo borrado.");
+            }
+        }
+
+        function modificarBono(index) {
+            if(!modoMonitorActivo) return;
+            let nuevoValor = prompt("Introduce el nuevo número de clases disponibles:", datosGlobales.alumnos[index].clasesBono);
+            if(nuevoValor !== null && !isNaN(nuevoValor)) {
+                datosGlobales.alumnos[index].clasesBono = parseInt(nuevoValor);
+                guardarDatos();
+                mostrarToast("Bono modificado correctamente.");
+            }
+        }
+
+        function borrarAlumno(index) {
+            if(!modoMonitorActivo) return;
+            if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
+                datosGlobales.alumnos.splice(index, 1);
+                guardarDatos();
+                mostrarToast("Alumno eliminado.");
+            }
+        }
+
+        function reiniciarDatosCompletos() {
+            if(!modoMonitorActivo) return;
+            if(prompt("Escribe 'BORRAR' para vaciar absolutamente todo:") === 'BORRAR') {
+                datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [] };
+                guardarDatos();
+                mostrarToast("Datos reiniciados.", "warning");
+            }
+        }
+
+        cargarDatos();
+        setInterval(cargarDatos, 5005);
+    </script>
+</body>
+</html>
