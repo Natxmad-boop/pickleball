@@ -6,48 +6,92 @@
     <title>Club de Pickleball | Pro</title>
     <style>
         :root {
-            --bg-dark: #111827;
-            --card-dark: rgba(31, 41, 55, 0.8);
-            --border-dark: rgba(75, 85, 99, 0.4);
-            --accent: #00e6ac;
-            --accent-glow: rgba(0, 230, 172, 0.3);
-            --text-main: #f3f4f6;
-            --text-muted: #9ca3af;
+            --bg-dark: #0f172a;
+            --card-dark: #1e293b;
+            --border-dark: #334155;
+            --accent: #00c897;
+            --accent-hover: #00a87f;
+            --accent-glow: rgba(0, 200, 151, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
         }
         
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
         }
 
         body {
-            font-family: system-ui, -apple-system, sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
             line-height: 1.6;
-            padding: 1rem;
+            padding: 1.5rem 1rem 3rem 1rem;
+        }
+
+        /* Sistema de Alertas Flotantes (Toasts) */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 90%;
+            max-width: 380px;
+            pointer-events: none;
+        }
+        .toast {
+            background: var(--card-dark);
+            color: var(--text-main);
+            padding: 14px 18px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            animation: fadeInDown 0.3s ease, fadeOutUp 0.3s ease 2.7s forwards;
+            border-left: 5px solid var(--accent);
+            border: 1px solid var(--border-dark);
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeOutUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-15px); }
         }
 
         header {
             text-align: center;
-            padding: 2rem 1rem;
+            padding: 2.5rem 1rem 2rem 1rem;
         }
 
         h1 {
             color: var(--accent);
-            font-size: 2rem;
+            font-size: 2.2rem;
+            font-weight: 800;
             margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px var(--accent-glow);
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 20px var(--accent-glow);
         }
 
         p.subtitle {
             color: var(--text-muted);
-            font-size: 1rem;
+            font-size: 1.05rem;
+            font-weight: 500;
         }
 
         .container {
-            max-width: 800px;
+            max-width: 680px;
             margin: 0 auto;
             display: grid;
             gap: 1.5rem;
@@ -56,17 +100,27 @@
         .card {
             background: var(--card-dark);
             border: 1px solid var(--border-dark);
-            border-radius: 1rem;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            border-radius: 16px;
+            padding: 1.75rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.4);
         }
 
         .card h2 {
             color: var(--accent);
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
+            font-size: 1.35rem;
+            margin-bottom: 1.25rem;
             border-bottom: 1px solid var(--border-dark);
-            padding-bottom: 0.5rem;
+            padding-bottom: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         ul {
@@ -74,39 +128,68 @@
         }
 
         li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-dark);
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            font-size: 1.05rem;
         }
 
         li:last-child {
             border-bottom: none;
         }
 
+        .badge-disponible {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .badge-ocupada {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
         .btn {
-            display: block;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             width: 100%;
             background-color: var(--accent);
-            color: var(--bg-dark);
+            color: #0f172a;
             text-align: center;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            font-weight: bold;
+            padding: 0.9rem;
+            border-radius: 12px;
+            font-weight: 800;
             text-decoration: none;
-            margin-top: 1rem;
+            margin-top: 1.25rem;
             border: none;
             cursor: pointer;
-            transition: opacity 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px var(--accent-glow);
+            transition: background-color 0.2s, transform 0.1s;
         }
 
         .btn:hover {
-            opacity: 0.9;
+            background-color: var(--accent-hover);
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
 
         footer {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem 1rem 1rem 1rem;
             color: var(--text-muted);
             font-size: 0.875rem;
         }
@@ -114,8 +197,10 @@
 </head>
 <body>
 
+    <div id="toast-container"></div>
+
     <header>
-        <h1>Club de Pickleball Pro</h1>
+        <h1>🏓 CLUB DE PICKLEBALL PRO</h1>
         <p class="subtitle">Tu espacio para jugar, aprender y competir</p>
     </header>
 
@@ -123,23 +208,34 @@
         <section class="card">
             <h2>🎾 Próximos Horarios y Pistas</h2>
             <ul>
-                <li><span>Pista Central (Indoor)</span> <strong>Disponible</strong></li>
-                <li><span>Pista 2 (Outdoor)</span> <strong>Ocupada</strong></li>
-                <li><span>Pista 3 (Entreno)</span> <strong>Disponible</strong></li>
+                <li><span>Pista Central (Indoor)</span> <span class="badge-disponible">Disponible</span></li>
+                <li><span>Pista 2 (Outdoor)</span> <span class="badge-ocupada">Ocupada</span></li>
+                <li><span>Pista 3 (Entreno)</span> <span class="badge-disponible">Disponible</span></li>
             </ul>
-            <button class="btn" onclick="alert('¡Reserva solicitada con éxito!')">Reservar Pista</button>
+            <button class="btn" onclick="mostrarToast('✅ ¡Reserva de pista solicitada con éxito!')">Reservar Pista</button>
         </section>
 
         <section class="card">
             <h2>🏆 Torneo de Verano</h2>
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">Inscríbete ya en la categoría dobles mixtos. Plazas limitadas.</p>
-            <button class="btn" onclick="alert('¡Inscripción abierta próximamente!')">Inscribirme</button>
+            <p style="color: var(--text-muted); margin-bottom: 1rem;">Inscríbete ya en la categoría dobles mixtos. Plazas limitadas para los socios del club.</p>
+            <button class="btn" onclick="mostrarToast('🏆 ¡Inscripción al torneo registrada correctamente!')">Inscribirme</button>
         </section>
     </div>
 
     <footer>
-        <p>&copy; 2026 Club de Pickleball. Todos los derechos reservados.</p>
+        <p>&copy; 2026 Club de Pickleball Pro. Todos los derechos reservados.</p>
     </footer>
+
+    <script>
+        function mostrarToast(mensaje) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `<span>${mensaje}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+    </script>
 
 </body>
 </html>
