@@ -636,7 +636,6 @@
 
         let climaCache = {};
 
-        // Coordenadas manuales de respaldo para ciudades comunes (para que nunca falle por geocodificación)
         const coordenadasFijas = {
             "madrid": { lat: 40.4168, lon: -3.7038, nombre: "Madrid" },
             "barcelona": { lat: 41.3851, lon: 2.1734, nombre: "Barcelona" },
@@ -654,15 +653,15 @@
             "club de tenis": { lat: 40.4168, lon: -3.7038, nombre: "Madrid" }
         };
 
-        async function obtenerClima(lugar) {
+        async function obtenerClima(lugar, fechaTexto) {
             if (!lugar) return null;
             let lugarClean = lugar.trim().toLowerCase();
-            if (climaCache[lugarClean]) return climaCache[lugarClean];
+            let cacheKey = `${lugarClean}_${fechaTexto || 'hoy'}`;
+            if (climaCache[cacheKey]) return climaCache[cacheKey];
 
             try {
                 let lat, lon, nombreUbicacion;
 
-                // 1. Buscar en coordenadas fijas primero para máxima fiabilidad
                 let encontradoFijo = false;
                 for (let clave in coordenadasFijas) {
                     if (lugarClean.includes(clave)) {
@@ -674,7 +673,6 @@
                     }
                 }
 
-                // 2. Si no está en las fijas, usar la API de geocodificación
                 if (!encontradoFijo) {
                     let geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(lugar)}&count=1&language=es&format=json`);
                     let geoJson = await geoRes.json();
@@ -684,44 +682,84 @@
                         lon = geoJson.results[0].longitude;
                         nombreUbicacion = geoJson.results[0].name;
                     } else {
-                        // Fallback absoluto por defecto a Madrid si no encuentra nada
                         lat = 40.4168;
                         lon = -3.7038;
                         nombreUbicacion = lugar;
                     }
                 }
 
-                // Obtener el clima actual con Open-Meteo
-                let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code`);
-                let weatherJson = await weatherRes.json();
-
-                if (weatherJson && weatherJson.current) {
-                    let temp = Math.round(weatherJson.current.temperature_2m);
-                    let code = weatherJson.current.weather_code;
-                    let iconoTiempo = "🌤️";
-
-                    if (code >= 1 && code <= 3) { iconoTiempo = "⛅"; }
-                    else if (code >= 45 && code <= 48) { iconoTiempo = "🌫️"; }
-                    else if (code >= 51 && code <= 67) { iconoTiempo = "🌧️"; }
-                    else if (code >= 71 && code <= 77) { iconoTiempo = "❄️"; }
-                    else if (code >= 95) { iconoTiempo = "⚡"; }
-
-                    let resultadoClima = `${iconoTiempo} ${temp}°C (${nombreUbicacion})`;
-                    climaCache[lugarClean] = resultadoClima;
-                    return resultadoClima;
+                // Extraer la fecha (YYYY-MM-DD)
+                let fechaObjeto = null;
+                if (fechaTexto) {
+                    let matchFecha = fechaTexto.match(/\d{4}-\d{2}-\d{2}/);
+                    if (matchFecha) {
+                        fechaObjeto = new Date(matchFecha[0]);
+                    }
                 }
+
+                let hoy = new Date();
+                let diasDiferencia = fechaObjeto ? Math.ceil((fechaObjeto - hoy) / (1000 * 60 * 60 * 24)) : 0;
+
+                // Si la fecha es dentro de los próximos 7 días, usamos la predicción exacta de la API
+                if (fechaObjeto && diasDiferencia >= 0 && diasDiferencia <= 7) {
+                    let dateStr = fechaObjeto.toISOString().split('T')[0];
+                    let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,weather_code&timezone=auto&start_date=${dateStr}&end_date=${dateStr}`);
+                    let weatherJson = await weatherRes.json();
+
+                    if (weatherJson && weatherJson.daily && weatherJson.daily.temperature_2m_max.length > 0) {
+                        let temp = Math.round(weatherJson.daily.temperature_2m_max[0]);
+                        let code = weatherJson.daily.weather_code[0];
+                        let iconoTiempo = "🌤️";
+
+                        if (code >= 1 && code <= 3) { iconoTiempo = "⛅"; }
+                        else if (code >= 45 && code <= 48) { iconoTiempo = "🌫️"; }
+                        else if (code >= 51 && code <= 67) { iconoTiempo = "🌧️"; }
+                        else if (code >= 71 && code <= 77) { iconoTiempo = "❄️"; }
+                        else if (code >= 95) { iconoTiempo = "⚡"; }
+
+                        let resultadoClima = `${iconoTiempo} ${temp}°C (${nombreUbicacion})`;
+                        climaCache[cacheKey] = resultadoClima;
+                        return resultadoClima;
+                    }
+                }
+
+                // Para fechas futuras lejanas, calculamos estimación estacional según el mes del evento
+                let mes = fechaObjeto ? fechaObjeto.getMonth() : hoy.getMonth(); 
+                let tempEstimada = 20;
+                let iconoTiempo = "☀️";
+
+                // Promedios térmicos estacionales aproximados
+                if (mes === 11 || mes === 0 || mes === 1) { // Diciembre, Enero, Febrero
+                    tempEstimada = 11;
+                    iconoTiempo = "🌤️";
+                } else if (mes >= 2 && mes <= 4) { // Marzo, Abril, Mayo
+                    tempEstimada = 19;
+                    iconoTiempo = "⛅";
+                } else if (mes >= 5 && mes <= 7) { // Junio, Julio, Agosto
+                    tempEstimada = 31;
+                    iconoTiempo = "☀️";
+                } else { // Septiembre, Octubre, Noviembre
+                    tempEstimada = 21;
+                    iconoTiempo = "🌤️";
+                }
+
+                let resultadoClima = `${iconoTiempo} ~${tempEstimada}°C (${nombreUbicacion})`;
+                climaCache[cacheKey] = resultadoClima;
+                return resultadoClima;
+
             } catch (e) {
                 console.error("Error al obtener el clima", e);
             }
-            return `🌤️ 22°C (${lugar})`; // Fallback visual directo para que nunca falle
+            return `🌤️ 22°C (${lugar})`; 
         }
 
         async function actualizarClimaEnTarjetas() {
             let elementosClima = document.querySelectorAll('.weather-badge-dynamic');
             for (let el of elementosClima) {
                 let lugar = el.getAttribute('data-lugar');
+                let fecha = el.getAttribute('data-fecha');
                 if (lugar) {
-                    let climaTexto = await obtenerClima(lugar);
+                    let climaTexto = await obtenerClima(lugar, fecha);
                     if (climaTexto) {
                         el.innerText = climaTexto;
                     }
@@ -1098,8 +1136,9 @@
                     let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar clase</button>` : '';
                     let lugarTxt = '';
                     if (ent.lugar) {
-                        let climaPrevio = climaCache[ent.lugar.trim().toLowerCase()] || `🌤️ Consultando tiempo...`;
-                        lugarTxt = `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${ent.lugar}">${climaPrevio}</div>`;
+                        let cacheKey = `${ent.lugar.trim().toLowerCase()}_${ent.fecha || 'hoy'}`;
+                        let climaPrevio = climaCache[cacheKey] || `🌤️ Consultando tiempo...`;
+                        lugarTxt = `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${ent.lugar}" data-fecha="${ent.fecha}">${climaPrevio}</div>`;
                     }
                     
                     let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
@@ -1153,8 +1192,9 @@
                     let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar torneo</button>` : '';
                     let lugarTorneoTxt = '';
                     if (tor.lugar) {
-                        let climaPrevioTorneo = climaCache[tor.lugar.trim().toLowerCase()] || `🌤️ Consultando tiempo...`;
-                        lugarTorneoTxt = `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${tor.lugar}">${climaPrevioTorneo}</div>`;
+                        let cacheKey = `${tor.lugar.trim().toLowerCase()}_${tor.fecha || 'hoy'}`;
+                        let climaPrevioTorneo = climaCache[cacheKey] || `🌤️ Consultando tiempo...`;
+                        lugarTorneoTxt = `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${tor.lugar}" data-fecha="${tor.fecha}">${climaPrevioTorneo}</div>`;
                     }
                     
                     let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
