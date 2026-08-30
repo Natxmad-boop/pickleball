@@ -185,6 +185,20 @@
             line-height: 1.6;
         }
 
+        .weather-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            border: 1px solid var(--border-card);
+        }
+
         button {
             background-color: var(--primary-accent);
             color: var(--primary);
@@ -612,6 +626,62 @@
             avisos: []
         };
 
+        // Caché global para no repetir peticiones innecesarias del clima
+        let climaCache = {};
+
+        async function obtenerClima(lugar) {
+            if (!lugar) return null;
+            if (climaCache[lugar]) return climaCache[lugar];
+
+            try {
+                // Geocodificación gratuita basada en texto
+                let geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(lugar)}&count=1&language=es&format=json`);
+                let geoJson = await geoRes.json();
+                
+                if (geoJson && geoJson.results && geoJson.results.length > 0) {
+                    let { latitude, longitude, name } = geoJson.results[0];
+                    let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code`);
+                    let weatherJson = await weatherRes.json();
+
+                    if (weatherJson && weatherJson.current) {
+                        let temp = Math.round(weatherJson.current.temperature_2m);
+                        let code = weatherJson.current.weather_code;
+                        let iconoTiempo = "🌤️";
+                        let textoTiempo = "Despejado";
+
+                        if (code >= 1 && code <= 3) { iconoTiempo = "⛅"; textoTiempo = "Parcialmente nublado"; }
+                        else if (code >= 45 && code <= 48) { iconoTiempo = "🌫️"; textoTiempo = "Neblina"; }
+                        else if (code >= 51 && code <= 67) { iconoTiempo = "🌧️"; textoTiempo = "Lluvia"; }
+                        else if (code >= 71 && code <= 77) { iconoTiempo = "❄️"; textoTiempo = "Nieve"; }
+                        else if (code >= 95) { iconoTiempo = "⚡"; textoTiempo = "Tormenta"; }
+
+                        let resultadoClima = { texto: `${iconoTiempo} ${temp}°C (${name})` };
+                        climaCache[lugar] = resultadoClima;
+                        return resultadoClima;
+                    }
+                }
+            } catch (e) {
+                console.error("Error al obtener el clima", e);
+            }
+            return null;
+        }
+
+        async function actualizarClimaEnTarjetas() {
+            let elementosClima = document.querySelectorAll('.weather-badge-dynamic');
+            for (let el of elementosClima) {
+                let lugar = el.getAttribute('data-lugar');
+                if (lugar && !el.dataset.fetched) {
+                    el.dataset.fetched = "true";
+                    let clima = await obtenerClima(lugar);
+                    if (clima) {
+                        el.innerHTML = clima.texto;
+                    } else {
+                        el.parentElement.removeChild(el); // Si no encuentra ubicación, oculta la cajita limpia
+                    }
+                }
+            }
+        }
+
         function mostrarToast(mensaje, tipo = 'success') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
@@ -973,7 +1043,7 @@
             } else {
                 datosGlobales.entrenamientos.forEach(ent => {
                     let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
-                    let lugarTxt = ent.lugar ? `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p>` : '';
+                    let lugarTxt = ent.lugar ? `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${ent.lugar}">🌤️ Consultando tiempo...</div>` : '';
                     
                     let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
                     let botonAccion = "";
@@ -1021,7 +1091,7 @@
             } else {
                 datosGlobales.torneos.forEach(tor => {
                     let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar Torneo</button>` : '';
-                    let lugarTorneoTxt = tor.lugar ? `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p>` : '';
+                    let lugarTorneoTxt = tor.lugar ? `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${tor.lugar}">🌤️ Consultando tiempo...</div>` : '';
                     
                     let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
                     let botonTorneoAccion = "";
@@ -1062,6 +1132,9 @@
                 });
             }
             document.getElementById('lista-torneos').innerHTML = htmlTorneos;
+
+            // Actualizar el tiempo asíncronamente para las tarjetas renderizadas
+            setTimeout(actualizarClimaEnTarjetas, 100);
 
             if(modoMonitorActivo) {
                 let avisosHtml = "";
