@@ -3,25 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club de Pickleball | Gestión Deportiva</title>
+    <title>Pickleball Club | Gestión Deportiva</title>
     <style>
         :root {
-            --primary: #0f172a;           
-            --primary-light: #1e293b;     
-            --primary-accent: #00c897;    
-            --btn-hover: #00a87f;        
-            --bg: #f8fafc;                
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --primary-accent: #00c897;
+            --btn-hover: #00a87f;
+            --bg: #f8fafc;
             --card-bg: #ffffff;
             --text: #0f172a;
             --text-light: #475569;
             --border-card: #e2e8f0;
-            --success: #10b981;           
+            --success: #10b981;
             --success-bg: #d1fae5;
-            --danger: #ef4444;            
+            --danger: #ef4444;
             --danger-bg: #fee2e2;
-            --warning: #f59e0b;           
+            --warning: #f59e0b;
             --warning-bg: #fffbeb;
-            --radius: 16px;               
+            --radius: 16px;
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -35,7 +35,7 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 130px;
+            padding-bottom: 140px;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -55,17 +55,17 @@
         .toast {
             background: var(--primary);
             color: #fff;
-            padding: 14px 18px;
-            border-radius: 12px;
+            padding: 16px 20px;
+            border-radius: 14px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 12px;
             pointer-events: auto;
             animation: fadeInDown 0.3s ease, fadeOutUp 0.3s ease 2.7s forwards;
-            border-left: 5px solid var(--primary-accent);
+            border-left: 6px solid var(--primary-accent);
         }
         .toast.success { border-left-color: var(--success); }
         .toast.error { border-left-color: var(--danger); }
@@ -83,8 +83,8 @@
         header {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            padding: 28px 20px 22px 20px;
-            border-bottom: 5px solid var(--primary-accent);
+            padding: 24px 20px 20px 20px;
+            border-bottom: 4px solid var(--primary-accent);
             box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
         }
 
@@ -92,31 +92,30 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.35rem;
             font-weight: 800;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             text-transform: uppercase;
         }
 
         header p {
-            font-size: 0.95rem;
-            opacity: 0.9;
-            font-weight: 600;
-            letter-spacing: 0.3px;
+            font-size: 0.9rem;
+            opacity: 0.85;
+            font-weight: 500;
         }
 
         .sync-status {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #ffffff;
             background: rgba(0, 200, 151, 0.2);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 20px;
             font-weight: 700;
             border: 1px solid var(--primary-accent);
@@ -124,20 +123,20 @@
         }
 
         .container {
-            max-width: 640px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 24px 16px;
         }
 
         h2 {
-            font-size: 1.45rem;
+            font-size: 1.35rem;
             color: var(--primary);
             margin-bottom: 20px;
             font-weight: 800;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             border-left: 5px solid var(--primary-accent);
             padding-left: 12px;
         }
@@ -145,7 +144,7 @@
         .card {
             background: var(--card-bg);
             border-radius: var(--radius);
-            padding: 22px;
+            padding: 24px;
             margin-bottom: 20px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border-card);
@@ -164,14 +163,10 @@
             background-color: var(--primary-accent);
         }
 
-        .card:hover {
-            box-shadow: 0 14px 30px -5px rgba(0, 0, 0, 0.08);
-        }
-
         .card h3 {
             color: var(--primary);
             margin-bottom: 12px;
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -179,10 +174,11 @@
         }
 
         .card p {
-            font-size: 1rem;
+            font-size: 1.05rem;
             color: var(--text-light);
-            margin-bottom: 12px;
-            line-height: 1.6;
+            margin-bottom: 10px;
+            line-height: 1.5;
+            font-weight: 500;
         }
 
         .weather-badge {
@@ -190,12 +186,12 @@
             align-items: center;
             gap: 6px;
             background: #f1f5f9;
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 20px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             border: 1px solid var(--border-card);
         }
 
@@ -204,7 +200,7 @@
             color: var(--primary);
             border: none;
             padding: 16px 20px;
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 1.05rem;
             font-weight: 800;
             cursor: pointer;
@@ -216,14 +212,14 @@
             justify-content: center;
             gap: 10px;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.25);
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.2);
         }
 
         button:hover {
             background-color: var(--btn-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 200, 151, 0.35);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 200, 151, 0.3);
         }
 
         button:active {
@@ -233,62 +229,58 @@
         button.danger {
             background-color: var(--danger);
             color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
         }
         button.danger:hover { 
             background-color: #b91c1c; 
-            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.35);
         }
 
         button.warning {
             background-color: var(--warning);
             color: var(--primary);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
         }
         button.warning:hover { 
             background-color: #d97706; 
-            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.35);
         }
 
         button.success {
             background-color: var(--success);
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
         }
         button.success:hover { 
             background-color: #059669; 
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.35);
         }
 
         button.btn-volver {
             background-color: var(--primary);
             color: #ffffff;
             border: 2px solid var(--primary-accent);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
         }
         button.btn-volver:hover {
             background-color: var(--primary-light);
-            border-color: #ffffff;
-            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.3);
         }
 
         input, select {
             width: 100%;
             padding: 16px 18px;
             margin-top: 8px;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             border: 2px solid var(--border-card);
-            border-radius: 12px;
+            border-radius: 14px;
             font-size: 1.05rem;
             background: #fff;
             color: var(--text);
             outline: none;
             transition: all 0.2s ease;
+            font-weight: 500;
         }
 
         input:focus, select:focus {
             border-color: var(--primary-accent);
-            box-shadow: 0 0 0 4px rgba(0, 200, 151, 0.15);
+            box-shadow: 0 0 0 4px rgba(0, 200, 151, 0.12);
         }
 
         .terms-container {
@@ -296,8 +288,8 @@
             align-items: flex-start;
             gap: 12px;
             margin-top: 12px;
-            margin-bottom: 18px;
-            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
             line-height: 1.5;
             color: var(--text-light);
         }
@@ -307,6 +299,7 @@
             margin-top: 2px;
             accent-color: var(--primary-accent);
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         nav {
@@ -314,23 +307,23 @@
             bottom: 16px;
             left: 16px;
             right: 16px;
-            max-width: 600px;
+            max-width: 580px;
             margin: 0 auto;
             background: var(--primary);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             display: flex;
             justify-content: space-around;
-            padding: 10px;
+            padding: 8px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-            border-radius: 16px;
+            border-radius: 20px;
             border: 2px solid var(--primary-accent);
             z-index: 1000;
         }
 
         nav button {
             background: none;
-            color: #a3b3c6;
+            color: #94a3b8;
             border: none;
             font-size: 0.8rem;
             margin: 0;
@@ -342,7 +335,7 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            border-radius: 10px;
+            border-radius: 12px;
             transition: all 0.3s ease;
             position: relative;
             text-transform: none;
@@ -350,19 +343,19 @@
         }
 
         nav button span.icon {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             transition: transform 0.3s;
         }
 
         .notification-badge {
             position: absolute;
-            top: -4px;
-            right: 14px;
+            top: 2px;
+            right: 22%;
             background-color: var(--danger);
             color: white;
             font-size: 0.7rem;
             font-weight: 800;
-            padding: 3px 7px;
+            padding: 2px 6px;
             border-radius: 10px;
             border: 2px solid var(--primary);
             display: none;
@@ -376,7 +369,7 @@
         }
 
         nav button.active span.icon {
-            transform: scale(1.15);
+            transform: scale(1.1);
         }
 
         .section {
@@ -406,21 +399,22 @@
         }
 
         label {
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 800;
             color: var(--primary-light);
             display: block;
-            margin-top: 6px;
+            margin-top: 8px;
             letter-spacing: 0.3px;
         }
-        
-        #seccion-home .card.success-card {
-            background: linear-gradient(135deg, var(--success-bg), #ecfdf5);
-            border: 2px solid #a7f3d0;
-            position: relative;
+
+        /* Estilo para el modal de acceso de alumno */
+        #modal-acceso-alumno {
+            background: var(--card-bg);
+            border: 2px solid var(--primary-accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
-        #seccion-home .card.success-card::before {
-            background-color: var(--success);
+        #modal-acceso-alumno::before {
+            background-color: var(--primary);
         }
     </style>
 </head>
@@ -438,21 +432,27 @@
 
     <div class="container">
 
+        <!-- PANTALLA PRINCIPAL -->
         <div id="seccion-home" class="section active">
-            <h2>👋 BIENVENIDO</h2>
-            <p style="margin-bottom: 25px; color: var(--text-light); font-weight: 600;">Selecciona cómo deseas acceder a la aplicación:</p>
-            
-            <div class="card" onclick="entrarComoAlumno()" style="cursor: pointer;">
-                <h3>👤 ENTRAR COMO ALUMNO</h3>
-                <p>Identifícate con tu nombre y PIN para consultar tus clases, torneos y gestionar tu bono personal.</p>
-                <button style="pointer-events: none;">ACCEDER COMO ALUMNO ➔</button>
+            <div class="card" style="border-left: 6px solid var(--primary-accent); text-align: center; padding: 32px 20px; background: linear-gradient(135deg, #ffffff, #f8fafc);">
+                <h2 style="border: none; padding: 0; justify-content: center; font-size: 1.6rem; margin-bottom: 8px; color: var(--primary);">🏓 PICKLEBALL CLUB</h2>
+                <p style="font-size: 1.1rem; color: var(--text-light); font-weight: 600; margin-bottom: 24px;">Tu club. Tus clases. Tu juego.</p>
+                
+                <button onclick="mostrarAccesoAlumno()" style="font-size: 1.15rem; padding: 18px 20px; margin-bottom: 14px;">
+                    👤 SOY ALUMNO
+                </button>
+
+                <button class="warning" onclick="entrarComoMonitorSeleccion()" style="font-size: 1.15rem; padding: 18px 20px; position: relative;">
+                    🔑 SOY MONITOR
+                    <span id="globo-notificaciones-home" class="notification-badge" style="display:none; position:absolute; top:12px; right:16px;">0</span>
+                </button>
             </div>
 
-            <div class="card success-card">
-                <h3 style="color: var(--success);">🎁 ¿NUEVO EN EL CLUB?</h3>
-                <p style="color: #065f46; margin-bottom: 15px; font-weight: 600;">Prueba una clase gratis y sin compromiso.</p>
+            <div class="card" style="border-left-color: var(--success); background: linear-gradient(135deg, var(--success-bg), #ecfdf5);">
+                <h3 style="color: var(--success); font-size: 1.25rem;">🎁 ¿NUEVO EN EL CLUB?</h3>
+                <p style="color: #065f46; margin-bottom: 16px; font-weight: 600;">Solicitar clase de prueba gratuita</p>
                 
-                <label style="color: #065f46;">TU NOMBRE Y APELLIDOS:</label>
+                <label style="color: #065f46;">NOMBRE Y APELLIDOS:</label>
                 <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
                 
                 <label style="color: #065f46;">TELÉFONO DE CONTACTO (Opcional):</label>
@@ -465,21 +465,31 @@
                     </label>
                 </div>
 
-                <button class="success" onclick="pedirClaseLibreSinRegistro()">📩 SOLICITAR CLASE DE PRUEBA</button>
+                <button class="success" onclick="pedirClaseLibreSinRegistro()">SOLICITAR CLASE DE PRUEBA</button>
             </div>
+        </div>
 
-            <div class="card warning" onclick="entrarComoMonitorSeleccion()" style="cursor: pointer; position: relative;">
-                <div style="position: absolute; top: 16px; right: 16px;">
-                    <span id="globo-notificaciones-home" class="notification-badge" style="display:inline-block; position:relative; top:0; right:0; font-size:0.8rem; padding:4px 8px;">0</span>
-                </div>
-                <h3 style="color: var(--primary);">🔑 ENTRAR COMO MONITOR</h3>
-                <p style="color: var(--primary-light);">Gestiona clases, torneos, altas de alumnos y aprueba recargas de bonos y solicitudes.</p>
-                <button class="warning" style="pointer-events: none;">ACCEDER COMO MONITOR ➔</button>
+        <!-- MODAL / FORMULARIO DE ACCESO ALUMNO -->
+        <div id="seccion-login-alumno" class="section">
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER</button>
+            
+            <div class="card" id="modal-acceso-alumno">
+                <h3>👤 ACCESO ALUMNO</h3>
+                <p style="margin-bottom: 16px;">Introduce tus datos para acceder a tu perfil y bonos.</p>
+                
+                <label>Nombre:</label>
+                <input type="text" id="input-login-nombre" placeholder="Tu nombre y apellidos">
+                
+                <label>PIN:</label>
+                <input type="password" id="input-login-pin" placeholder="Tu PIN personal" inputmode="numeric">
+
+                <button onclick="procesarAccesoAlumno()">ENTRAR</button>
             </div>
         </div>
         
+        <!-- SECCIÓN ENTRENAMIENTOS / CLASES -->
         <div id="seccion-entrenamientos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
             <h2>📅 PRÓXIMOS ENTRENAMIENTOS</h2>
             <div id="lista-entrenamientos" style="margin-top: 10px;">
                 <p>Cargando entrenamientos...</p>
@@ -489,16 +499,19 @@
                 <h3>➕ AÑADIR NUEVO ENTRENAMIENTO</h3>
                 <label>Título / Nivel:</label>
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
-                <label>Fecha y Hora:</label>
-                <input type="text" id="nuevo-fecha" placeholder="Ej: Mañana a las 18:00">
+                <label>Fecha:</label>
+                <input type="date" id="nuevo-fecha">
+                <label>Hora:</label>
+                <input type="time" id="nuevo-hora">
                 <label>Lugar:</label>
                 <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
                 <button onclick="agregarEntrenamiento()">CREAR CLASE</button>
             </div>
         </div>
 
+        <!-- SECCIÓN TORNEOS -->
         <div id="seccion-torneos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
             <h2>🏆 TORNEOS Y COMPETICIONES</h2>
             <div id="lista-torneos" style="margin-top: 10px;">
                 <p>Cargando torneos...</p>
@@ -508,37 +521,43 @@
                 <h3>➕ CREAR NUEVO TORNEO</h3>
                 <label>Nombre del Torneo:</label>
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
-                <label>Fecha y Hora:</label>
-                <input type="text" id="torneo-fecha" placeholder="Ej: Sábado a las 10:00">
+                <label>Fecha:</label>
+                <input type="date" id="torneo-fecha">
+                <label>Hora:</label>
+                <input type="time" id="torneo-hora">
                 <label>Lugar:</label>
                 <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
-                <button onclick="agregarTorneo()">CREAR CLASE</button>
+                <button onclick="agregarTorneo()">CREAR TORNEO</button>
             </div>
         </div>
 
+        <!-- SECCIÓN PERFIL DE ALUMNO -->
         <div id="seccion-perfil" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
             <h2>👤 MI PANEL DE ALUMNO</h2>
             
             <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
                 <span class="badge">Sesión Activa</span>
-                <h3 id="saludo-alumno" style="color: #065f46;">¡Hola!</h3>
-                <p id="info-bono-personal" style="font-size: 1.1rem; color: #047857; margin: 12px 0; font-weight: 800;">🎟️ MI BONO: 0 clases</p>
+                <h3 id="saludo-alumno" style="color: #065f46; font-size: 1.4rem;">¡Hola!</h3>
                 
-                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 15px; font-size: 0.85rem; color: #065f46; background: rgba(255,255,255,0.6); padding: 10px; border-radius: 8px;">
+                <div class="card" style="background: #ffffff; border-left-color: var(--success); margin: 16px 0; text-align: center; padding: 20px;">
+                    <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; color: var(--text-light); margin-bottom: 4px;">🎟️ TU BONO</p>
+                    <p id="info-bono-personal" style="font-size: 2.2rem; color: var(--success); font-weight: 900; line-height: 1.1; margin-bottom: 4px;">0</p>
+                    <p style="font-size: 0.95rem; color: var(--text-light); font-weight: 600;">clases disponibles</p>
+                    <button class="success" style="margin-top: 16px;" onclick="solicitarRecargaBono()">+ RECARGAR BONO</button>
+                </div>
+                
+                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 15px; font-size: 0.9rem; color: #065f46; background: rgba(255,255,255,0.7); padding: 12px; border-radius: 12px; font-weight: 500;">
                     📜 <strong>Historial reciente:</strong> Cuenta activa correctamente sincronizada.
                 </div>
 
-                <div style="margin-top: 15px; border-top: 1px solid #d1fae5; padding-top: 15px;">
-                    <button class="success" onclick="solicitarRecargaBono()">SOLICITAR RECARGA</button>
-                </div>
-
-                <button class="danger" style="margin-top: 12px;" onclick="cerrarSesionAlumno()">CERRAR SESIÓN</button>
+                <button class="danger" style="margin-top: 16px;" onclick="cerrarSesionAlumno()">CERRAR SESIÓN</button>
             </div>
         </div>
 
+        <!-- SECCIÓN GESTIÓN DE ALUMNOS (MONITOR) -->
         <div id="seccion-alumnos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
             <h2>👥 GESTIÓN DE ALUMNOS</h2>
             <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
                 <h3 style="color: #92400e;">➕ CREAR NUEVO ALUMNO</h3>
@@ -563,8 +582,9 @@
             </div>
         </div>
 
+        <!-- SECCIÓN GESTIÓN / AVISOS (MONITOR) -->
         <div id="seccion-gestion" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A SELECCIÓN PRINCIPAL</button>
+            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
             <h2>⚙️ PANEL DE GESTIÓN</h2>
             <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
                 <h3 style="color: #92400e;">🚨 SOLICITUDES DE ALUMNOS Y PRUEBAS</h3>
@@ -578,7 +598,9 @@
         
     </div>
 
+    <!-- MENÚ INFERIOR -->
     <nav id="barra-navegacion-inferior" style="display: none;">
+        <!-- Menú Alumno -->
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
             <span class="icon">📅</span>
             <span>Clases</span>
@@ -592,6 +614,7 @@
             <span>Perfil</span>
         </button>
         
+        <!-- Menú Monitor -->
         <button onclick="cambiarSeccion('entrenamientos')" id="nav-monitor-clases" style="display: none;">
             <span class="icon">📅</span>
             <span>Clases</span>
@@ -605,11 +628,9 @@
             <span>Alumnos</span>
         </button>
         <button onclick="cambiarSeccion('gestion')" id="nav-monitor-gestion" style="display: none;">
-            <span class="icon">
-                ⚙️
-                <span id="globo-notificaciones" class="notification-badge">0</span>
-            </span>
+            <span class="icon">⚙️</span>
             <span>Gestión</span>
+            <span id="globo-notificaciones" class="notification-badge">0</span>
         </button>
     </nav>
 
@@ -667,14 +688,13 @@
             let elementosClima = document.querySelectorAll('.weather-badge-dynamic');
             for (let el of elementosClima) {
                 let lugar = el.getAttribute('data-lugar');
-                // Si el elemento ya muestra temperatura numérica, no volvemos a consultar para evitar parpadeos
                 if (lugar && !el.innerText.includes("°C") && !el.dataset.loading) {
                     el.dataset.loading = "true";
                     let climaTexto = await obtenerClima(lugar);
                     if (climaTexto) {
                         el.innerText = climaTexto;
                     } else {
-                        el.innerText = "📍 " + lugar; // Si falla la API, muestra al menos el lugar limpio sin desaparecer
+                        el.innerText = "📍 " + lugar;
                     }
                 }
             }
@@ -700,19 +720,25 @@
             cambiarSeccion('home');
         }
 
-        function entrarComoAlumno() {
-            let nombreInput = prompt("Introduce tu nombre:");
-            if(nombreInput === null) return;
-            nombreInput = nombreInput.trim();
+        function mostrarAccesoAlumno() {
+            document.getElementById('input-login-nombre').value = '';
+            document.getElementById('input-login-pin').value = '';
+            cambiarSeccion('login-alumno');
+        }
+
+        function procesarAccesoAlumno() {
+            let nombreInput = document.getElementById('input-login-nombre').value.trim();
+            let passInput = document.getElementById('input-login-pin').value.trim();
 
             if(!nombreInput) {
                 mostrarToast("Debes introducir tu nombre.", "error");
                 return;
             }
 
-            let passInput = prompt("Introduce tu PIN personal:");
-            if(passInput === null) return;
-            passInput = passInput.trim();
+            if(!passInput) {
+                mostrarToast("Debes introducir tu PIN personal.", "error");
+                return;
+            }
 
             let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
             
@@ -788,7 +814,7 @@
             
             document.getElementById('seccion-' + seccion).classList.add('active');
             
-            if(seccion !== 'home') {
+            if(seccion !== 'home' && seccion !== 'login-alumno') {
                 let btnNav = document.getElementById('nav-' + seccion);
                 if(!btnNav && modoMonitorActivo) {
                     btnNav = document.getElementById('nav-monitor-' + seccion);
@@ -1029,7 +1055,7 @@
                 let reg = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
                 let clases = reg ? reg.clasesBono : 0;
                 alumnoActual.clasesBono = clases;
-                document.getElementById('info-bono-personal').innerHTML = `🎟️ <strong>MI BONO:</strong> ${clases} clases disponibles`;
+                document.getElementById('info-bono-personal').innerText = clases;
                 document.getElementById('historial-bono-alumno').innerHTML = `📜 <strong>Estado de cuenta:</strong> Al día. Clases listas para reservar entrenamientos o torneos.`;
             } else {
                 document.getElementById('panel-identificado').style.display = 'none';
@@ -1061,7 +1087,7 @@
 
                     if(modoMonitorActivo) {
                         if(numInscritos > 0) {
-                            listaInscritosHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
+                            listaInscritosHTML = "<ul style='margin-left: 20px; margin-top: 8px;'>";
                             ent.inscritos.forEach(alumnoNombre => {
                                 listaInscritosHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver clase</button></li>`;
                             });
@@ -1076,7 +1102,7 @@
                     htmlEntrenamientos += `
                         <div class="card">
                             <h3>🏓 ${ent.titulo}</h3>
-                            <p>🕒 <strong>Fecha:</strong> ${ent.fecha}</p>
+                            <p>📅 <strong>Fecha:</strong> ${ent.fecha}</p>
                             ${lugarTxt}
                             <p>👥 <strong>Inscritos:</strong> ${listaInscritosHTML}</p>
                             ${botonAccion}
@@ -1103,7 +1129,7 @@
                     let botonTorneoAccion = "";
 
                     if(estaApuntadoTorneo) {
-                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">ANULAR ASISTENCIA</button>`;
+                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">ANULAR INSCRIPCIÓN</button>`;
                     } else {
                         botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">APUNTARME</button>`;
                     }
@@ -1113,7 +1139,7 @@
 
                     if(modoMonitorActivo) {
                         if(numInscritosTorneo > 0) {
-                            listaInscritosTorneoHTML = "<ul style='margin-left: 20px; margin-top: 5px;'>";
+                            listaInscritosTorneoHTML = "<ul style='margin-left: 20px; margin-top: 8px;'>";
                             tor.inscritos.forEach(alumnoNombre => {
                                 listaInscritosTorneoHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre}</li>`;
                             });
@@ -1160,7 +1186,7 @@
                         `;
                     });
                 } else {
-                    avisosHtml = `<p style="color: var(--text-light); font-size: 0.9rem;">No hay avisos pendientes.</p>`;
+                    avisosHtml = `<p style="color: var(--text-light); font-size: 0.95rem;">No hay avisos pendientes.</p>`;
                 }
                 document.getElementById('lista-avisos-monitor').innerHTML = avisosHtml;
 
@@ -1168,13 +1194,13 @@
                 if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
                     datosGlobales.alumnos.forEach((al, idx) => {
                         listaAdminHtml += `
-                            <div class="card" style="padding:14px; margin-bottom:12px; background:white;">
-                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
-                                <p style="margin-bottom:10px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
-                                <button class="success" style="padding: 9px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
+                            <div class="card" style="padding:16px; margin-bottom:12px; background:white;">
+                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.9rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
+                                <p style="margin-bottom:12px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
+                                <button class="success" style="padding: 10px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
                                 <div style="display:flex; gap:10px;">
-                                    <button onclick="modificarBono(${idx})" style="padding:8px 12px; font-size:0.9rem; margin-top:0;">Editar Clases</button>
-                                    <button class="danger" style="padding:8px 12px; font-size:0.9rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
+                                    <button onclick="modificarBono(${idx})" style="padding:10px 12px; font-size:0.9rem; margin-top:0;">Editar Clases</button>
+                                    <button class="danger" style="padding:10px 12px; font-size:0.9rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
                                 </div>
                             </div>
                         `;
@@ -1236,14 +1262,24 @@
 
         function agregarEntrenamiento() {
             if(!modoMonitorActivo) return;
-            let titulo = document.getElementById('nuevo-titulo').value;
-            let fecha = document.getElementById('nuevo-fecha').value;
-            let lugar = document.getElementById('nuevo-lugar').value;
-            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
+            let titulo = document.getElementById('nuevo-titulo').value.trim();
+            let fechaInput = document.getElementById('nuevo-fecha').value;
+            let horaInput = document.getElementById('nuevo-hora').value;
+            let lugar = document.getElementById('nuevo-lugar').value.trim();
+            
+            if(!titulo || !fechaInput) return mostrarToast("Rellena el título y la fecha", "error");
+            
+            let fechaFormateada = fechaInput;
+            if(horaInput) {
+                fechaFormateada += " a las " + horaInput;
+            }
+
             if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
-            datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
+            datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha: fechaFormateada, lugar, inscritos: [] });
+            
             document.getElementById('nuevo-titulo').value = "";
             document.getElementById('nuevo-fecha').value = "";
+            document.getElementById('nuevo-hora').value = "";
             document.getElementById('nuevo-lugar').value = "";
             guardarDatos();
             mostrarToast("Clase creada correctamente.");
@@ -1260,14 +1296,24 @@
 
         function agregarTorneo() {
             if(!modoMonitorActivo) return;
-            let titulo = document.getElementById('torneo-titulo').value;
-            let fecha = document.getElementById('torneo-fecha').value;
-            let lugar = document.getElementById('torneo-lugar').value;
-            if(!titulo || !fecha) return mostrarToast("Rellena el título y la fecha", "error");
+            let titulo = document.getElementById('torneo-titulo').value.trim();
+            let fechaInput = document.getElementById('torneo-fecha').value;
+            let horaInput = document.getElementById('torneo-hora').value;
+            let lugar = document.getElementById('torneo-lugar').value.trim();
+            
+            if(!titulo || !fechaInput) return mostrarToast("Rellena el título y la fecha", "error");
+            
+            let fechaFormateada = fechaInput;
+            if(horaInput) {
+                fechaFormateada += " a las " + horaInput;
+            }
+
             if(!datosGlobales.torneos) datosGlobales.torneos = [];
-            datosGlobales.torneos.push({ id: Date.now(), titulo, fecha, lugar, inscritos: [] });
+            datosGlobales.torneos.push({ id: Date.now(), titulo, fecha: fechaFormateada, lugar, inscritos: [] });
+            
             document.getElementById('torneo-titulo').value = "";
             document.getElementById('torneo-fecha').value = "";
+            document.getElementById('torneo-hora').value = "";
             document.getElementById('torneo-lugar').value = "";
             guardarDatos();
             mostrarToast("Torneo creado correctamente.");
