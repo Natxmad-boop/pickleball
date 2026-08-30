@@ -448,7 +448,7 @@
                 <div class="terms-container">
                     <input type="checkbox" id="check-rgpd-prueba">
                     <label for="check-rgpd-prueba" style="color: var(--text-light); font-weight: normal; display: inline;">
-                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: var(--success); font-weight: 500;">política de protección de datos</a> y el tratamiento de mis datos.
+                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serão tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: var(--success); font-weight: 500;">política de protección de datos</a> y el tratamiento de mis datos.
                     </label>
                 </div>
 
@@ -657,38 +657,9 @@
             if (!lugar) return null;
             let lugarClean = lugar.trim().toLowerCase();
             let cacheKey = `${lugarClean}_${fechaTexto || 'hoy'}`;
-            if (climaCache[cacheKey]) return climaCache[cacheKey];
+            if (climaCache[cacheKey] !== undefined) return climaCache[cacheKey];
 
             try {
-                let lat, lon, nombreUbicacion;
-
-                let encontradoFijo = false;
-                for (let clave in coordenadasFijas) {
-                    if (lugarClean.includes(clave)) {
-                        lat = coordenadasFijas[clave].lat;
-                        lon = coordenadasFijas[clave].lon;
-                        nombreUbicacion = coordenadasFijas[clave].nombre;
-                        encontradoFijo = true;
-                        break;
-                    }
-                }
-
-                if (!encontradoFijo) {
-                    let geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(lugar)}&count=1&language=es&format=json`);
-                    let geoJson = await geoRes.json();
-                    
-                    if (geoJson && geoJson.results && geoJson.results.length > 0) {
-                        lat = geoJson.results[0].latitude;
-                        lon = geoJson.results[0].longitude;
-                        nombreUbicacion = geoJson.results[0].name;
-                    } else {
-                        lat = 40.4168;
-                        lon = -3.7038;
-                        nombreUbicacion = lugar;
-                    }
-                }
-
-                // Extraer la fecha (YYYY-MM-DD)
                 let fechaObjeto = null;
                 if (fechaTexto) {
                     let matchFecha = fechaTexto.match(/\d{4}-\d{2}-\d{2}/);
@@ -703,35 +674,42 @@
                 
                 let diasDiferencia = Math.ceil((fechaSinHora - hoySinHora) / (1000 * 60 * 60 * 24));
 
-                // Si la fecha es pasada
-                if (diasDiferencia < 0) {
-                    let resultadoClima = `📅 Fecha pasada`;
-                    climaCache[cacheKey] = resultadoClima;
-                    return resultadoClima;
+                // SI FALTAN MÁS DE 3 DÍAS (O ES FECHA PASADA), NO MOSTRAMOS NADA (DEVUELVE NULL)
+                if (diasDiferencia < 0 || diasDiferencia > 3) {
+                    climaCache[cacheKey] = null;
+                    return null;
                 }
 
-                // Si la fecha supera los 16 días, Open-Meteo no tiene previsión meteorológica real
-                if (diasDiferencia > 16) {
-                    let resultadoClima = `⏳ Pronóstico disponible 7 días antes`;
-                    climaCache[cacheKey] = resultadoClima;
-                    return resultadoClima;
+                let lat = 40.4168, lon = -3.7038, nombreUbicacion = lugar;
+                for (let clave in coordenadasFijas) {
+                    if (lugarClean.includes(clave)) {
+                        lat = coordenadasFijas[clave].lat;
+                        lon = coordenadasFijas[clave].lon;
+                        nombreUbicacion = coordenadasFijas[clave].nombre;
+                        break;
+                    }
                 }
 
-                // Si está dentro del rango de la API, consultamos el pronóstico horario exacto
                 let dateStr = fechaSinHora.toISOString().split('T')[0];
-                let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code&timezone=auto&start_date=${dateStr}&end_date=${dateStr}`);
+                let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code&timezone=Europe%2FMadrid&start_date=${dateStr}&end_date=${dateStr}`);
                 let weatherJson = await weatherRes.json();
 
-                if (weatherJson && weatherJson.hourly && weatherJson.hourly.temperature_2m) {
-                    let horaClase = 20; 
+                if (weatherJson && weatherJson.hourly && weatherJson.hourly.time) {
+                    let horaClase = 18; 
                     if (fechaTexto) {
-                        let matchHora = fechaTexto.match(/a las (\d{2}):/);
+                        let matchHora = fechaTexto.match(/(\d{2}):(\d{2})/);
                         if (matchHora) {
                             horaClase = parseInt(matchHora[1]);
                         }
                     }
+
+                    let horasArray = weatherJson.hourly.time;
+                    let indiceHora = horasArray.findIndex(t => t.includes(`T${String(horaClase).padStart(2, '0')}:00`));
                     
-                    let indiceHora = horaClase; 
+                    if (indiceHora === -1) {
+                        indiceHora = Math.min(Math.max(horaClase, 0), horasArray.length - 1);
+                    }
+                    
                     let temp = Math.round(weatherJson.hourly.temperature_2m[indiceHora]);
                     let code = weatherJson.hourly.weather_code[indiceHora];
                     let iconoTiempo = "🌤️";
@@ -750,7 +728,8 @@
             } catch (e) {
                 console.error("Error al obtener el clima", e);
             }
-            return `🌤️ Clima no disponible`; 
+            climaCache[cacheKey] = null;
+            return null;
         }
 
         async function actualizarClimaEnTarjetas() {
@@ -762,6 +741,9 @@
                     let climaTexto = await obtenerClima(lugar, fecha);
                     if (climaTexto) {
                         el.innerText = climaTexto;
+                        el.style.display = 'inline-flex';
+                    } else {
+                        el.style.display = 'none';
                     }
                 }
             }
@@ -1137,8 +1119,10 @@
                     let lugarTxt = '';
                     if (ent.lugar) {
                         let cacheKey = `${ent.lugar.trim().toLowerCase()}_${ent.fecha || 'hoy'}`;
-                        let climaPrevio = climaCache[cacheKey] || `🌤️ Consultando tiempo...`;
-                        lugarTxt = `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${ent.lugar}" data-fecha="${ent.fecha}">${climaPrevio}</div>`;
+                        let climaPrevio = climaCache[cacheKey];
+                        // Si ya está en caché y es válido (<= 3 días), se muestra de entrada; si no, arranca oculto hasta que compruebe la API
+                        let estiloDisplay = (climaPrevio) ? 'inline-flex' : 'none';
+                        lugarTxt = `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p><div class="weather-badge weather-badge-dynamic" style="display: ${estiloDisplay};" data-lugar="${ent.lugar}" data-fecha="${ent.fecha}">${climaPrevio || ''}</div>`;
                     }
                     
                     let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
@@ -1193,8 +1177,9 @@
                     let lugarTorneoTxt = '';
                     if (tor.lugar) {
                         let cacheKey = `${tor.lugar.trim().toLowerCase()}_${tor.fecha || 'hoy'}`;
-                        let climaPrevioTorneo = climaCache[cacheKey] || `🌤️ Consultando tiempo...`;
-                        lugarTorneoTxt = `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p><div class="weather-badge weather-badge-dynamic" data-lugar="${tor.lugar}" data-fecha="${tor.fecha}">${climaPrevioTorneo}</div>`;
+                        let climaPrevioTorneo = climaCache[cacheKey];
+                        let estiloDisplayTorneo = (climaPrevioTorneo) ? 'inline-flex' : 'none';
+                        lugarTorneoTxt = `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p><div class="weather-badge weather-badge-dynamic" style="display: ${estiloDisplayTorneo};" data-lugar="${tor.lugar}" data-fecha="${tor.fecha}">${climaPrevioTorneo || ''}</div>`;
                     }
                     
                     let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
@@ -1399,7 +1384,6 @@
             if(confirm("¿Seguro que quieres borrar este torneo?")) {
                 datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
                 guardarDatos();
-                mostrarToast("Torneo borrado.");
             }
         }
 
