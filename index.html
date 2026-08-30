@@ -698,59 +698,59 @@
                 }
 
                 let hoy = new Date();
-                let diasDiferencia = fechaObjeto ? Math.ceil((fechaObjeto - hoy) / (1000 * 60 * 60 * 24)) : 0;
+                let hoySinHora = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+                let fechaSinHora = fechaObjeto ? new Date(fechaObjeto.getFullYear(), fechaObjeto.getMonth(), fechaObjeto.getDate()) : hoySinHora;
+                
+                let diasDiferencia = Math.ceil((fechaSinHora - hoySinHora) / (1000 * 60 * 60 * 24));
 
-                // Si la fecha es dentro de los próximos 7 días, usamos la predicción exacta de la API
-                if (fechaObjeto && diasDiferencia >= 0 && diasDiferencia <= 7) {
-                    let dateStr = fechaObjeto.toISOString().split('T')[0];
-                    let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,weather_code&timezone=auto&start_date=${dateStr}&end_date=${dateStr}`);
-                    let weatherJson = await weatherRes.json();
+                // Si la fecha es pasada
+                if (diasDiferencia < 0) {
+                    let resultadoClima = `📅 Fecha pasada`;
+                    climaCache[cacheKey] = resultadoClima;
+                    return resultadoClima;
+                }
 
-                    if (weatherJson && weatherJson.daily && weatherJson.daily.temperature_2m_max.length > 0) {
-                        let temp = Math.round(weatherJson.daily.temperature_2m_max[0]);
-                        let code = weatherJson.daily.weather_code[0];
-                        let iconoTiempo = "🌤️";
+                // Si la fecha supera los 16 días, Open-Meteo no tiene previsión meteorológica real
+                if (diasDiferencia > 16) {
+                    let resultadoClima = `⏳ Pronóstico disponible 7 días antes`;
+                    climaCache[cacheKey] = resultadoClima;
+                    return resultadoClima;
+                }
 
-                        if (code >= 1 && code <= 3) { iconoTiempo = "⛅"; }
-                        else if (code >= 45 && code <= 48) { iconoTiempo = "🌫️"; }
-                        else if (code >= 51 && code <= 67) { iconoTiempo = "🌧️"; }
-                        else if (code >= 71 && code <= 77) { iconoTiempo = "❄️"; }
-                        else if (code >= 95) { iconoTiempo = "⚡"; }
+                // Si está dentro del rango de la API, consultamos el pronóstico horario exacto
+                let dateStr = fechaSinHora.toISOString().split('T')[0];
+                let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code&timezone=auto&start_date=${dateStr}&end_date=${dateStr}`);
+                let weatherJson = await weatherRes.json();
 
-                        let resultadoClima = `${iconoTiempo} ${temp}°C (${nombreUbicacion})`;
-                        climaCache[cacheKey] = resultadoClima;
-                        return resultadoClima;
+                if (weatherJson && weatherJson.hourly && weatherJson.hourly.temperature_2m) {
+                    let horaClase = 20; 
+                    if (fechaTexto) {
+                        let matchHora = fechaTexto.match(/a las (\d{2}):/);
+                        if (matchHora) {
+                            horaClase = parseInt(matchHora[1]);
+                        }
                     }
+                    
+                    let indiceHora = horaClase; 
+                    let temp = Math.round(weatherJson.hourly.temperature_2m[indiceHora]);
+                    let code = weatherJson.hourly.weather_code[indiceHora];
+                    let iconoTiempo = "🌤️";
+
+                    if (code >= 1 && code <= 3) { iconoTiempo = "⛅"; }
+                    else if (code >= 45 && code <= 48) { iconoTiempo = "🌫️"; }
+                    else if (code >= 51 && code <= 67) { iconoTiempo = "🌧️"; }
+                    else if (code >= 71 && code <= 77) { iconoTiempo = "❄️"; }
+                    else if (code >= 95) { iconoTiempo = "⚡"; }
+
+                    let resultadoClima = `${iconoTiempo} ${temp}°C (${nombreUbicacion})`;
+                    climaCache[cacheKey] = resultadoClima;
+                    return resultadoClima;
                 }
-
-                // Para fechas futuras lejanas, calculamos estimación estacional según el mes del evento
-                let mes = fechaObjeto ? fechaObjeto.getMonth() : hoy.getMonth(); 
-                let tempEstimada = 20;
-                let iconoTiempo = "☀️";
-
-                // Promedios térmicos estacionales aproximados
-                if (mes === 11 || mes === 0 || mes === 1) { // Diciembre, Enero, Febrero
-                    tempEstimada = 11;
-                    iconoTiempo = "🌤️";
-                } else if (mes >= 2 && mes <= 4) { // Marzo, Abril, Mayo
-                    tempEstimada = 19;
-                    iconoTiempo = "⛅";
-                } else if (mes >= 5 && mes <= 7) { // Junio, Julio, Agosto
-                    tempEstimada = 31;
-                    iconoTiempo = "☀️";
-                } else { // Septiembre, Octubre, Noviembre
-                    tempEstimada = 21;
-                    iconoTiempo = "🌤️";
-                }
-
-                let resultadoClima = `${iconoTiempo} ~${tempEstimada}°C (${nombreUbicacion})`;
-                climaCache[cacheKey] = resultadoClima;
-                return resultadoClima;
 
             } catch (e) {
                 console.error("Error al obtener el clima", e);
             }
-            return `🌤️ 22°C (${lugar})`; 
+            return `🌤️ Clima no disponible`; 
         }
 
         async function actualizarClimaEnTarjetas() {
