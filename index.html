@@ -675,7 +675,7 @@
             let elementosClima = document.querySelectorAll('.weather-badge-dynamic');
             for (let el of elementosClima) {
                 let lugar = el.getAttribute('data-lugar');
-                if (lugar && !el.innerText.includes("°C") && !el.dataset.loading) {
+                if (lugar && !el.dataset.loading) {
                     el.dataset.loading = "true";
                     let climaTexto = await obtenerClima(lugar);
                     if (climaTexto) {
