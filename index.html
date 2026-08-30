@@ -6,22 +6,22 @@
     <title>Pickleball Club | Gestión Deportiva</title>
     <style>
         :root {
-            --primary: #0f172a;
-            --primary-light: #1e293b;
-            --primary-accent: #00c897;
-            --btn-hover: #00a87f;
-            --bg: #f8fafc;
+            --primary: #0b132b;
+            --primary-light: #1c2541;
+            --primary-accent: #00b4d8;
+            --btn-hover: #0096c7;
+            --bg: #f4f6f9;
             --card-bg: #ffffff;
-            --text: #0f172a;
-            --text-light: #475569;
-            --border-card: #e2e8f0;
-            --success: #10b981;
-            --success-bg: #d1fae5;
-            --danger: #ef4444;
-            --danger-bg: #fee2e2;
-            --warning: #f59e0b;
-            --warning-bg: #fffbeb;
-            --radius: 16px;
+            --text: #1d3557;
+            --text-light: #6c757d;
+            --border-card: #e9ecef;
+            --success: #2a9d8f;
+            --success-bg: #e8f5e9;
+            --danger: #e63946;
+            --danger-bg: #fde8e8;
+            --warning: #f4a261;
+            --warning-bg: #fef3e2;
+            --radius: 20px;
             --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
@@ -35,7 +35,7 @@
         body {
             background-color: var(--bg);
             color: var(--text);
-            padding-bottom: 140px;
+            padding-bottom: 130px;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -56,16 +56,16 @@
             background: var(--primary);
             color: #fff;
             padding: 16px 20px;
-            border-radius: 14px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            font-size: 0.95rem;
+            font-weight: 500;
             display: flex;
             align-items: center;
             gap: 12px;
             pointer-events: auto;
             animation: fadeInDown 0.3s ease, fadeOutUp 0.3s ease 2.7s forwards;
-            border-left: 6px solid var(--primary-accent);
+            border-left: 5px solid var(--primary-accent);
         }
         .toast.success { border-left-color: var(--success); }
         .toast.error { border-left-color: var(--danger); }
@@ -85,60 +85,57 @@
             color: white;
             padding: 24px 20px 20px 20px;
             border-bottom: 4px solid var(--primary-accent);
-            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.15);
+            box-shadow: 0 4px 20px rgba(11, 19, 43, 0.1);
         }
 
         .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         header h1 {
-            font-size: 1.35rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.3px;
             display: flex;
             align-items: center;
             gap: 8px;
-            text-transform: uppercase;
         }
 
         header p {
             font-size: 0.9rem;
-            opacity: 0.85;
-            font-weight: 500;
+            opacity: 0.8;
+            font-weight: 400;
         }
 
         .sync-status {
             font-size: 0.7rem;
-            color: #ffffff;
-            background: rgba(0, 200, 151, 0.2);
+            color: var(--primary-accent);
+            background: rgba(0, 180, 216, 0.12);
             padding: 5px 12px;
             border-radius: 20px;
-            font-weight: 700;
-            border: 1px solid var(--primary-accent);
-            letter-spacing: 0.5px;
+            font-weight: 600;
+            border: 1px solid rgba(0, 180, 216, 0.3);
+            letter-spacing: 0.3px;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 580px;
             margin: 0 auto;
             padding: 24px 16px;
         }
 
         h2 {
-            font-size: 1.35rem;
-            color: var(--primary);
+            font-size: 1.25rem;
+            color: var(--text);
             margin-bottom: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
             display: flex;
             align-items: center;
             gap: 10px;
-            border-left: 5px solid var(--primary-accent);
-            padding-left: 12px;
         }
 
         .card {
@@ -146,63 +143,54 @@
             border-radius: var(--radius);
             padding: 24px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
             border: 1px solid var(--border-card);
             position: relative;
             overflow: hidden;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 6px;
-            background-color: var(--primary-accent);
-        }
-
         .card h3 {
-            color: var(--primary);
+            color: var(--text);
             margin-bottom: 12px;
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-weight: 800;
+            gap: 8px;
+            font-weight: 700;
         }
 
         .card p {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--text-light);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             line-height: 1.5;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         .weather-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: #f1f5f9;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 14px;
+            background: #f8f9fa;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+            margin-top: 4px;
+            margin-bottom: 12px;
             border: 1px solid var(--border-card);
         }
 
         button {
             background-color: var(--primary-accent);
-            color: var(--primary);
+            color: #ffffff;
             border: none;
             padding: 16px 20px;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 800;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             margin-top: 14px;
@@ -210,16 +198,14 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.2);
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(0, 180, 216, 0.25);
         }
 
         button:hover {
             background-color: var(--btn-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(0, 200, 151, 0.3);
+            box-shadow: 0 6px 18px rgba(0, 180, 216, 0.35);
         }
 
         button:active {
@@ -228,74 +214,74 @@
 
         button.danger {
             background-color: var(--danger);
-            color: white;
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+            box-shadow: 0 4px 14px rgba(230, 57, 70, 0.25);
         }
         button.danger:hover { 
-            background-color: #b91c1c; 
+            background-color: #c1121f; 
         }
 
         button.warning {
             background-color: var(--warning);
-            color: var(--primary);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+            color: #ffffff;
+            box-shadow: 0 4px 14px rgba(244, 162, 97, 0.25);
         }
         button.warning:hover { 
-            background-color: #d97706; 
+            background-color: #e76f51; 
         }
 
         button.success {
             background-color: var(--success);
             color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 4px 14px rgba(42, 157, 143, 0.25);
         }
         button.success:hover { 
-            background-color: #059669; 
+            background-color: #218375; 
         }
 
         button.btn-volver {
-            background-color: var(--primary);
-            color: #ffffff;
-            border: 2px solid var(--primary-accent);
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+            background-color: #ffffff;
+            color: var(--text);
+            border: 1px solid var(--border-card);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            font-weight: 500;
         }
         button.btn-volver:hover {
-            background-color: var(--primary-light);
+            background-color: #f8f9fa;
         }
 
         input, select {
             width: 100%;
             padding: 16px 18px;
-            margin-top: 8px;
-            margin-bottom: 18px;
-            border: 2px solid var(--border-card);
-            border-radius: 14px;
-            font-size: 1.05rem;
-            background: #fff;
+            margin-top: 6px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border-card);
+            border-radius: 16px;
+            font-size: 1rem;
+            background: #ffffff;
             color: var(--text);
             outline: none;
             transition: all 0.2s ease;
-            font-weight: 500;
+            font-weight: 400;
         }
 
         input:focus, select:focus {
             border-color: var(--primary-accent);
-            box-shadow: 0 0 0 4px rgba(0, 200, 151, 0.12);
+            box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.1);
         }
 
         .terms-container {
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            margin-top: 12px;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
-            line-height: 1.5;
+            margin-top: 10px;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            line-height: 1.4;
             color: var(--text-light);
         }
         .terms-container input[type="checkbox"] {
-            width: 22px;
-            height: 22px;
+            width: 20px;
+            height: 20px;
             margin-top: 2px;
             accent-color: var(--primary-accent);
             cursor: pointer;
@@ -309,67 +295,64 @@
             right: 16px;
             max-width: 580px;
             margin: 0 auto;
-            background: var(--primary);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             display: flex;
             justify-content: space-around;
             padding: 8px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.25);
-            border-radius: 20px;
-            border: 2px solid var(--primary-accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
+            border: 1px solid var(--border-card);
             z-index: 1000;
         }
 
         nav button {
             background: none;
-            color: #94a3b8;
+            color: var(--text-light);
             border: none;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             margin: 0;
-            padding: 10px 4px;
-            font-weight: 700;
+            padding: 8px 4px;
+            font-weight: 500;
             width: 25%;
             box-shadow: none;
             display: flex;
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            border-radius: 12px;
-            transition: all 0.3s ease;
+            border-radius: 16px;
+            transition: all 0.2s ease;
             position: relative;
-            text-transform: none;
-            letter-spacing: normal;
         }
 
         nav button span.icon {
-            font-size: 1.5rem;
-            transition: transform 0.3s;
+            font-size: 1.35rem;
+            transition: transform 0.2s;
         }
 
         .notification-badge {
             position: absolute;
-            top: 2px;
-            right: 22%;
+            top: 4px;
+            right: 25%;
             background-color: var(--danger);
             color: white;
-            font-size: 0.7rem;
-            font-weight: 800;
+            font-size: 0.65rem;
+            font-weight: 700;
             padding: 2px 6px;
             border-radius: 10px;
-            border: 2px solid var(--primary);
+            border: 2px solid #ffffff;
             display: none;
         }
 
         nav button.active {
-            color: var(--primary);
-            background-color: var(--primary-accent);
-            font-weight: 800;
-            box-shadow: 0 4px 12px rgba(0, 200, 151, 0.3);
+            color: var(--primary-accent);
+            background-color: rgba(0, 180, 216, 0.08);
+            font-weight: 600;
         }
 
         nav button.active span.icon {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .section {
@@ -378,11 +361,11 @@
 
         .section.active {
             display: block;
-            animation: slideIn 0.3s ease-out;
+            animation: fadeIn 0.25s ease-out;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -390,31 +373,35 @@
             display: inline-block;
             background: var(--success-bg);
             color: var(--success);
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
             margin-bottom: 12px;
-            letter-spacing: 0.5px;
         }
 
         label {
-            font-size: 0.95rem;
-            font-weight: 800;
-            color: var(--primary-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text);
             display: block;
-            margin-top: 8px;
-            letter-spacing: 0.3px;
+            margin-top: 6px;
         }
 
-        /* Estilo para el modal de acceso de alumno */
-        #modal-acceso-alumno {
-            background: var(--card-bg);
-            border: 2px solid var(--primary-accent);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        .home-card-main {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            border: 1px solid var(--border-card);
+            text-align: center;
+            padding: 32px 20px;
         }
-        #modal-acceso-alumno::before {
-            background-color: var(--primary);
+
+        .bono-card-container {
+            background: linear-gradient(135deg, var(--success-bg), #ffffff);
+            border: 1px solid #c7d2fe;
+            text-align: center;
+            padding: 24px;
+            margin: 16px 0;
+            border-radius: var(--radius);
         }
     </style>
 </head>
@@ -424,8 +411,8 @@
 
     <header>
         <div class="header-top">
-            <h1>🏓 PICKLEBALL CLUB</h1>
-            <span class="sync-status" id="estado-sync">CONECTANDO...</span>
+            <h1>🏓 Pickleball Club</h1>
+            <span class="sync-status" id="estado-sync">Conectando...</span>
         </div>
         <p>Tu club. Tus clases. Tu juego.</p>
     </header>
@@ -434,165 +421,165 @@
 
         <!-- PANTALLA PRINCIPAL -->
         <div id="seccion-home" class="section active">
-            <div class="card" style="border-left: 6px solid var(--primary-accent); text-align: center; padding: 32px 20px; background: linear-gradient(135deg, #ffffff, #f8fafc);">
-                <h2 style="border: none; padding: 0; justify-content: center; font-size: 1.6rem; margin-bottom: 8px; color: var(--primary);">🏓 PICKLEBALL CLUB</h2>
-                <p style="font-size: 1.1rem; color: var(--text-light); font-weight: 600; margin-bottom: 24px;">Tu club. Tus clases. Tu juego.</p>
+            <div class="card home-card-main">
+                <h2 style="border: none; padding: 0; justify-content: center; font-size: 1.5rem; margin-bottom: 6px; color: var(--primary);">Pickleball Club</h2>
+                <p style="font-size: 1rem; color: var(--text-light); margin-bottom: 28px;">Tu club. Tus clases. Tu juego.</p>
                 
-                <button onclick="mostrarAccesoAlumno()" style="font-size: 1.15rem; padding: 18px 20px; margin-bottom: 14px;">
-                    👤 SOY ALUMNO
+                <button onclick="mostrarAccesoAlumno()" style="font-size: 1.05rem; padding: 18px 20px; margin-bottom: 12px;">
+                    👤 Soy alumno
                 </button>
 
-                <button class="warning" onclick="entrarComoMonitorSeleccion()" style="font-size: 1.15rem; padding: 18px 20px; position: relative;">
-                    🔑 SOY MONITOR
-                    <span id="globo-notificaciones-home" class="notification-badge" style="display:none; position:absolute; top:12px; right:16px;">0</span>
+                <button class="warning" onclick="entrarComoMonitorSeleccion()" style="font-size: 1.05rem; padding: 18px 20px; position: relative;">
+                    🔑 Soy monitor
+                    <span id="globo-notificaciones-home" class="notification-badge" style="display:none; position:absolute; top:14px; right:16px;">0</span>
                 </button>
             </div>
 
-            <div class="card" style="border-left-color: var(--success); background: linear-gradient(135deg, var(--success-bg), #ecfdf5);">
-                <h3 style="color: var(--success); font-size: 1.25rem;">🎁 ¿NUEVO EN EL CLUB?</h3>
-                <p style="color: #065f46; margin-bottom: 16px; font-weight: 600;">Solicitar clase de prueba gratuita</p>
+            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #ffffff); border-color: #bbf7d0;">
+                <h3 style="color: var(--success); font-size: 1.15rem;">🎁 ¿Nuevo en el club?</h3>
+                <p style="color: var(--text-light); margin-bottom: 16px;">Solicita tu clase de prueba gratuita</p>
                 
-                <label style="color: #065f46;">NOMBRE Y APELLIDOS:</label>
+                <label>Nombre y apellidos</label>
                 <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
                 
-                <label style="color: #065f46;">TELÉFONO DE CONTACTO (Opcional):</label>
+                <label>Teléfono de contacto (opcional)</label>
                 <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
 
                 <div class="terms-container">
                     <input type="checkbox" id="check-rgpd-prueba">
-                    <label for="check-rgpd-prueba" style="color: #065f46; font-weight: normal; display: inline;">
-                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: #047857; font-weight: bold;">política de protección de datos</a> y el tratamiento de mis datos.
+                    <label for="check-rgpd-prueba" style="color: var(--text-light); font-weight: normal; display: inline;">
+                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: var(--success); font-weight: 500;">política de protección de datos</a> y el tratamiento de mis datos.
                     </label>
                 </div>
 
-                <button class="success" onclick="pedirClaseLibreSinRegistro()">SOLICITAR CLASE DE PRUEBA</button>
+                <button class="success" onclick="pedirClaseLibreSinRegistro()">Solicitar clase de prueba</button>
             </div>
         </div>
 
         <!-- MODAL / FORMULARIO DE ACCESO ALUMNO -->
         <div id="seccion-login-alumno" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER</button>
+            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver</button>
             
             <div class="card" id="modal-acceso-alumno">
-                <h3>👤 ACCESO ALUMNO</h3>
+                <h3>👤 Acceso de alumno</h3>
                 <p style="margin-bottom: 16px;">Introduce tus datos para acceder a tu perfil y bonos.</p>
                 
-                <label>Nombre:</label>
+                <label>Nombre</label>
                 <input type="text" id="input-login-nombre" placeholder="Tu nombre y apellidos">
                 
-                <label>PIN:</label>
+                <label>PIN</label>
                 <input type="password" id="input-login-pin" placeholder="Tu PIN personal" inputmode="numeric">
 
-                <button onclick="procesarAccesoAlumno()">ENTRAR</button>
+                <button onclick="procesarAccesoAlumno()">Entrar</button>
             </div>
         </div>
         
         <!-- SECCIÓN ENTRENAMIENTOS / CLASES -->
         <div id="seccion-entrenamientos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
-            <h2>📅 PRÓXIMOS ENTRENAMIENTOS</h2>
+            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
+            <h2>📅 Próximos entrenamientos</h2>
             <div id="lista-entrenamientos" style="margin-top: 10px;">
                 <p>Cargando entrenamientos...</p>
             </div>
             
-            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
-                <h3>➕ AÑADIR NUEVO ENTRENAMIENTO</h3>
-                <label>Título / Nivel:</label>
+            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 20px; background: #fafbfc; display:none; border: 2px dashed #d1d5db;">
+                <h3>➕ Añadir nuevo entrenamiento</h3>
+                <label>Título / Nivel</label>
                 <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
-                <label>Fecha:</label>
+                <label>Fecha</label>
                 <input type="date" id="nuevo-fecha">
-                <label>Hora:</label>
+                <label>Hora</label>
                 <input type="time" id="nuevo-hora">
-                <label>Lugar:</label>
+                <label>Lugar</label>
                 <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
-                <button onclick="agregarEntrenamiento()">CREAR CLASE</button>
+                <button onclick="agregarEntrenamiento()">Crear clase</button>
             </div>
         </div>
 
         <!-- SECCIÓN TORNEOS -->
         <div id="seccion-torneos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
-            <h2>🏆 TORNEOS Y COMPETICIONES</h2>
+            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
+            <h2>🏆 Torneos y competiciones</h2>
             <div id="lista-torneos" style="margin-top: 10px;">
                 <p>Cargando torneos...</p>
             </div>
             
-            <div class="card" id="panel-crear-torneo" style="margin-top: 20px; background: #fafafa; display:none; border: 2px dashed #cbd5e1;">
-                <h3>➕ CREAR NUEVO TORNEO</h3>
-                <label>Nombre del Torneo:</label>
+            <div class="card" id="panel-crear-torneo" style="margin-top: 20px; background: #fafbfc; display:none; border: 2px dashed #d1d5db;">
+                <h3>➕ Crear nuevo torneo</h3>
+                <label>Nombre del torneo</label>
                 <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
-                <label>Fecha:</label>
+                <label>Fecha</label>
                 <input type="date" id="torneo-fecha">
-                <label>Hora:</label>
+                <label>Hora</label>
                 <input type="time" id="torneo-hora">
-                <label>Lugar:</label>
+                <label>Lugar</label>
                 <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
-                <button onclick="agregarTorneo()">CREAR TORNEO</button>
+                <button onclick="agregarTorneo()">Crear torneo</button>
             </div>
         </div>
 
         <!-- SECCIÓN PERFIL DE ALUMNO -->
         <div id="seccion-perfil" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
-            <h2>👤 MI PANEL DE ALUMNO</h2>
+            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
+            <h2>👤 Mi panel de alumno</h2>
             
-            <div id="panel-identificado" class="card" style="display:none; background: var(--success-bg); border-color: #a7f3d0;">
-                <span class="badge">Sesión Activa</span>
-                <h3 id="saludo-alumno" style="color: #065f46; font-size: 1.4rem;">¡Hola!</h3>
+            <div id="panel-identificado" class="card" style="display:none;">
+                <span class="badge">Sesión activa</span>
+                <h3 id="saludo-alumno" style="font-size: 1.3rem; margin-bottom: 4px;">¡Hola!</h3>
                 
-                <div class="card" style="background: #ffffff; border-left-color: var(--success); margin: 16px 0; text-align: center; padding: 20px;">
-                    <p style="font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; color: var(--text-light); margin-bottom: 4px;">🎟️ TU BONO</p>
-                    <p id="info-bono-personal" style="font-size: 2.2rem; color: var(--success); font-weight: 900; line-height: 1.1; margin-bottom: 4px;">0</p>
-                    <p style="font-size: 0.95rem; color: var(--text-light); font-weight: 600;">clases disponibles</p>
-                    <button class="success" style="margin-top: 16px;" onclick="solicitarRecargaBono()">+ RECARGAR BONO</button>
+                <div class="bono-card-container">
+                    <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; color: var(--success); margin-bottom: 4px;">🎟️ Tu bono</p>
+                    <p id="info-bono-personal" style="font-size: 2.5rem; color: var(--success); font-weight: 700; line-height: 1.1; margin-bottom: 2px;">0</p>
+                    <p style="font-size: 0.9rem; color: var(--text-light); font-weight: 500;">clases disponibles</p>
+                    <button class="success" style="margin-top: 16px;" onclick="solicitarRecargaBono()">+ Recargar bono</button>
                 </div>
                 
-                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 15px; font-size: 0.9rem; color: #065f46; background: rgba(255,255,255,0.7); padding: 12px; border-radius: 12px; font-weight: 500;">
-                    📜 <strong>Historial reciente:</strong> Cuenta activa correctamente sincronizada.
+                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 16px; font-size: 0.85rem; color: var(--text-light); background: #f8f9fa; padding: 12px; border-radius: 12px; border: 1px solid var(--border-card);">
+                    📜 Estado de cuenta al día. Clases listas para reservar entrenamientos o torneos.
                 </div>
 
-                <button class="danger" style="margin-top: 16px;" onclick="cerrarSesionAlumno()">CERRAR SESIÓN</button>
+                <button class="danger" style="margin-top: 8px;" onclick="cerrarSesionAlumno()">Cerrar sesión</button>
             </div>
         </div>
 
         <!-- SECCIÓN GESTIÓN DE ALUMNOS (MONITOR) -->
         <div id="seccion-alumnos" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
-            <h2>👥 GESTIÓN DE ALUMNOS</h2>
-            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
-                <h3 style="color: #92400e;">➕ CREAR NUEVO ALUMNO</h3>
-                <label>Nombre del Alumno:</label>
+            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
+            <h2>👥 Gestión de alumnos</h2>
+            <div class="card" style="background: #fffdf9; border-color: #fef08a;">
+                <h3 style="color: #b45309;">➕ Crear nuevo alumno</h3>
+                <label>Nombre del alumno</label>
                 <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
-                <label>PIN de Acceso:</label>
+                <label>PIN de acceso</label>
                 <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
-                <label>Clases iniciales en el Bono:</label>
+                <label>Clases iniciales en el bono</label>
                 <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
 
                 <div class="terms-container">
                     <input type="checkbox" id="check-rgpd-alumno" checked>
-                    <label for="check-rgpd-alumno" style="color: #92400e; font-weight: normal; display: inline;">
+                    <label for="check-rgpd-alumno" style="color: var(--text-light); font-weight: normal; display: inline;">
                         Confirmo que el alumno ha sido informado y ha dado su consentimiento para el tratamiento de sus datos deportivos.
                     </label>
                 </div>
 
-                <button onclick="registrarNuevoAlumno()" class="warning">CREAR ALUMNO</button>
+                <button onclick="registrarNuevoAlumno()" class="warning">Crear alumno</button>
 
-                <h3 style="margin-top:30px; color: var(--primary);">👥 ALUMNOS REGISTRADOS</h3>
+                <h3 style="margin-top:28px; color: var(--text);">👥 Alumnos registrados</h3>
                 <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
             </div>
         </div>
 
         <!-- SECCIÓN GESTIÓN / AVISOS (MONITOR) -->
         <div id="seccion-gestion" class="section">
-            <button class="btn-volver" style="margin-bottom: 20px;" onclick="volverAHome()">🏠 VOLVER A INICIO</button>
-            <h2>⚙️ PANEL DE GESTIÓN</h2>
-            <div class="card" style="background: var(--warning-bg); border-color: #fef3c7;">
-                <h3 style="color: #92400e;">🚨 SOLICITUDES DE ALUMNOS Y PRUEBAS</h3>
+            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
+            <h2>⚙️ Panel de gestión</h2>
+            <div class="card" style="background: #fffdf9; border-color: #fef08a;">
+                <h3 style="color: #b45309;">🚨 Solicitudes de alumnos y pruebas</h3>
                 <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
                     <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
                 </div>
 
-                <button class="danger" style="margin-top:20px;" onclick="reiniciarDatosCompletos()">⚠️ VACIAR / REINICIAR TODO</button>
+                <button class="danger" style="margin-top:20px;" onclick="reiniciarDatosCompletos()">⚠️ Vaciar / Reiniciar todo</button>
             </div>
         </div>
         
@@ -837,16 +824,16 @@
                         if(!datosGlobales.torneos) datosGlobales.torneos = [];
                         if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
                     }
-                    document.getElementById('estado-sync').innerText = "SINCRONIZADO 🟢";
+                    document.getElementById('estado-sync').innerText = "Sincronizado";
                 }
             } catch(e) {
-                document.getElementById('estado-sync').innerText = "SIN CONEXIÓN 🔴";
+                document.getElementById('estado-sync').innerText = "Sin conexión";
             }
             renderizar();
         }
 
         async function guardarDatos() {
-            document.getElementById('estado-sync').innerText = "GUARDANDO... ⏳";
+            document.getElementById('estado-sync').innerText = "Guardando...";
             try {
                 let respuesta = await fetch(API_URL, {
                     method: 'POST',
@@ -854,12 +841,12 @@
                     body: JSON.stringify(datosGlobales)
                 });
                 if(respuesta.ok) {
-                    document.getElementById('estado-sync').innerText = "SINCRONIZADO 🟢";
+                    document.getElementById('estado-sync').innerText = "Sincronizado";
                 } else {
-                    document.getElementById('estado-sync').innerText = "ERROR 🔴";
+                    document.getElementById('estado-sync').innerText = "Error";
                 }
             } catch(e) {
-                document.getElementById('estado-sync').innerText = "ERROR RED 🔴";
+                document.getElementById('estado-sync').innerText = "Error red";
             }
             renderizar();
         }
@@ -1056,7 +1043,7 @@
                 let clases = reg ? reg.clasesBono : 0;
                 alumnoActual.clasesBono = clases;
                 document.getElementById('info-bono-personal').innerText = clases;
-                document.getElementById('historial-bono-alumno').innerHTML = `📜 <strong>Estado de cuenta:</strong> Al día. Clases listas para reservar entrenamientos o torneos.`;
+                document.getElementById('historial-bono-alumno').innerHTML = `📜 Estado de cuenta al día. Clases listas para reservar entrenamientos o torneos.`;
             } else {
                 document.getElementById('panel-identificado').style.display = 'none';
             }
@@ -1066,7 +1053,7 @@
                 htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
             } else {
                 datosGlobales.entrenamientos.forEach(ent => {
-                    let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar Clase</button>` : '';
+                    let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar clase</button>` : '';
                     let lugarTxt = '';
                     if (ent.lugar) {
                         let climaPrevio = climaCache[ent.lugar] || `🌤️ Consultando tiempo...`;
@@ -1077,9 +1064,9 @@
                     let botonAccion = "";
 
                     if(estaApuntado) {
-                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">ANULAR ASISTENCIA</button>`;
+                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">Anular asistencia</button>`;
                     } else {
-                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">APUNTARME</button>`;
+                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme</button>`;
                     }
 
                     let listaInscritosHTML = "";
@@ -1099,11 +1086,14 @@
                         listaInscritosHTML = `${numInscritos} personas apuntadas`;
                     }
 
+                    let estadoInscripcionVisual = estaApuntado ? '<div style="margin-bottom:10px;"><span class="badge" style="background:#e8f5e9; color:var(--success);">✓ ESTÁS APUNTADO</span></div>' : '';
+
                     htmlEntrenamientos += `
                         <div class="card">
                             <h3>🏓 ${ent.titulo}</h3>
                             <p>📅 <strong>Fecha:</strong> ${ent.fecha}</p>
                             ${lugarTxt}
+                            ${estadoInscripcionVisual}
                             <p>👥 <strong>Inscritos:</strong> ${listaInscritosHTML}</p>
                             ${botonAccion}
                             ${btnBorrar}
@@ -1118,7 +1108,7 @@
                 htmlTorneos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay torneos programados actualmente.</p>";
             } else {
                 datosGlobales.torneos.forEach(tor => {
-                    let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar Torneo</button>` : '';
+                    let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar torneo</button>` : '';
                     let lugarTorneoTxt = '';
                     if (tor.lugar) {
                         let climaPrevioTorneo = climaCache[tor.lugar] || `🌤️ Consultando tiempo...`;
@@ -1129,9 +1119,9 @@
                     let botonTorneoAccion = "";
 
                     if(estaApuntadoTorneo) {
-                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">ANULAR INSCRIPCIÓN</button>`;
+                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">Anular inscripción</button>`;
                     } else {
-                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">APUNTARME</button>`;
+                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">Apuntarme</button>`;
                     }
 
                     let listaInscritosTorneoHTML = "";
@@ -1151,11 +1141,14 @@
                         listaInscritosTorneoHTML = `${numInscritosTorneo} personas apuntadas`;
                     }
 
+                    let estadoInscripcionTorneoVisual = estaApuntadoTorneo ? '<div style="margin-bottom:10px;"><span class="badge" style="background:#e8f5e9; color:var(--success);">✓ ESTÁS INSCRITO</span></div>' : '';
+
                     htmlTorneos += `
                         <div class="card">
                             <h3>🏆 ${tor.titulo}</h3>
                             <p>📅 <strong>Fecha:</strong> ${tor.fecha}</p>
                             ${lugarTorneoTxt}
+                            ${estadoInscripcionTorneoVisual}
                             <p>👥 <strong>Participantes:</strong> ${listaInscritosTorneoHTML}</p>
                             ${botonTorneoAccion}
                             ${btnBorrarTorneo}
@@ -1177,11 +1170,11 @@
                         }
                         
                         avisosHtml += `
-                            <div class="card" style="background: white; border-color: #f59e0b; padding: 16px; margin-bottom: 12px;">
-                                <p style="color: #92400e; font-weight: bold; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
+                            <div class="card" style="background: white; border-color: #fde047; padding: 16px; margin-bottom: 12px; box-shadow: none;">
+                                <p style="color: #b45309; font-weight: 600; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
                                 <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 8px;">${aviso.texto}</p>
                                 ${botonExtraAviso}
-                                <button class="danger" style="padding: 8px; font-size: 0.85rem; margin-top: 6px; background-color: #64748b;" onclick="resolverAviso(${aviso.id})">✖ Descartar aviso</button>
+                                <button class="danger" style="padding: 8px; font-size: 0.85rem; margin-top: 6px; background-color: #6b7280;" onclick="resolverAviso(${aviso.id})">✖ Descartar aviso</button>
                             </div>
                         `;
                     });
@@ -1194,13 +1187,13 @@
                 if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
                     datosGlobales.alumnos.forEach((al, idx) => {
                         listaAdminHtml += `
-                            <div class="card" style="padding:16px; margin-bottom:12px; background:white;">
-                                <p style="font-weight:bold; color:var(--text); margin-bottom:4px; font-size: 1.05rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.9rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
-                                <p style="margin-bottom:12px;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
-                                <button class="success" style="padding: 10px 12px; font-size: 0.9rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
+                            <div class="card" style="padding:16px; margin-bottom:12px; background:white; box-shadow: none;">
+                                <p style="font-weight:600; color:var(--text); margin-bottom:4px; font-size: 1rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
+                                <p style="margin-bottom:12px; font-size: 0.9rem;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
+                                <button class="success" style="padding: 10px 12px; font-size: 0.85rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
                                 <div style="display:flex; gap:10px;">
-                                    <button onclick="modificarBono(${idx})" style="padding:10px 12px; font-size:0.9rem; margin-top:0;">Editar Clases</button>
-                                    <button class="danger" style="padding:10px 12px; font-size:0.9rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
+                                    <button onclick="modificarBono(${idx})" style="padding:10px 12px; font-size:0.85rem; margin-top:0;">Editar clases</button>
+                                    <button class="danger" style="padding:10px 12px; font-size:0.85rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
                                 </div>
                             </div>
                         `;
