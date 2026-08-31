@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pickleball Club | Gestión Deportiva</title>
+    
+    <!-- Configuración para PWA -->
+    <meta name="theme-color" content="#0b132b">
+    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/pickleball.png">
+    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Pickleball%20Club%22%2C%22short_name%22%3A%22Pickleball%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b132b%22%2C%22theme_color%22%3A%22%230b132b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fcolor%2F192%2Fpickleball.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fcolor%2F512%2Fpickleball.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D'>
+
     <style>
         :root {
             --primary: #0b132b;
@@ -622,6 +628,17 @@
     </nav>
 
     <script>
+        // Service Worker integrado para convertir la página en PWA instalable
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
+                    self.addEventListener('install', (e) => e.waitUntil(self.skipWaiting()));
+                    self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
+                    self.addEventListener('fetch', (e) => {});
+                `)).catch(err => console.log('SW registration failed: ', err));
+            });
+        }
+
         const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
         
         let modoMonitorActivo = false;
@@ -674,7 +691,6 @@
                 
                 let diasDiferencia = Math.ceil((fechaSinHora - hoySinHora) / (1000 * 60 * 60 * 24));
 
-                // SI FALTAN MÁS DE 3 DÍAS (O ES FECHA PASADA), NO MOSTRAMOS NADA (DEVUELVE NULL)
                 if (diasDiferencia < 0 || diasDiferencia > 3) {
                     climaCache[cacheKey] = null;
                     return null;
@@ -1120,7 +1136,6 @@
                     if (ent.lugar) {
                         let cacheKey = `${ent.lugar.trim().toLowerCase()}_${ent.fecha || 'hoy'}`;
                         let climaPrevio = climaCache[cacheKey];
-                        // Si ya está en caché y es válido (<= 3 días), se muestra de entrada; si no, arranca oculto hasta que compruebe la API
                         let estiloDisplay = (climaPrevio) ? 'inline-flex' : 'none';
                         lugarTxt = `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p><div class="weather-badge weather-badge-dynamic" style="display: ${estiloDisplay};" data-lugar="${ent.lugar}" data-fecha="${ent.fecha}">${climaPrevio || ''}</div>`;
                     }
