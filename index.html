@@ -6,10 +6,8 @@
 <title>Pickleball El Escorial | Club</title>
 <meta name="theme-color" content="#0a3d20">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%230a3d20'/%3E%3Ctext x='50' y='65' font-size='60' text-anchor='middle' fill='%23d4af37' font-family='Arial' font-weight='bold'%3EP%3C/text%3E%3C/svg%3E">
 <style>
 :root{
-  /* Paleta extraída del escudo */
   --verde-oscuro:#0a3d20;
   --verde-medio:#1a5c33;
   --verde-claro:#2d8659;
@@ -19,7 +17,6 @@
   --dorado:#d4af37;
   --dorado-oscuro:#a88a2a;
   --carbon:#1a1a1a;
-  --carbon-suave:#2a2a2a;
   --bg:#f0f2f0;
   --card-bg:#ffffff;
   --text:#1a1a1a;
@@ -45,52 +42,44 @@
   --success-bg:#0f2a1c;
   --danger-bg:#2a1010;
   --warning-bg:#2a1f0a;
-  --plata:#e8e8e8;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font);-webkit-tap-highlight-color:transparent}
 body{background:var(--bg);color:var(--text);padding-bottom:130px;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s;background-image:repeating-linear-gradient(90deg,transparent 0,transparent 40px,rgba(10,61,32,.025) 40px,rgba(10,61,32,.025) 42px)}
 [data-theme="dark"] body{background-image:repeating-linear-gradient(90deg,transparent 0,transparent 40px,rgba(212,175,55,.03) 40px,rgba(212,175,55,.03) 42px)}
 
-/* Toasts */
 #toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:10px;width:90%;max-width:400px;pointer-events:none}
-.toast{background:var(--verde-oscuro);color:#fff;padding:14px 18px;border-radius:var(--radius-sm);box-shadow:0 10px 25px rgba(0,0,0,.25);font-size:.92rem;font-weight:500;display:flex;align-items:center;gap:10px;pointer-events:auto;animation:fadeInDown .3s ease,fadeOutUp .3s ease 2.7s forwards;border-left:4px solid var(--dorado);position:relative}
-.toast::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--dorado),transparent)}
+.toast{background:var(--verde-oscuro);color:#fff;padding:14px 18px;border-radius:var(--radius-sm);box-shadow:0 10px 25px rgba(0,0,0,.25);font-size:.92rem;font-weight:500;display:flex;align-items:center;gap:10px;pointer-events:auto;animation:fadeInDown .3s ease,fadeOutUp .3s ease 2.7s forwards;border-left:4px solid var(--dorado)}
 .toast.success{border-left-color:var(--verde-lima)}
 .toast.error{border-left-color:#ef4444}
 .toast.warning{border-left-color:var(--warning)}
 @keyframes fadeInDown{from{opacity:0;transform:translateY(-15px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fadeOutUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-15px)}}
 
-/* Header con escudo */
 header{background:linear-gradient(160deg,var(--verde-oscuro) 0%,#062a16 60%,#041a0d 100%);color:#fff;padding:20px 20px 22px;box-shadow:0 6px 30px rgba(0,0,0,.35);position:relative;overflow:hidden;border-bottom:3px solid var(--dorado)}
 header::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0,transparent 30px,rgba(123,201,111,.04) 30px,rgba(123,201,111,.04) 32px);pointer-events:none}
 .header-inner{max-width:580px;margin:0 auto;display:flex;align-items:center;gap:16px;position:relative;z-index:1}
-.logo-svg{width:60px;height:70px;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}
+.logo-svg{width:70px;height:84px;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}
 .header-text{flex:1;min-width:0}
 header h1{font-family:var(--font-titulo);font-size:1.35rem;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:var(--plata);line-height:1;margin-bottom:4px;text-shadow:0 2px 4px rgba(0,0,0,.5)}
 header .sub{font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--dorado);font-weight:600;margin-bottom:6px}
 header .tagline{font-size:.78rem;opacity:.75;font-style:italic}
-.sync-status{position:absolute;top:16px;right:16px;font-size:.65rem;color:var(--verde-lima);background:rgba(123,201,111,.12);padding:4px 10px;border-radius:20px;font-weight:600;border:1px solid rgba(123,201,111,.3);letter-spacing:.5px;text-transform:uppercase}
+.sync-status{position:absolute;top:16px;right:60px;font-size:.65rem;color:var(--verde-lima);background:rgba(123,201,111,.12);padding:4px 10px;border-radius:20px;font-weight:600;border:1px solid rgba(123,201,111,.3);letter-spacing:.5px;text-transform:uppercase;z-index:2}
 .theme-toggle{position:absolute;top:14px;right:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:var(--plata);width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0;z-index:2}
 .theme-toggle:hover{background:rgba(255,255,255,.15)}
 .theme-toggle svg{width:18px;height:18px}
-.sync-status{position:static;display:inline-block;margin-top:8px}
 
-/* Container */
 .container{max-width:580px;margin:0 auto;padding:20px 16px}
 h2{font-family:var(--font-titulo);font-size:1.15rem;color:var(--verde-oscuro);margin-bottom:16px;font-weight:400;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:10px}
 [data-theme="dark"] h2{color:var(--verde-lima)}
 h2 svg{width:22px;height:22px;color:var(--dorado)}
 
-/* Cards */
 .card{background:var(--card-bg);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:0 4px 20px rgba(10,61,32,.06);border:1px solid var(--border);position:relative;overflow:hidden}
 .card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,var(--verde-oscuro),var(--dorado))}
 .card h3{color:var(--text);margin-bottom:10px;font-size:1.05rem;display:flex;align-items:center;gap:8px;font-weight:700}
 .card h3 svg{width:18px;height:18px;color:var(--verde-medio);flex-shrink:0}
 .card p{font-size:.95rem;color:var(--text-light);margin-bottom:6px;line-height:1.5}
 
-/* Botones */
-button{background:linear-gradient(180deg,var(--verde-medio),var(--verde-oscuro));color:#fff;border:none;padding:14px 18px;border-radius:var(--radius-sm);font-size:.95rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:12px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(10,61,32,.25);letter-spacing:.3px;text-transform:uppercase;font-size:.85rem}
+button{background:linear-gradient(180deg,var(--verde-medio),var(--verde-oscuro));color:#fff;border:none;padding:14px 18px;border-radius:var(--radius-sm);font-weight:600;cursor:pointer;transition:all .2s;margin-top:12px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(10,61,32,.25);letter-spacing:.3px;text-transform:uppercase;font-size:.85rem}
 button:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(10,61,32,.35);filter:brightness(1.1)}
 button:active{transform:translateY(0)}
 button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
@@ -103,20 +92,16 @@ button.btn-volver{background:transparent;color:var(--text);border:1px solid var(
 button.btn-volver:hover{background:var(--bg)}
 button.btn-mini{padding:6px 12px;font-size:.72rem;width:auto;margin-top:6px;border-radius:8px;letter-spacing:.3px}
 button.btn-primario{background:linear-gradient(180deg,var(--dorado),var(--dorado-oscuro));color:var(--carbon);box-shadow:0 4px 14px rgba(212,175,55,.3)}
-button.btn-primario:hover{filter:brightness(1.05)}
 
-/* Inputs */
 input,select,textarea{width:100%;padding:13px 14px;margin-top:4px;margin-bottom:12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:.95rem;background:var(--card-bg);color:var(--text);outline:none;transition:all .2s;font-family:var(--font)}
 input:focus,select:focus,textarea:focus{border-color:var(--verde-claro);box-shadow:0 0 0 4px rgba(45,134,89,.1)}
 label{font-size:.8rem;font-weight:600;color:var(--text);display:block;margin-top:4px;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
 
-/* Terms */
 .terms-container{display:flex;align-items:flex-start;gap:10px;margin:8px 0 14px;font-size:.85rem;line-height:1.4;color:var(--text-light)}
 .terms-container input[type="checkbox"]{width:18px;height:18px;margin:2px 0 0;accent-color:var(--verde-oscuro);cursor:pointer;flex-shrink:0}
 .terms-container label{font-weight:400;display:inline;color:var(--text-light);text-transform:none;letter-spacing:0;font-size:.85rem}
 .terms-container a{color:var(--verde-medio);font-weight:600}
 
-/* Nav inferior */
 nav{position:fixed;bottom:16px;left:16px;right:16px;max-width:580px;margin:0 auto;background:var(--card-bg);backdrop-filter:blur(16px);display:flex;justify-content:space-around;padding:6px;box-shadow:0 10px 40px rgba(0,0,0,.2);border-radius:20px;border:1px solid var(--border);z-index:1000}
 nav button{background:none;color:var(--text-light);font-size:.65rem;margin:0;padding:8px 4px;font-weight:600;width:25%;box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:3px;border-radius:14px;position:relative;text-transform:uppercase;letter-spacing:.5px}
 nav button:hover{background:none;transform:none;box-shadow:none;filter:none}
@@ -126,22 +111,19 @@ nav button.active{color:var(--verde-oscuro);background:rgba(45,134,89,.08);font-
 nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 .notification-badge{position:absolute;top:4px;right:22%;background:var(--danger);color:#fff;font-size:.6rem;font-weight:700;padding:2px 6px;border-radius:10px;border:2px solid var(--card-bg);display:none;min-width:16px;text-align:center}
 
-/* Secciones */
 .section{display:none}
 .section.active{display:block;animation:fadeIn .3s ease-out}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* Home destacado */
 .home-hero{background:linear-gradient(160deg,var(--card-bg),#f8faf8);border:2px solid var(--verde-oscuro);border-radius:var(--radius);padding:32px 20px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(10,61,32,.12)}
 [data-theme="dark"] .home-hero{background:linear-gradient(160deg,var(--card-bg),#0f1f15)}
 .home-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--verde-oscuro),var(--dorado),var(--verde-oscuro))}
-.home-hero .logo-grande{width:110px;height:128px;margin:0 auto 16px;display:block;filter:drop-shadow(0 6px 16px rgba(10,61,32,.25))}
+.home-hero .logo-grande{width:140px;height:168px;margin:0 auto 16px;display:block;filter:drop-shadow(0 6px 16px rgba(10,61,32,.25))}
 .home-hero h2{justify-content:center;font-size:1.4rem;margin-bottom:4px;color:var(--verde-oscuro);letter-spacing:2px}
 [data-theme="dark"] .home-hero h2{color:var(--verde-lima)}
 .home-hero .sub{font-size:.72rem;letter-spacing:4px;color:var(--dorado);font-weight:700;text-transform:uppercase;margin-bottom:20px}
 .home-hero .tagline{font-size:.9rem;color:var(--text-light);font-style:italic;margin-bottom:24px}
 
-/* Bono destacado */
 .bono-card{background:linear-gradient(135deg,var(--verde-oscuro),var(--verde-medio));border:2px solid var(--dorado);border-radius:var(--radius);padding:24px;margin:14px 0;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 24px rgba(10,61,32,.25)}
 .bono-card::before{content:'';position:absolute;top:-50%;right:-50%;width:200%;height:200%;background:radial-gradient(circle,rgba(212,175,55,.15) 0%,transparent 60%);pointer-events:none}
 .bono-card .label{font-size:.7rem;letter-spacing:3px;color:var(--dorado);font-weight:700;text-transform:uppercase;margin-bottom:8px;position:relative}
@@ -149,12 +131,10 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 .bono-card .desc{font-size:.85rem;color:var(--plata-oscura);font-weight:500;position:relative}
 .bono-card button{margin-top:16px;position:relative;background:linear-gradient(180deg,var(--dorado),var(--dorado-oscuro));color:var(--carbon);border:1px solid rgba(0,0,0,.2)}
 
-/* Badge */
 .badge{display:inline-block;background:var(--success-bg);color:var(--success);padding:4px 10px;border-radius:20px;font-size:.72rem;font-weight:700;margin-bottom:10px;letter-spacing:.5px;text-transform:uppercase}
 .badge.dorado{background:rgba(212,175,55,.15);color:var(--dorado-oscuro)}
 [data-theme="dark"] .badge.dorado{color:var(--dorado)}
 
-/* Clima */
 .weather-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#e8f5ee,#f0faf4);padding:6px 12px;border-radius:20px;font-size:.82rem;font-weight:600;color:var(--verde-oscuro);margin:4px 0 10px;border:1px solid rgba(45,134,89,.2)}
 [data-theme="dark"] .weather-badge{background:linear-gradient(135deg,#0f2a1c,#0a1f14);color:var(--verde-lima);border-color:rgba(123,201,111,.2)}
 
@@ -162,7 +142,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 .list-inscritos{margin-left:16px;margin-top:6px}
 .list-inscritos li{margin-bottom:6px;color:var(--text);font-size:.9rem}
 
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(10,20,15,.7);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:5000;padding:20px;animation:fadeIn .2s}
 .modal-overlay.active{display:flex}
 .modal-box{background:var(--card-bg);border-radius:var(--radius);padding:24px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.5);animation:fadeIn .25s;border-top:4px solid var(--dorado)}
@@ -172,7 +151,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 .modal-actions{display:flex;gap:10px;margin-top:10px}
 .modal-actions button{margin-top:0;font-size:.8rem;padding:12px}
 
-/* Tarjetas de clase/torneo */
 .card-evento{background:var(--card-bg);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:0 4px 20px rgba(10,61,32,.06);border:1px solid var(--border);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
 .card-evento:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(10,61,32,.12)}
 .card-evento::before{content:'';position:absolute;left:0;top:0;bottom:0;width:5px;background:linear-gradient(180deg,var(--verde-oscuro),var(--verde-claro))}
@@ -183,14 +161,11 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 .card-evento .meta{font-size:.88rem;color:var(--text-light);margin-bottom:6px;display:flex;align-items:center;gap:6px}
 .card-evento .meta svg{width:14px;height:14px;flex-shrink:0;color:var(--verde-claro)}
 .card-evento .meta strong{color:var(--text);font-weight:600}
-
-/* Iconos genéricos */
-.ico{display:inline-flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
 
-<!-- SVGs reutilizables -->
+<!-- Biblioteca de iconos -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
   <symbol id="icon-pala" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M14 4a3 3 0 0 0-4.2 0L4 9.8a3 3 0 0 0 0 4.2l2 2a3 3 0 0 0 4.2 0L16 10.2a3 3 0 0 0 0-4.2z"/>
@@ -244,41 +219,98 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
   <symbol id="icon-descargar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
   </symbol>
-  <symbol id="icon-subir" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-  </symbol>
 </svg>
 
-<!-- Escudo SVG del club -->
+<!-- ============ ESCUDO PICKLEBALL EL ESCORIAL (SVG) ============ -->
 <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="escudo-club" viewBox="0 0 100 120">
-    <!-- Fondo escudo -->
-    <path d="M50 2 L92 18 L92 60 Q92 95 50 118 Q8 95 8 60 L8 18 Z" fill="#0a3d20" stroke="#d4af37" stroke-width="2"/>
-    <!-- Borde interior -->
-    <path d="M50 8 L86 21 L86 60 Q86 90 50 110 Q14 90 14 60 L14 21 Z" fill="none" stroke="#7bc96f" stroke-width="1"/>
-    <!-- Montañas -->
-    <path d="M14 55 L30 38 L42 50 L50 42 L58 50 L70 38 L86 55 L86 60 L14 60 Z" fill="#1a5c33" opacity="0.8"/>
-    <!-- Red de fondo -->
-    <path d="M20 68 L80 68" stroke="#e8e8e8" stroke-width="0.5" opacity="0.5"/>
-    <path d="M22 70 L78 70" stroke="#e8e8e8" stroke-width="0.5" opacity="0.5"/>
-    <path d="M25 72 L75 72" stroke="#e8e8e8" stroke-width="0.5" opacity="0.5"/>
-    <path d="M30 74 L70 74" stroke="#e8e8e8" stroke-width="0.5" opacity="0.5"/>
-    <!-- Pala -->
-    <ellipse cx="38" cy="72" rx="10" ry="13" fill="#1a1a1a" stroke="#d4af37" stroke-width="0.8"/>
-    <rect x="36" y="82" width="4" height="14" fill="#1a1a1a" stroke="#d4af37" stroke-width="0.5"/>
-    <!-- Pelota -->
-    <circle cx="60" cy="76" r="9" fill="#1a1a1a" stroke="#d4af37" stroke-width="0.8"/>
-    <circle cx="57" cy="73" r="1.2" fill="#d4af37"/>
-    <circle cx="63" cy="73" r="1.2" fill="#d4af37"/>
-    <circle cx="60" cy="78" r="1.2" fill="#d4af37"/>
-    <circle cx="56" cy="79" r="1.2" fill="#d4af37"/>
-    <circle cx="64" cy="79" r="1.2" fill="#d4af37"/>
-    <circle cx="60" cy="71" r="1" fill="#d4af37"/>
-    <!-- Banda del texto -->
-    <path d="M12 88 L88 88 L88 100 L50 105 L12 100 Z" fill="#0a3d20" stroke="#d4af37" stroke-width="1"/>
-    <text x="50" y="97" text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-size="7" fill="#e8e8e8" font-weight="900" letter-spacing="0.3">EL ESCORIAL</text>
-    <!-- Detalle inferior -->
-    <path d="M40 108 L50 114 L60 108" fill="none" stroke="#d4af37" stroke-width="1"/>
+  <symbol id="escudo-club" viewBox="0 0 200 240">
+    <defs>
+      <linearGradient id="verdeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#0d4a25"/>
+        <stop offset="100%" stop-color="#062a13"/>
+      </linearGradient>
+      <linearGradient id="plataGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#f5f5f5"/>
+        <stop offset="50%" stop-color="#c8c8c8"/>
+        <stop offset="100%" stop-color="#8a8a8a"/>
+      </linearGradient>
+    </defs>
+
+    <path d="M100 4 L190 30 L190 130 Q190 200 100 236 Q10 200 10 130 L10 30 Z" fill="url(#verdeGrad)" stroke="#1a1a1a" stroke-width="3"/>
+    <path d="M100 10 L184 34 L184 130 Q184 195 100 228 Q16 195 16 130 L16 34 Z" fill="none" stroke="#a88a2a" stroke-width="1.5"/>
+
+    <path d="M16 100 L50 55 L75 85 L100 45 L125 85 L150 55 L184 100 L184 130 L16 130 Z" fill="#062a13"/>
+    <path d="M50 55 L65 78 L75 70 L75 85 Z" fill="#1a1a1a" opacity="0.6"/>
+    <path d="M100 45 L115 68 L125 60 L125 85 Z" fill="#1a1a1a" opacity="0.6"/>
+    <path d="M150 55 L165 78 L175 70 L175 85 Z" fill="#1a1a1a" opacity="0.6"/>
+
+    <path d="M46 60 L50 55 L54 60 L50 63 Z" fill="#e8e8e8"/>
+    <path d="M96 50 L100 45 L104 50 L100 53 Z" fill="#e8e8e8"/>
+    <path d="M146 60 L150 55 L154 60 L150 63 Z" fill="#e8e8e8"/>
+
+    <g transform="translate(45, 90)">
+      <path d="M-18 0 Q-25 -15 -12 -20 Q-5 -25 0 -20 Q5 -25 12 -20 Q25 -15 18 0 Q25 5 20 12 Q10 15 0 15 Q-10 15 -20 12 Q-25 5 -18 0 Z" fill="#0d4a25" stroke="#1a1a1a" stroke-width="0.5"/>
+      <ellipse cx="0" cy="0" rx="15" ry="12" fill="#1a1a1a"/>
+      <path d="M-15 -8 Q-20 -15 -12 -18 M15 -8 Q20 -15 12 -18 M-18 2 Q-22 8 -12 10 M18 2 Q22 8 12 10" fill="none" stroke="#7bc96f" stroke-width="0.8" opacity="0.7"/>
+      <circle cx="-5" cy="-2" r="1.5" fill="#e8c66a"/>
+      <circle cx="5" cy="-2" r="1.5" fill="#e8c66a"/>
+      <ellipse cx="0" cy="5" rx="4" ry="2.5" fill="#0a0a0a"/>
+    </g>
+
+    <g transform="translate(155, 90)">
+      <path d="M-18 0 Q-25 -15 -12 -20 Q-5 -25 0 -20 Q5 -25 12 -20 Q25 -15 18 0 Q25 5 20 12 Q10 15 0 15 Q-10 15 -20 12 Q-25 5 -18 0 Z" fill="#0d4a25" stroke="#1a1a1a" stroke-width="0.5"/>
+      <ellipse cx="0" cy="0" rx="15" ry="12" fill="#1a1a1a"/>
+      <path d="M-15 -8 Q-20 -15 -12 -18 M15 -8 Q20 -15 12 -18 M-18 2 Q-22 8 -12 10 M18 2 Q22 8 12 10" fill="none" stroke="#7bc96f" stroke-width="0.8" opacity="0.7"/>
+      <circle cx="-5" cy="-2" r="1.5" fill="#e8c66a"/>
+      <circle cx="5" cy="-2" r="1.5" fill="#e8c66a"/>
+      <ellipse cx="0" cy="5" rx="4" ry="2.5" fill="#0a0a0a"/>
+    </g>
+
+    <rect x="78" y="55" width="44" height="65" rx="8" fill="#0a0a0a" stroke="#a88a2a" stroke-width="1.5"/>
+
+    <g stroke="#7bc96f" stroke-width="1.2" opacity="0.6">
+      <line x1="100" y1="62" x2="100" y2="70"/>
+      <line x1="100" y1="105" x2="100" y2="113"/>
+      <line x1="85" y1="87" x2="93" y2="87"/>
+      <line x1="107" y1="87" x2="115" y2="87"/>
+    </g>
+
+    <ellipse cx="100" cy="82" rx="14" ry="17" fill="url(#plataGrad)" stroke="#1a1a1a" stroke-width="1.5"/>
+    <rect x="97" y="96" width="6" height="22" rx="2" fill="url(#plataGrad)" stroke="#1a1a1a" stroke-width="1"/>
+
+    <circle cx="100" cy="82" r="9" fill="#f5f5f5" stroke="#1a1a1a" stroke-width="1"/>
+    <circle cx="96" cy="78" r="1.3" fill="#1a1a1a"/>
+    <circle cx="104" cy="78" r="1.3" fill="#1a1a1a"/>
+    <circle cx="100" cy="82" r="1.3" fill="#1a1a1a"/>
+    <circle cx="95" cy="85" r="1.3" fill="#1a1a1a"/>
+    <circle cx="105" cy="85" r="1.3" fill="#1a1a1a"/>
+    <circle cx="100" cy="88" r="1.3" fill="#1a1a1a"/>
+    <circle cx="100" cy="75" r="1.3" fill="#1a1a1a"/>
+
+    <g stroke="#e8e8e8" stroke-width="0.6" opacity="0.85">
+      <line x1="20" y1="120" x2="180" y2="120"/>
+      <line x1="20" y1="125" x2="180" y2="125"/>
+      <line x1="20" y1="130" x2="180" y2="130"/>
+      <line x1="20" y1="135" x2="180" y2="135"/>
+      <line x1="30" y1="118" x2="30" y2="137"/>
+      <line x1="45" y1="118" x2="45" y2="137"/>
+      <line x1="60" y1="118" x2="60" y2="137"/>
+      <line x1="75" y1="118" x2="75" y2="137"/>
+      <line x1="90" y1="118" x2="90" y2="137"/>
+      <line x1="110" y1="118" x2="110" y2="137"/>
+      <line x1="125" y1="118" x2="125" y2="137"/>
+      <line x1="140" y1="118" x2="140" y2="137"/>
+      <line x1="155" y1="118" x2="155" y2="137"/>
+      <line x1="170" y1="118" x2="170" y2="137"/>
+    </g>
+
+    <path d="M10 145 L190 145 L190 175 L100 182 L10 175 Z" fill="#062a13" stroke="#a88a2a" stroke-width="1.5"/>
+    <text x="100" y="167" text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-size="18" font-weight="900" fill="#e8e8e8" letter-spacing="0.5">EL ESCORIAL</text>
+
+    <path d="M25 180 L175 180 L175 200 L100 205 L25 200 Z" fill="#0a0a0a" stroke="#a88a2a" stroke-width="1"/>
+    <text x="100" y="196" text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-size="13" font-weight="900" fill="#e8e8e8" letter-spacing="1">PICKLEBALL</text>
+
+    <path d="M85 218 L100 228 L115 218" fill="none" stroke="#a88a2a" stroke-width="1.5"/>
   </symbol>
 </svg>
 
@@ -313,7 +345,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 
 <div class="container">
 
-  <!-- HOME -->
   <div id="seccion-home" class="section active">
     <div class="home-hero">
       <svg class="logo-grande"><use href="#escudo-club"/></svg>
@@ -346,7 +377,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     </div>
   </div>
 
-  <!-- LOGIN ALUMNO -->
   <div id="seccion-login-alumno" class="section">
     <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-login">← Volver</button>
     <div class="card">
@@ -360,7 +390,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     </div>
   </div>
 
-  <!-- ENTRENAMIENTOS -->
   <div id="seccion-entrenamientos" class="section">
     <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-ent">← Volver a inicio</button>
     <h2><svg><use href="#icon-calendario"/></svg> Próximos entrenamientos</h2>
@@ -381,7 +410,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     </div>
   </div>
 
-  <!-- TORNEOS -->
   <div id="seccion-torneos" class="section">
     <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-tor">← Volver a inicio</button>
     <h2><svg><use href="#icon-trofeo"/></svg> Torneos y competiciones</h2>
@@ -402,7 +430,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     </div>
   </div>
 
-  <!-- PERFIL -->
   <div id="seccion-perfil" class="section">
     <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-perfil">← Volver a inicio</button>
     <h2><svg><use href="#icon-usuario"/></svg> Mi panel</h2>
@@ -426,7 +453,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     </div>
   </div>
 
-  <!-- ALUMNOS (MONITOR) -->
   <div id="seccion-alumnos" class="section">
     <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-alumnos">← Volver a inicio</button>
     <h2><svg><use href="#icon-grupo"/></svg> Gestión de alumnos</h2>
@@ -450,7 +476,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     </div>
   </div>
 
-  <!-- GESTIÓN (MONITOR) -->
   <div id="seccion-gestion" class="section">
     <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-gestion">← Volver a inicio</button>
     <h2><svg><use href="#icon-ajustes"/></svg> Panel de gestión</h2>
@@ -490,9 +515,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 <script>
 "use strict";
 
-/* =========================================================
-   CONSTANTES
-   ========================================================= */
 var CLAVE_STORAGE = 'pickleball_escorial_v1';
 var PASS_MONITOR = '1234';
 
@@ -502,7 +524,6 @@ var COORDENADAS = {
   "valencia":{lat:39.4699,lon:-0.3763,n:"Valencia"},
   "sevilla":{lat:37.3891,lon:-5.9845,n:"Sevilla"},
   "malaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},
-  "málaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},
   "bilbao":{lat:43.2630,lon:-2.9350,n:"Bilbao"},
   "zaragoza":{lat:41.6488,lon:-0.8891,n:"Zaragoza"},
   "alicante":{lat:38.3452,lon:-0.4810,n:"Alicante"},
@@ -510,9 +531,7 @@ var COORDENADAS = {
   "palma":{lat:39.5696,lon:2.6502,n:"Palma"},
   "granada":{lat:37.1773,lon:-3.5986,n:"Granada"},
   "cordoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"},
-  "córdoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"},
   "escorial":{lat:40.5833,lon:-4.1333,n:"El Escorial"},
-  "el escorial":{lat:40.5833,lon:-4.1333,n:"El Escorial"},
   "san lorenzo":{lat:40.5933,lon:-4.1467,n:"San Lorenzo"},
   "guadarrama":{lat:40.6833,lon:-4.0833,n:"Guadarrama"},
   "galapagar":{lat:40.5833,lon:-4.0000,n:"Galapagar"},
@@ -521,18 +540,12 @@ var COORDENADAS = {
   "valdemorillo":{lat:40.5000,lon:-4.0667,n:"Valdemorillo"}
 };
 
-/* =========================================================
-   ESTADO
-   ========================================================= */
 var modoMonitorActivo = false;
 var alumnoActual = null;
 var climaCache = {};
 var datosGlobales = { entrenamientos:[], torneos:[], alumnos:[], avisos:[], historial:[] };
 var modalCallbackAceptar = null;
 
-/* =========================================================
-   UTILIDADES
-   ========================================================= */
 function $(id){ return document.getElementById(id); }
 
 function escapeHtml(str){
@@ -587,9 +600,6 @@ function cerrarModal(){
   modalCallbackAceptar = null;
 }
 
-/* =========================================================
-   PERSISTENCIA
-   ========================================================= */
 function guardarDatos(silencioso){
   try {
     localStorage.setItem(CLAVE_STORAGE, JSON.stringify(datosGlobales));
@@ -624,9 +634,6 @@ function cargarDatos(){
   renderizar();
 }
 
-/* =========================================================
-   TEMA
-   ========================================================= */
 function toggleTema(){
   var actual = document.documentElement.getAttribute('data-theme');
   var nuevo = actual === 'dark' ? 'light' : 'dark';
@@ -637,18 +644,12 @@ function toggleTema(){
     : '<svg><use href="#icon-luna"/></svg>';
 }
 
-/* =========================================================
-   PRIVACIDAD
-   ========================================================= */
 function mostrarPoliticaPrivacidad(){
   mostrarModal('Política de Privacidad',
-    'Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club, conforme al RGPD. Podrá ejercer sus derechos de acceso, rectificación y supresión contactando con el club.',
+    'Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club, conforme al RGPD. Podrá ejercer sus derechos contactando con el club.',
     function(){}, { textoAceptar: 'Entendido' });
 }
 
-/* =========================================================
-   NAVEGACIÓN
-   ========================================================= */
 function volverAHome(){
   modoMonitorActivo = false;
   alumnoActual = null;
@@ -705,9 +706,6 @@ function cambiarSeccion(seccion){
   renderizar();
 }
 
-/* =========================================================
-   AUTENTICACIÓN
-   ========================================================= */
 function procesarAccesoAlumno(){
   var nombre = $('input-login-nombre').value.trim();
   var pin = $('input-login-pin').value.trim();
@@ -754,9 +752,6 @@ function cerrarSesionAlumno(){
   volverAHome();
 }
 
-/* =========================================================
-   CLIMA
-   ========================================================= */
 function obtenerClima(lugar, fechaTexto){
   if(!lugar) return Promise.resolve(null);
   var lugarClean = lugar.trim().toLowerCase();
@@ -850,9 +845,6 @@ function cargarClimasPendientes(){
   return Promise.all(promises);
 }
 
-/* =========================================================
-   HISTORIAL
-   ========================================================= */
 function registrarHistorial(alumno, accion, detalle){
   if(!datosGlobales.historial) datosGlobales.historial = [];
   datosGlobales.historial.unshift({
@@ -862,9 +854,6 @@ function registrarHistorial(alumno, accion, detalle){
   if(datosGlobales.historial.length > 200) datosGlobales.historial.length = 200;
 }
 
-/* =========================================================
-   ACCIONES ALUMNO
-   ========================================================= */
 function apuntarseEntrenamiento(id){
   if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'warning');
   var alumnoBD = null;
@@ -916,7 +905,6 @@ function desapuntarseEntrenamientoPropio(id){
   }, { danger: true });
 }
 
-/* TORNEOS: NO descuentan clase */
 function apuntarseTorneo(id){
   if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'warning');
   var tor = null;
@@ -969,9 +957,6 @@ function solicitarRecargaBono(){
   mostrarToast('Solicitud enviada al monitor.');
 }
 
-/* =========================================================
-   CLASE PRUEBA
-   ========================================================= */
 function pedirClaseLibreSinRegistro(){
   var nombre = $('input-nombre-prueba').value.trim();
   var telefono = $('input-telefono-prueba').value.trim();
@@ -995,9 +980,6 @@ function pedirClaseLibreSinRegistro(){
   mostrarToast('¡Solicitud enviada!');
 }
 
-/* =========================================================
-   ACCIONES MONITOR
-   ========================================================= */
 function registrarNuevoAlumno(){
   if(!modoMonitorActivo) return;
   var nombre = $('nuevo-alumno-nombre').value.trim();
@@ -1222,9 +1204,6 @@ function importarDatos(event){
   event.target.value = '';
 }
 
-/* =========================================================
-   RENDERIZADO
-   ========================================================= */
 function renderizar(){
   var i;
 
@@ -1422,9 +1401,6 @@ function renderizar(){
   $('panel-crear-torneo').style.display = modoMonitorActivo ? 'block' : 'none';
 }
 
-/* =========================================================
-   INICIALIZACIÓN
-   ========================================================= */
 document.addEventListener('DOMContentLoaded', function(){
   var temaGuardado = localStorage.getItem('pickleball_tema');
   if(temaGuardado === 'dark'){
