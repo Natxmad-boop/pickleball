@@ -156,7 +156,7 @@ nav button.active span.icon{transform:scale(1.05)}
       <label>Hora</label>
       <input type="time" id="nuevo-hora" value="18:00">
       <label>Lugar</label>
-      <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
+      <input type="text" id="nuevo-lugar" placeholder="Ej: El Escorial">
       <label>Plazas máximas (opcional)</label>
       <input type="number" id="nuevo-plazas" placeholder="Ej: 8" min="1">
       <button id="btn-crear-ent">Crear clase</button>
@@ -176,7 +176,7 @@ nav button.active span.icon{transform:scale(1.05)}
       <label>Hora</label>
       <input type="time" id="torneo-hora" value="10:00">
       <label>Lugar</label>
-      <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
+      <input type="text" id="torneo-lugar" placeholder="Ej: El Escorial">
       <label>Plazas máximas (opcional)</label>
       <input type="number" id="torneo-plazas" placeholder="Ej: 16" min="1">
       <button id="btn-crear-tor">Crear torneo</button>
@@ -270,13 +270,31 @@ nav button.active span.icon{transform:scale(1.05)}
 /* ========== CONSTANTES ========== */
 var CLAVE_STORAGE = 'pickleball_club_v3';
 var PASS_MONITOR = '1234';
+
+/* Coordenadas de ciudades conocidas (con El Escorial incluido) */
 var COORDENADAS = {
-  "madrid":{lat:40.4168,lon:-3.7038,n:"Madrid"},"barcelona":{lat:41.3851,lon:2.1734,n:"Barcelona"},
-  "valencia":{lat:39.4699,lon:-0.3763,n:"Valencia"},"sevilla":{lat:37.3891,lon:-5.9845,n:"Sevilla"},
-  "malaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},"bilbao":{lat:43.2630,lon:-2.9350,n:"Bilbao"},
-  "zaragoza":{lat:41.6488,lon:-0.8891,n:"Zaragoza"},"alicante":{lat:38.3452,lon:-0.4810,n:"Alicante"},
-  "murcia":{lat:37.9922,lon:-1.1307,n:"Murcia"},"palma":{lat:39.5696,lon:2.6502,n:"Palma"},
-  "granada":{lat:37.1773,lon:-3.5986,n:"Granada"},"cordoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"}
+  "madrid":{lat:40.4168,lon:-3.7038,n:"Madrid"},
+  "barcelona":{lat:41.3851,lon:2.1734,n:"Barcelona"},
+  "valencia":{lat:39.4699,lon:-0.3763,n:"Valencia"},
+  "sevilla":{lat:37.3891,lon:-5.9845,n:"Sevilla"},
+  "malaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},
+  "málaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},
+  "bilbao":{lat:43.2630,lon:-2.9350,n:"Bilbao"},
+  "zaragoza":{lat:41.6488,lon:-0.8891,n:"Zaragoza"},
+  "alicante":{lat:38.3452,lon:-0.4810,n:"Alicante"},
+  "murcia":{lat:37.9922,lon:-1.1307,n:"Murcia"},
+  "palma":{lat:39.5696,lon:2.6502,n:"Palma"},
+  "granada":{lat:37.1773,lon:-3.5986,n:"Granada"},
+  "cordoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"},
+  "córdoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"},
+  "escorial":{lat:40.5833,lon:-4.1333,n:"El Escorial"},
+  "el escorial":{lat:40.5833,lon:-4.1333,n:"El Escorial"},
+  "san lorenzo":{lat:40.5933,lon:-4.1467,n:"San Lorenzo de El Escorial"},
+  "guadarrama":{lat:40.6833,lon:-4.0833,n:"Guadarrama"},
+  "galapagar":{lat:40.5833,lon:-4.0000,n:"Galapagar"},
+  "villalba":{lat:40.6333,lon:-4.0000,n:"Collado Villalba"},
+  "colmenarejo":{lat:40.5667,lon:-4.0167,n:"Colmenarejo"},
+  "valdemorillo":{lat:40.5000,lon:-4.0667,n:"Valdemorillo"}
 };
 
 /* ========== ESTADO ========== */
@@ -513,12 +531,14 @@ function obtenerClima(lugar, fechaTexto){
     return Promise.resolve(null);
   }
 
-  var lat = 40.4168, lon = -3.7038, nombreUbicacion = lugar;
+  var lat = 40.5833, lon = -4.1333, nombreUbicacion = lugar;
+  var encontrado = false;
   for(var clave in COORDENADAS){
     if(lugarClean.indexOf(clave) !== -1){
       lat = COORDENADAS[clave].lat;
       lon = COORDENADAS[clave].lon;
       nombreUbicacion = COORDENADAS[clave].n;
+      encontrado = true;
       break;
     }
   }
@@ -647,7 +667,7 @@ function desapuntarseEntrenamientoPropio(id){
   }, { danger: true });
 }
 
-/* ⚠️ TORNEOS: NO descuentan clase */
+/* TORNEOS: NO descuentan clase */
 function apuntarseTorneo(id){
   if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'warning');
   var tor = null;
@@ -953,7 +973,6 @@ function importarDatos(event){
 function renderizar(){
   var i;
 
-  // Badge notificaciones
   var totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
   var globoNav = $('globo-notificaciones');
   var globoHome = $('globo-notificaciones-home');
@@ -965,7 +984,6 @@ function renderizar(){
     globoHome.style.display = 'none';
   }
 
-  // Perfil alumno
   if(alumnoActual){
     $('panel-identificado').style.display = 'block';
     $('saludo-alumno').innerText = '¡Hola, ' + alumnoActual.nombre + '!';
@@ -993,7 +1011,6 @@ function renderizar(){
     $('panel-identificado').style.display = 'none';
   }
 
-  // Entrenamientos
   var listaEnt = $('lista-entrenamientos');
   if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0){
     listaEnt.innerHTML = '<p class="empty-state">No hay entrenamientos programados.</p>';
@@ -1051,7 +1068,6 @@ function renderizar(){
     }).join('');
   }
 
-  // Torneos
   var listaTor = $('lista-torneos');
   if(!datosGlobales.torneos || datosGlobales.torneos.length === 0){
     listaTor.innerHTML = '<p class="empty-state">No hay torneos programados.</p>';
@@ -1110,7 +1126,6 @@ function renderizar(){
 
   setTimeout(cargarClimasPendientes, 50);
 
-  // Panel monitor
   if(modoMonitorActivo){
     var contAvisos = $('lista-avisos-monitor');
     if(datosGlobales.avisos && datosGlobales.avisos.length > 0){
@@ -1154,17 +1169,14 @@ function renderizar(){
 
 /* ========== INICIALIZACIÓN ========== */
 document.addEventListener('DOMContentLoaded', function(){
-  // Tema guardado
   var temaGuardado = localStorage.getItem('pickleball_tema');
   if(temaGuardado === 'dark'){
     document.documentElement.setAttribute('data-theme', 'dark');
     $('btn-tema').innerText = '☀️';
   }
 
-  // Botón tema
   $('btn-tema').addEventListener('click', toggleTema);
 
-  // Modal
   $('modal-cancelar').addEventListener('click', cerrarModal);
   $('modal-aceptar').addEventListener('click', function(){
     if(modalCallbackAceptar) modalCallbackAceptar();
@@ -1173,13 +1185,11 @@ document.addEventListener('DOMContentLoaded', function(){
     if(e.target.id === 'modal-overlay') cerrarModal();
   });
 
-  // Botones home
   $('btn-soy-alumno').addEventListener('click', mostrarAccesoAlumno);
   $('btn-soy-monitor').addEventListener('click', entrarComoMonitorSeleccion);
   $('btn-solicitar-prueba').addEventListener('click', pedirClaseLibreSinRegistro);
   $('link-privacidad').addEventListener('click', function(e){ e.preventDefault(); mostrarPoliticaPrivacidad(); });
 
-  // Botones volver
   $('btn-volver-login').addEventListener('click', volverAHome);
   $('btn-volver-ent').addEventListener('click', volverAHome);
   $('btn-volver-tor').addEventListener('click', volverAHome);
@@ -1187,27 +1197,22 @@ document.addEventListener('DOMContentLoaded', function(){
   $('btn-volver-alumnos').addEventListener('click', volverAHome);
   $('btn-volver-gestion').addEventListener('click', volverAHome);
 
-  // Login alumno
   $('btn-login-entrar').addEventListener('click', procesarAccesoAlumno);
   $('input-login-pin').addEventListener('keypress', function(e){
     if(e.key === 'Enter') procesarAccesoAlumno();
   });
 
-  // Crear entrenamiento/torneo/alumno
   $('btn-crear-ent').addEventListener('click', agregarEntrenamiento);
   $('btn-crear-tor').addEventListener('click', agregarTorneo);
   $('btn-crear-alumno').addEventListener('click', registrarNuevoAlumno);
 
-  // Perfil
   $('btn-recarga-bono').addEventListener('click', solicitarRecargaBono);
   $('btn-cerrar-sesion').addEventListener('click', cerrarSesionAlumno);
 
-  // Gestión
   $('btn-exportar').addEventListener('click', exportarDatos);
   $('btn-reiniciar').addEventListener('click', reiniciarDatosCompletos);
   $('input-import').addEventListener('change', importarDatos);
 
-  // Nav inferior: delegación
   var navBtns = document.querySelectorAll('nav button[data-nav]');
   for(var i=0;i<navBtns.length;i++){
     (function(btn){
