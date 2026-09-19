@@ -1,1437 +1,450 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pickleball Club | Gestión Deportiva</title>
-    
-    <!-- Configuración para PWA -->
-    <meta name="theme-color" content="#0b132b">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/pickleball.png">
-    <link rel="manifest" href='data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Pickleball%20Club%22%2C%22short_name%22%3A%22Pickleball%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b132b%22%2C%22theme_color%22%3A%22%230b132b%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fcolor%2F192%2Fpickleball.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%7D%2C%7B%22src%22%3A%22https%3A%2F%2Fimg.icons8.com%2Fcolor%2F512%2Fpickleball.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%7D%5D%7D'>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Pickleball Club | Gestión Deportiva</title>
+<meta name="theme-color" content="#0b132b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="https://img.icons8.com/color/192/pickleball.png">
+<style>
+:root {
+  --primary: #0b132b;
+  --primary-light: #1c2541;
+  --primary-accent: #00b4d8;
+  --btn-hover: #0096c7;
+  --bg: #f4f6f9;
+  --card-bg: #ffffff;
+  --text: #1d3557;
+  --text-light: #6c757d;
+  --border-card: #e9ecef;
+  --success: #2a9d8f;
+  --success-bg: #e8f5e9;
+  --danger: #e63946;
+  --danger-bg: #fde8e8;
+  --warning: #f4a261;
+  --warning-bg: #fef3e2;
+  --radius: 20px;
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+[data-theme="dark"] {
+  --primary: #0d1117;
+  --primary-light: #161b22;
+  --bg: #0d1117;
+  --card-bg: #161b22;
+  --text: #e6edf3;
+  --text-light: #8b949e;
+  --border-card: #30363d;
+  --success-bg: #12261e;
+  --danger-bg: #2d1214;
+  --warning-bg: #2d1e12;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); -webkit-tap-highlight-color: transparent; }
+body { background: var(--bg); color: var(--text); padding-bottom: 130px; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
 
-    <style>
-        :root {
-            --primary: #0b132b;
-            --primary-light: #1c2541;
-            --primary-accent: #00b4d8;
-            --btn-hover: #0096c7;
-            --bg: #f4f6f9;
-            --card-bg: #ffffff;
-            --text: #1d3557;
-            --text-light: #6c757d;
-            --border-card: #e9ecef;
-            --success: #2a9d8f;
-            --success-bg: #e8f5e9;
-            --danger: #e63946;
-            --danger-bg: #fde8e8;
-            --warning: #f4a261;
-            --warning-bg: #fef3e2;
-            --radius: 20px;
-            --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
+/* Toasts */
+#toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; pointer-events: none; }
+.toast { background: var(--primary); color: #fff; padding: 16px 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,.15); font-size: .95rem; font-weight: 500; display: flex; align-items: center; gap: 12px; pointer-events: auto; animation: fadeInDown .3s ease, fadeOutUp .3s ease 2.7s forwards; border-left: 5px solid var(--primary-accent); }
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeOutUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-15px); } }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: var(--font-family);
-        }
+/* Header */
+header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 24px 20px 20px; border-bottom: 4px solid var(--primary-accent); box-shadow: 0 4px 20px rgba(0,0,0,.15); }
+.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 10px; }
+header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
+header p { font-size: .9rem; opacity: .8; }
+.sync-status { font-size: .7rem; color: var(--primary-accent); background: rgba(0,180,216,.12); padding: 5px 12px; border-radius: 20px; font-weight: 600; border: 1px solid rgba(0,180,216,.3); white-space: nowrap; }
+.theme-toggle { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #fff; width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; padding: 0; margin: 0; box-shadow: none; flex-shrink: 0; }
+.theme-toggle:hover { background: rgba(255,255,255,.2); transform: none; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            padding-bottom: 130px;
-            -webkit-font-smoothing: antialiased;
-        }
+/* Container */
+.container { max-width: 580px; margin: 0 auto; padding: 24px 16px; }
+h2 { font-size: 1.25rem; color: var(--text); margin-bottom: 20px; font-weight: 700; letter-spacing: -.3px; display: flex; align-items: center; gap: 10px; }
 
-        #toast-container {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 9999;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 90%;
-            max-width: 400px;
-            pointer-events: none;
-        }
-        .toast {
-            background: var(--primary);
-            color: #fff;
-            padding: 16px 20px;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            font-size: 0.95rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            pointer-events: auto;
-            animation: fadeInDown 0.3s ease, fadeOutUp 0.3s ease 2.7s forwards;
-            border-left: 5px solid var(--primary-accent);
-        }
-        .toast.success { border-left-color: var(--success); }
-        .toast.error { border-left-color: var(--danger); }
-        .toast.warning { border-left-color: var(--warning); }
+/* Cards */
+.card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,.04); border: 1px solid var(--border-card); transition: transform .2s, box-shadow .2s; }
+.card h3 { color: var(--text); margin-bottom: 12px; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.card p { font-size: 1rem; color: var(--text-light); margin-bottom: 8px; line-height: 1.5; }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeOutUp {
-            from { opacity: 1; transform: translateY(0); }
-            to { opacity: 0; transform: translateY(-15px); }
-        }
+/* Buttons */
+button { background: var(--primary-accent); color: #fff; border: none; padding: 16px 20px; border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all .2s; margin-top: 14px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(0,180,216,.25); }
+button:hover { background: var(--btn-hover); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,180,216,.35); }
+button:active { transform: translateY(0); }
+button:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
+button.danger { background: var(--danger); box-shadow: 0 4px 14px rgba(230,57,70,.25); }
+button.danger:hover { background: #c1121f; }
+button.warning { background: var(--warning); box-shadow: 0 4px 14px rgba(244,162,97,.25); }
+button.warning:hover { background: #e76f51; }
+button.success { background: var(--success); box-shadow: 0 4px 14px rgba(42,157,143,.25); }
+button.success:hover { background: #218375; }
+button.btn-volver { background: var(--card-bg); color: var(--text); border: 1px solid var(--border-card); box-shadow: 0 2px 8px rgba(0,0,0,.02); font-weight: 500; }
+button.btn-volver:hover { background: var(--bg); }
+button.btn-mini { padding: 6px 12px; font-size: .8rem; width: auto; margin-top: 6px; border-radius: 10px; }
 
-        header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 24px 20px 20px 20px;
-            border-bottom: 4px solid var(--primary-accent);
-            box-shadow: 0 4px 20px rgba(11, 19, 43, 0.1);
-        }
+/* Inputs */
+input, select, textarea { width: 100%; padding: 14px 16px; margin-top: 6px; margin-bottom: 14px; border: 1px solid var(--border-card); border-radius: 14px; font-size: 1rem; background: var(--card-bg); color: var(--text); outline: none; transition: all .2s; font-family: var(--font); }
+input:focus, select:focus, textarea:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 4px rgba(0,180,216,.1); }
+label { font-size: .9rem; font-weight: 500; color: var(--text); display: block; margin-top: 6px; }
 
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 6px;
-        }
+/* Terms */
+.terms-container { display: flex; align-items: flex-start; gap: 12px; margin: 10px 0 18px; font-size: .9rem; line-height: 1.4; color: var(--text-light); }
+.terms-container input[type="checkbox"] { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--primary-accent); cursor: pointer; flex-shrink: 0; }
+.terms-container label { font-weight: 400; display: inline; color: var(--text-light); }
+.terms-container a { color: var(--success); font-weight: 500; }
 
-        header h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+/* Nav */
+nav { position: fixed; bottom: 16px; left: 16px; right: 16px; max-width: 580px; margin: 0 auto; background: var(--card-bg); opacity: .97; backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.15); border-radius: 24px; border: 1px solid var(--border-card); z-index: 1000; }
+nav button { background: none; color: var(--text-light); font-size: .75rem; margin: 0; padding: 8px 4px; font-weight: 500; width: 25%; box-shadow: none; display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 16px; position: relative; }
+nav button:hover { background: none; transform: none; box-shadow: none; }
+nav button span.icon { font-size: 1.35rem; transition: transform .2s; }
+nav button.active { color: var(--primary-accent); background: rgba(0,180,216,.08); font-weight: 600; }
+nav button.active span.icon { transform: scale(1.05); }
+.notification-badge { position: absolute; top: 4px; right: 22%; background: var(--danger); color: #fff; font-size: .65rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--card-bg); display: none; }
 
-        header p {
-            font-size: 0.9rem;
-            opacity: 0.8;
-            font-weight: 400;
-        }
+/* Sections */
+.section { display: none; }
+.section.active { display: block; animation: fadeIn .25s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-        .sync-status {
-            font-size: 0.7rem;
-            color: var(--primary-accent);
-            background: rgba(0, 180, 216, 0.12);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            border: 1px solid rgba(0, 180, 216, 0.3);
-            letter-spacing: 0.3px;
-        }
+/* Misc */
+.badge { display: inline-block; background: var(--success-bg); color: var(--success); padding: 4px 10px; border-radius: 8px; font-size: .8rem; font-weight: 600; margin-bottom: 12px; }
+.home-card-main { background: linear-gradient(135deg, var(--card-bg), var(--bg)); border: 1px solid var(--border-card); text-align: center; padding: 32px 20px; }
+.bono-card-container { background: linear-gradient(135deg, var(--success-bg), var(--card-bg)); border: 1px solid var(--success); text-align: center; padding: 24px; margin: 16px 0; border-radius: var(--radius); }
+.weather-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg); padding: 6px 12px; border-radius: 12px; font-size: .85rem; font-weight: 500; color: var(--text); margin: 4px 0 12px; border: 1px solid var(--border-card); }
+.empty-state { text-align: center; padding: 20px; color: var(--text-light); }
+.list-inscritos { margin-left: 20px; margin-top: 8px; }
+.list-inscritos li { margin-bottom: 6px; color: var(--text); }
 
-        .container {
-            max-width: 580px;
-            margin: 0 auto;
-            padding: 24px 16px;
-        }
-
-        h2 {
-            font-size: 1.25rem;
-            color: var(--text);
-            margin-bottom: 20px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-            border: 1px solid var(--border-card);
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .card h3 {
-            color: var(--text);
-            margin-bottom: 12px;
-            font-size: 1.15rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 700;
-        }
-
-        .card p {
-            font-size: 1rem;
-            color: var(--text-light);
-            margin-bottom: 8px;
-            line-height: 1.5;
-            font-weight: 400;
-        }
-
-        .weather-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #f8f9fa;
-            padding: 6px 12px;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text);
-            margin-top: 4px;
-            margin-bottom: 12px;
-            border: 1px solid var(--border-card);
-        }
-
-        button {
-            background-color: var(--primary-accent);
-            color: #ffffff;
-            border: none;
-            padding: 16px 20px;
-            border-radius: 16px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            margin-top: 14px;
-            width: 100%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 14px rgba(0, 180, 216, 0.25);
-        }
-
-        button:hover {
-            background-color: var(--btn-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 18px rgba(0, 180, 216, 0.35);
-        }
-
-        button:active {
-            transform: translateY(0);
-        }
-
-        button.danger {
-            background-color: var(--danger);
-            box-shadow: 0 4px 14px rgba(230, 57, 70, 0.25);
-        }
-        button.danger:hover { 
-            background-color: #c1121f; 
-        }
-
-        button.warning {
-            background-color: var(--warning);
-            color: #ffffff;
-            box-shadow: 0 4px 14px rgba(244, 162, 97, 0.25);
-        }
-        button.warning:hover { 
-            background-color: #e76f51; 
-        }
-
-        button.success {
-            background-color: var(--success);
-            color: white;
-            box-shadow: 0 4px 14px rgba(42, 157, 143, 0.25);
-        }
-        button.success:hover { 
-            background-color: #218375; 
-        }
-
-        button.btn-volver {
-            background-color: #ffffff;
-            color: var(--text);
-            border: 1px solid var(--border-card);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-            font-weight: 500;
-        }
-        button.btn-volver:hover {
-            background-color: #f8f9fa;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 16px 18px;
-            margin-top: 6px;
-            margin-bottom: 16px;
-            border: 1px solid var(--border-card);
-            border-radius: 16px;
-            font-size: 1rem;
-            background: #ffffff;
-            color: var(--text);
-            outline: none;
-            transition: all 0.2s ease;
-            font-weight: 400;
-        }
-
-        input:focus, select:focus {
-            border-color: var(--primary-accent);
-            box-shadow: 0 0 0 4px rgba(0, 180, 216, 0.1);
-        }
-
-        .terms-container {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-top: 10px;
-            margin-bottom: 18px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            color: var(--text-light);
-        }
-        .terms-container input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            margin-top: 2px;
-            accent-color: var(--primary-accent);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-
-        nav {
-            position: fixed;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            max-width: 580px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            display: flex;
-            justify-content: space-around;
-            padding: 8px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            border: 1px solid var(--border-card);
-            z-index: 1000;
-        }
-
-        nav button {
-            background: none;
-            color: var(--text-light);
-            border: none;
-            font-size: 0.75rem;
-            margin: 0;
-            padding: 8px 4px;
-            font-weight: 500;
-            width: 25%;
-            box-shadow: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            border-radius: 16px;
-            transition: all 0.2s ease;
-            position: relative;
-        }
-
-        nav button span.icon {
-            font-size: 1.35rem;
-            transition: transform 0.2s;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: 4px;
-            right: 25%;
-            background-color: var(--danger);
-            color: white;
-            font-size: 0.65rem;
-            font-weight: 700;
-            padding: 2px 6px;
-            border-radius: 10px;
-            border: 2px solid #ffffff;
-            display: none;
-        }
-
-        nav button.active {
-            color: var(--primary-accent);
-            background-color: rgba(0, 180, 216, 0.08);
-            font-weight: 600;
-        }
-
-        nav button.active span.icon {
-            transform: scale(1.05);
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeIn 0.25s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .badge {
-            display: inline-block;
-            background: var(--success-bg);
-            color: var(--success);
-            padding: 4px 10px;
-            border-radius: 8px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 12px;
-        }
-
-        label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text);
-            display: block;
-            margin-top: 6px;
-        }
-
-        .home-card-main {
-            background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            border: 1px solid var(--border-card);
-            text-align: center;
-            padding: 32px 20px;
-        }
-
-        .bono-card-container {
-            background: linear-gradient(135deg, var(--success-bg), #ffffff);
-            border: 1px solid #c7d2fe;
-            text-align: center;
-            padding: 24px;
-            margin: 16px 0;
-            border-radius: var(--radius);
-        }
-    </style>
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; animation: fadeIn .2s; }
+.modal-overlay.active { display: flex; }
+.modal-box { background: var(--card-bg); border-radius: var(--radius); padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.3); animation: fadeIn .25s; }
+.modal-box h3 { margin-bottom: 12px; color: var(--text); }
+.modal-box p { margin-bottom: 16px; color: var(--text-light); line-height: 1.5; }
+.modal-actions { display: flex; gap: 10px; margin-top: 12px; }
+.modal-actions button { margin-top: 0; }
+</style>
 </head>
 <body>
 
-    <div id="toast-container"></div>
+<div id="toast-container"></div>
 
-    <header>
-        <div class="header-top">
-            <h1>🏓 Pickleball Club</h1>
-            <span class="sync-status" id="estado-sync">Conectando...</span>
-        </div>
-        <p>Tu club. Tus clases. Tu juego.</p>
-    </header>
+<!-- Modal genérico -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal-box">
+    <h3 id="modal-titulo">Confirmar</h3>
+    <p id="modal-mensaje">¿Estás seguro?</p>
+    <input type="text" id="modal-input" style="display:none;" placeholder="">
+    <div class="modal-actions">
+      <button class="btn-volver" id="modal-cancelar">Cancelar</button>
+      <button id="modal-aceptar">Aceptar</button>
+    </div>
+  </div>
+</div>
 
-    <div class="container">
+<header>
+  <div class="header-top">
+    <h1>🏓 Pickleball Club</h1>
+    <div style="display:flex; gap:8px; align-items:center;">
+      <span class="sync-status" id="estado-sync">Local</span>
+      <button class="theme-toggle" onclick="toggleTema()" title="Modo oscuro/claro">🌙</button>
+    </div>
+  </div>
+  <p>Tu club. Tus clases. Tu juego.</p>
+</header>
 
-        <!-- PANTALLA PRINCIPAL -->
-        <div id="seccion-home" class="section active">
-            <div class="card home-card-main">
-                <h2 style="border: none; padding: 0; justify-content: center; font-size: 1.5rem; margin-bottom: 6px; color: var(--primary);">Pickleball Club</h2>
-                <p style="font-size: 1rem; color: var(--text-light); margin-bottom: 28px;">Tu club. Tus clases. Tu juego.</p>
-                
-                <button onclick="mostrarAccesoAlumno()" style="font-size: 1.05rem; padding: 18px 20px; margin-bottom: 12px;">
-                    👤 Soy alumno
-                </button>
+<div class="container">
 
-                <button class="warning" onclick="entrarComoMonitorSeleccion()" style="font-size: 1.05rem; padding: 18px 20px; position: relative;">
-                    🔑 Soy monitor
-                    <span id="globo-notificaciones-home" class="notification-badge" style="display:none; position:absolute; top:14px; right:16px;">0</span>
-                </button>
-            </div>
-
-            <div class="card" style="background: linear-gradient(135deg, #f0fdf4, #ffffff); border-color: #bbf7d0;">
-                <h3 style="color: var(--success); font-size: 1.15rem;">🎁 ¿Nuevo en el club?</h3>
-                <p style="color: var(--text-light); margin-bottom: 16px;">Solicita tu clase de prueba gratuita</p>
-                
-                <label>Nombre y apellidos</label>
-                <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez">
-                
-                <label>Teléfono de contacto (opcional)</label>
-                <input type="text" id="input-telefono-prueba" placeholder="Ej: 600123456">
-
-                <div class="terms-container">
-                    <input type="checkbox" id="check-rgpd-prueba">
-                    <label for="check-rgpd-prueba" style="color: var(--text-light); font-weight: normal; display: inline;">
-                        Acepto la <a href="#" onclick="mostrarToast('Política de Privacidad: Sus datos serão tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club de conformidad con el RGPD.', 'warning'); return false;" style="color: var(--success); font-weight: 500;">política de protección de datos</a> y el tratamiento de mis datos.
-                    </label>
-                </div>
-
-                <button class="success" onclick="pedirClaseLibreSinRegistro()">Solicitar clase de prueba</button>
-            </div>
-        </div>
-
-        <!-- MODAL / FORMULARIO DE ACCESO ALUMNO -->
-        <div id="seccion-login-alumno" class="section">
-            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver</button>
-            
-            <div class="card" id="modal-acceso-alumno">
-                <h3>👤 Acceso de alumno</h3>
-                <p style="margin-bottom: 16px;">Introduce tus datos para acceder a tu perfil y bonos.</p>
-                
-                <label>Nombre</label>
-                <input type="text" id="input-login-nombre" placeholder="Tu nombre y apellidos">
-                
-                <label>PIN</label>
-                <input type="password" id="input-login-pin" placeholder="Tu PIN personal" inputmode="numeric">
-
-                <button onclick="procesarAccesoAlumno()">Entrar</button>
-            </div>
-        </div>
-        
-        <!-- SECCIÓN ENTRENAMIENTOS / CLASES -->
-        <div id="seccion-entrenamientos" class="section">
-            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
-            <h2>📅 Próximos entrenamientos</h2>
-            <div id="lista-entrenamientos" style="margin-top: 10px;">
-                <p>Cargando entrenamientos...</p>
-            </div>
-            
-            <div class="card" id="panel-crear-entrenamiento" style="margin-top: 20px; background: #fafbfc; display:none; border: 2px dashed #d1d5db;">
-                <h3>➕ Añadir nuevo entrenamiento</h3>
-                <label>Título / Nivel</label>
-                <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
-                <label>Fecha</label>
-                <input type="date" id="nuevo-fecha">
-                <label>Hora</label>
-                <input type="time" id="nuevo-hora">
-                <label>Lugar</label>
-                <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
-                <button onclick="agregarEntrenamiento()">Crear clase</button>
-            </div>
-        </div>
-
-        <!-- SECCIÓN TORNEOS -->
-        <div id="seccion-torneos" class="section">
-            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
-            <h2>🏆 Torneos y competiciones</h2>
-            <div id="lista-torneos" style="margin-top: 10px;">
-                <p>Cargando torneos...</p>
-            </div>
-            
-            <div class="card" id="panel-crear-torneo" style="margin-top: 20px; background: #fafbfc; display:none; border: 2px dashed #d1d5db;">
-                <h3>➕ Crear nuevo torneo</h3>
-                <label>Nombre del torneo</label>
-                <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
-                <label>Fecha</label>
-                <input type="date" id="torneo-fecha">
-                <label>Hora</label>
-                <input type="time" id="torneo-hora">
-                <label>Lugar</label>
-                <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
-                <button onclick="agregarTorneo()">Crear torneo</button>
-            </div>
-        </div>
-
-        <!-- SECCIÓN PERFIL DE ALUMNO -->
-        <div id="seccion-perfil" class="section">
-            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
-            <h2>👤 Mi panel de alumno</h2>
-            
-            <div id="panel-identificado" class="card" style="display:none;">
-                <span class="badge">Sesión activa</span>
-                <h3 id="saludo-alumno" style="font-size: 1.3rem; margin-bottom: 4px;">¡Hola!</h3>
-                
-                <div class="bono-card-container">
-                    <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; color: var(--success); margin-bottom: 4px;">🎟️ Tu bono</p>
-                    <p id="info-bono-personal" style="font-size: 2.5rem; color: var(--success); font-weight: 700; line-height: 1.1; margin-bottom: 2px;">0</p>
-                    <p style="font-size: 0.9rem; color: var(--text-light); font-weight: 500;">clases disponibles</p>
-                    <button class="success" style="margin-top: 16px;" onclick="solicitarRecargaBono()">+ Recargar bono</button>
-                </div>
-                
-                <div id="historial-bono-alumno" style="margin-top: 12px; margin-bottom: 16px; font-size: 0.85rem; color: var(--text-light); background: #f8f9fa; padding: 12px; border-radius: 12px; border: 1px solid var(--border-card);">
-                    📜 Estado de cuenta al día. Clases listas para reservar entrenamientos o torneos.
-                </div>
-
-                <button class="danger" style="margin-top: 8px;" onclick="cerrarSesionAlumno()">Cerrar sesión</button>
-            </div>
-        </div>
-
-        <!-- SECCIÓN GESTIÓN DE ALUMNOS (MONITOR) -->
-        <div id="seccion-alumnos" class="section">
-            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
-            <h2>👥 Gestión de alumnos</h2>
-            <div class="card" style="background: #fffdf9; border-color: #fef08a;">
-                <h3 style="color: #b45309;">➕ Crear nuevo alumno</h3>
-                <label>Nombre del alumno</label>
-                <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
-                <label>PIN de acceso</label>
-                <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234">
-                <label>Clases iniciales en el bono</label>
-                <input type="number" id="nuevo-alumno-clases" value="10" placeholder="10">
-
-                <div class="terms-container">
-                    <input type="checkbox" id="check-rgpd-alumno" checked>
-                    <label for="check-rgpd-alumno" style="color: var(--text-light); font-weight: normal; display: inline;">
-                        Confirmo que el alumno ha sido informado y ha dado su consentimiento para el tratamiento de sus datos deportivos.
-                    </label>
-                </div>
-
-                <button onclick="registrarNuevoAlumno()" class="warning">Crear alumno</button>
-
-                <h3 style="margin-top:28px; color: var(--text);">👥 Alumnos registrados</h3>
-                <div id="lista-alumnos-admin" style="margin-top:10px;"></div>
-            </div>
-        </div>
-
-        <!-- SECCIÓN GESTIÓN / AVISOS (MONITOR) -->
-        <div id="seccion-gestion" class="section">
-            <button class="btn-volver" style="margin-bottom: 16px;" onclick="volverAHome()">← Volver a inicio</button>
-            <h2>⚙️ Panel de gestión</h2>
-            <div class="card" style="background: #fffdf9; border-color: #fef08a;">
-                <h3 style="color: #b45309;">🚨 Solicitudes de alumnos y pruebas</h3>
-                <div id="lista-avisos-monitor" style="margin-bottom: 20px;">
-                    <p style="color: var(--text-light);">No hay solicitudes pendientes.</p>
-                </div>
-
-                <button class="danger" style="margin-top:20px;" onclick="reiniciarDatosCompletos()">⚠️ Vaciar / Reiniciar todo</button>
-            </div>
-        </div>
-        
+  <!-- HOME -->
+  <div id="seccion-home" class="section active">
+    <div class="card home-card-main">
+      <h2 style="justify-content:center; font-size:1.5rem; margin-bottom:6px; color:var(--text);">Pickleball Club</h2>
+      <p style="font-size:1rem; margin-bottom:28px;">Tu club. Tus clases. Tu juego.</p>
+      <button onclick="mostrarAccesoAlumno()" style="font-size:1.05rem; padding:18px 20px; margin-bottom:12px;">👤 Soy alumno</button>
+      <button class="warning" onclick="entrarComoMonitorSeleccion()" style="font-size:1.05rem; padding:18px 20px; position:relative;">
+        🔑 Soy monitor
+        <span id="globo-notificaciones-home" class="notification-badge" style="top:14px; right:16px;">0</span>
+      </button>
     </div>
 
-    <!-- MENÚ INFERIOR -->
-    <nav id="barra-navegacion-inferior" style="display: none;">
-        <!-- Menú Alumno -->
-        <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active">
-            <span class="icon">📅</span>
-            <span>Clases</span>
-        </button>
-        <button onclick="cambiarSeccion('torneos')" id="nav-torneos">
-            <span class="icon">🏆</span>
-            <span>Torneos</span>
-        </button>
-        <button onclick="cambiarSeccion('perfil')" id="nav-perfil">
-            <span class="icon">👤</span>
-            <span>Perfil</span>
-        </button>
-        
-        <!-- Menú Monitor -->
-        <button onclick="cambiarSeccion('entrenamientos')" id="nav-monitor-clases" style="display: none;">
-            <span class="icon">📅</span>
-            <span>Clases</span>
-        </button>
-        <button onclick="cambiarSeccion('torneos')" id="nav-monitor-torneos" style="display: none;">
-            <span class="icon">🏆</span>
-            <span>Torneos</span>
-        </button>
-        <button onclick="cambiarSeccion('alumnos')" id="nav-monitor-alumnos" style="display: none;">
-            <span class="icon">👥</span>
-            <span>Alumnos</span>
-        </button>
-        <button onclick="cambiarSeccion('gestion')" id="nav-monitor-gestion" style="display: none;">
-            <span class="icon">⚙️</span>
-            <span>Gestión</span>
-            <span id="globo-notificaciones" class="notification-badge">0</span>
-        </button>
-    </nav>
-
-    <script>
-        // Service Worker integrado para convertir la página en PWA instalable
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
-                    self.addEventListener('install', (e) => e.waitUntil(self.skipWaiting()));
-                    self.addEventListener('activate', (e) => e.waitUntil(self.clients.claim()));
-                    self.addEventListener('fetch', (e) => {});
-                `)).catch(err => console.log('SW registration failed: ', err));
-            });
-        }
-
-        const API_URL = "https://api.npoint.io/451d4728d05c351c11fb";
-        
-        let modoMonitorActivo = false;
-        let alumnoActual = null; 
-        
-        let datosGlobales = {
-            entrenamientos: [],
-            torneos: [],
-            alumnos: [],
-            avisos: []
-        };
-
-        let climaCache = {};
-
-        const coordenadasFijas = {
-            "madrid": { lat: 40.4168, lon: -3.7038, nombre: "Madrid" },
-            "barcelona": { lat: 41.3851, lon: 2.1734, nombre: "Barcelona" },
-            "valencia": { lat: 39.4699, lon: -0.3763, nombre: "Valencia" },
-            "sevilla": { lat: 37.3891, lon: -5.9845, nombre: "Sevilla" },
-            "malaga": { lat: 36.7213, lon: -4.4214, nombre: "Málaga" },
-            "bilbao": { lat: 43.2630, lon: -2.9350, nombre: "Bilbao" },
-            "zaragoza": { lat: 41.6488, lon: -0.8891, nombre: "Zaragoza" },
-            "alicante": { lat: 38.3452, lon: -0.4810, nombre: "Alicante" },
-            "murcia": { lat: 37.9922, lon: -1.1307, nombre: "Murcia" },
-            "palma": { lat: 39.5696, lon: 2.6502, nombre: "Palma" },
-            "granada": { lat: 37.1773, lon: -3.5986, nombre: "Granada" },
-            "cordoba": { lat: 37.8882, lon: -4.7794, nombre: "Córdoba" },
-            "pista municipal": { lat: 40.4168, lon: -3.7038, nombre: "Madrid" },
-            "club de tenis": { lat: 40.4168, lon: -3.7038, nombre: "Madrid" }
-        };
-
-        async function obtenerClima(lugar, fechaTexto) {
-            if (!lugar) return null;
-            let lugarClean = lugar.trim().toLowerCase();
-            let cacheKey = `${lugarClean}_${fechaTexto || 'hoy'}`;
-            if (climaCache[cacheKey] !== undefined) return climaCache[cacheKey];
-
-            try {
-                let fechaObjeto = null;
-                if (fechaTexto) {
-                    let matchFecha = fechaTexto.match(/\d{4}-\d{2}-\d{2}/);
-                    if (matchFecha) {
-                        fechaObjeto = new Date(matchFecha[0]);
-                    }
-                }
-
-                let hoy = new Date();
-                let hoySinHora = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
-                let fechaSinHora = fechaObjeto ? new Date(fechaObjeto.getFullYear(), fechaObjeto.getMonth(), fechaObjeto.getDate()) : hoySinHora;
-                
-                let diasDiferencia = Math.ceil((fechaSinHora - hoySinHora) / (1000 * 60 * 60 * 24));
-
-                if (diasDiferencia < 0 || diasDiferencia > 3) {
-                    climaCache[cacheKey] = null;
-                    return null;
-                }
-
-                let lat = 40.4168, lon = -3.7038, nombreUbicacion = lugar;
-                for (let clave in coordenadasFijas) {
-                    if (lugarClean.includes(clave)) {
-                        lat = coordenadasFijas[clave].lat;
-                        lon = coordenadasFijas[clave].lon;
-                        nombreUbicacion = coordenadasFijas[clave].nombre;
-                        break;
-                    }
-                }
-
-                let dateStr = fechaSinHora.toISOString().split('T')[0];
-                let weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=temperature_2m,weather_code&timezone=Europe%2FMadrid&start_date=${dateStr}&end_date=${dateStr}`);
-                let weatherJson = await weatherRes.json();
-
-                if (weatherJson && weatherJson.hourly && weatherJson.hourly.time) {
-                    let horaClase = 18; 
-                    if (fechaTexto) {
-                        let matchHora = fechaTexto.match(/(\d{2}):(\d{2})/);
-                        if (matchHora) {
-                            horaClase = parseInt(matchHora[1]);
-                        }
-                    }
-
-                    let horasArray = weatherJson.hourly.time;
-                    let indiceHora = horasArray.findIndex(t => t.includes(`T${String(horaClase).padStart(2, '0')}:00`));
-                    
-                    if (indiceHora === -1) {
-                        indiceHora = Math.min(Math.max(horaClase, 0), horasArray.length - 1);
-                    }
-                    
-                    let temp = Math.round(weatherJson.hourly.temperature_2m[indiceHora]);
-                    let code = weatherJson.hourly.weather_code[indiceHora];
-                    let iconoTiempo = "🌤️";
-
-                    if (code >= 1 && code <= 3) { iconoTiempo = "⛅"; }
-                    else if (code >= 45 && code <= 48) { iconoTiempo = "🌫️"; }
-                    else if (code >= 51 && code <= 67) { iconoTiempo = "🌧️"; }
-                    else if (code >= 71 && code <= 77) { iconoTiempo = "❄️"; }
-                    else if (code >= 95) { iconoTiempo = "⚡"; }
-
-                    let resultadoClima = `${iconoTiempo} ${temp}°C (${nombreUbicacion})`;
-                    climaCache[cacheKey] = resultadoClima;
-                    return resultadoClima;
-                }
-
-            } catch (e) {
-                console.error("Error al obtener el clima", e);
-            }
-            climaCache[cacheKey] = null;
-            return null;
-        }
-
-        async function actualizarClimaEnTarjetas() {
-            let elementosClima = document.querySelectorAll('.weather-badge-dynamic');
-            for (let el of elementosClima) {
-                let lugar = el.getAttribute('data-lugar');
-                let fecha = el.getAttribute('data-fecha');
-                if (lugar) {
-                    let climaTexto = await obtenerClima(lugar, fecha);
-                    if (climaTexto) {
-                        el.innerText = climaTexto;
-                        el.style.display = 'inline-flex';
-                    } else {
-                        el.style.display = 'none';
-                    }
-                }
-            }
-        }
-
-        function mostrarToast(mensaje, tipo = 'success') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-            toast.className = `toast ${tipo}`;
-            let icono = '✅';
-            if(tipo === 'error') icono = '❌';
-            if(tipo === 'warning') icono = '⚠️';
-            
-            toast.innerHTML = `<span>${icono}</span> <span>${mensaje}</span>`;
-            container.appendChild(toast);
-            setTimeout(() => { toast.remove(); }, 3000);
-        }
-
-        function volverAHome() {
-            modoMonitorActivo = false;
-            alumnoActual = null;
-            document.getElementById('barra-navegacion-inferior').style.display = 'none';
-            cambiarSeccion('home');
-        }
-
-        function mostrarAccesoAlumno() {
-            document.getElementById('input-login-nombre').value = '';
-            document.getElementById('input-login-pin').value = '';
-            cambiarSeccion('login-alumno');
-        }
-
-        function procesarAccesoAlumno() {
-            let nombreInput = document.getElementById('input-login-nombre').value.trim();
-            let passInput = document.getElementById('input-login-pin').value.trim();
-
-            if(!nombreInput) {
-                mostrarToast("Debes introducir tu nombre.", "error");
-                return;
-            }
-
-            if(!passInput) {
-                mostrarToast("Debes introducir tu PIN personal.", "error");
-                return;
-            }
-
-            let alumno = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombreInput.toLowerCase());
-            
-            if(alumno && alumno.pass === passInput) {
-                alumnoActual = alumno;
-                modoMonitorActivo = false; 
-                document.getElementById('barra-navegacion-inferior').style.display = 'flex';
-                ajustarMenuInferior(); 
-                mostrarToast("¡Bienvenido, " + alumno.nombre + "!");
-                cambiarSeccion('entrenamientos');
-            } else {
-                mostrarToast("Nombre o PIN incorrectos.", "error");
-            }
-        }
-
-        function entrarComoMonitorSeleccion() {
-            let pass = prompt("Introduce la contraseña de monitor:");
-            if(pass === "1234") {
-                modoMonitorActivo = true; 
-                alumnoActual = null;      
-                document.getElementById('barra-navegacion-inferior').style.display = 'flex';
-                ajustarMenuInferior(); 
-                cambiarSeccion('entrenamientos');
-            } else if(pass !== null) {
-                mostrarToast("Contraseña incorrecta.", "error");
-            }
-        }
-
-        function ajustarMenuInferior() {
-            let btnAlumnoClases = document.getElementById('nav-entrenamientos');
-            let btnAlumnoTorneos = document.getElementById('nav-torneos');
-            let btnAlumnoPerfil = document.getElementById('nav-perfil');
-            
-            let btnMonitorClases = document.getElementById('nav-monitor-clases');
-            let btnMonitorTorneos = document.getElementById('nav-monitor-torneos');
-            let btnMonitorAlumnos = document.getElementById('nav-monitor-alumnos');
-            let btnMonitorGestion = document.getElementById('nav-monitor-gestion');
-
-            if (modoMonitorActivo) {
-                btnAlumnoClases.style.display = 'none';
-                btnAlumnoTorneos.style.display = 'none';
-                btnAlumnoPerfil.style.display = 'none';
-
-                btnMonitorClases.style.display = 'flex';
-                btnMonitorTorneos.style.display = 'flex';
-                btnMonitorAlumnos.style.display = 'flex';
-                btnMonitorGestion.style.display = 'flex';
-
-                [btnMonitorClases, btnMonitorTorneos, btnMonitorAlumnos, btnMonitorGestion].forEach(b => b.style.width = '25%');
-            } else {
-                btnMonitorClases.style.display = 'none';
-                btnMonitorTorneos.style.display = 'none';
-                btnMonitorAlumnos.style.display = 'none';
-                btnMonitorGestion.style.display = 'none';
-
-                btnAlumnoClases.style.display = 'flex';
-                btnAlumnoTorneos.style.display = 'flex';
-                btnAlumnoPerfil.style.display = 'flex';
-
-                [btnAlumnoClases, btnAlumnoTorneos, btnAlumnoPerfil].forEach(b => b.style.width = '33.33%');
-            }
-        }
-
-        function cambiarSeccion(seccion) {
-            if ((seccion === 'alumnos' || seccion === 'gestion') && !modoMonitorActivo) {
-                mostrarToast("Acceso denegado. Debes iniciar sesión como monitor.", "error");
-                volverAHome();
-                return;
-            }
-
-            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-            
-            document.getElementById('seccion-' + seccion).classList.add('active');
-            
-            if(seccion !== 'home' && seccion !== 'login-alumno') {
-                let btnNav = document.getElementById('nav-' + seccion);
-                if(!btnNav && modoMonitorActivo) {
-                    btnNav = document.getElementById('nav-monitor-' + seccion);
-                }
-                if(btnNav) btnNav.classList.add('active');
-            }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            renderizar();
-        }
-
-        async function cargarDatos() {
-            try {
-                let respuesta = await fetch(API_URL);
-                if(respuesta.ok) {
-                    let json = await respuesta.json();
-                    if(json) {
-                        datosGlobales = json;
-                        if(!datosGlobales.avisos) datosGlobales.avisos = [];
-                        if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
-                        if(!datosGlobales.torneos) datosGlobales.torneos = [];
-                        if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
-                    }
-                    document.getElementById('estado-sync').innerText = "Sincronizado";
-                }
-            } catch(e) {
-                document.getElementById('estado-sync').innerText = "Sin conexión";
-            }
-            renderizar();
-        }
-
-        async function guardarDatos() {
-            document.getElementById('estado-sync').innerText = "Guardando...";
-            try {
-                let respuesta = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(datosGlobales)
-                });
-                if(respuesta.ok) {
-                    document.getElementById('estado-sync').innerText = "Sincronizado";
-                } else {
-                    document.getElementById('estado-sync').innerText = "Error";
-                }
-            } catch(e) {
-                document.getElementById('estado-sync').innerText = "Error red";
-            }
-            renderizar();
-        }
-
-        function pedirClaseLibreSinRegistro() {
-            let nombre = document.getElementById('input-nombre-prueba').value.trim();
-            let telefono = document.getElementById('input-telefono-prueba').value.trim();
-            let aceptoRgpd = document.getElementById('check-rgpd-prueba').checked;
-
-            if(!nombre) {
-                mostrarToast("Por favor, introduce al menos tu nombre y apellidos.", "error");
-                return;
-            }
-
-            if(!aceptoRgpd) {
-                mostrarToast("⚠️ Debes aceptar la política de protección de datos.", "warning");
-                return;
-            }
-
-            if(!datosGlobales.avisos) datosGlobales.avisos = [];
-
-            let textoAviso = `${nombre} ha solicitado una Clase de Prueba gratuita.`;
-            if(telefono) textoAviso += ` (Contacto: ${telefono})`;
-
-            datosGlobales.avisos.push({
-                id: Date.now(),
-                alumno: nombre,
-                tipo: 'Clase de Prueba (Sin Registro)',
-                texto: textoAviso
-            });
-
-            guardarDatos();
-            document.getElementById('input-nombre-prueba').value = "";
-            document.getElementById('input-telefono-prueba').value = "";
-            document.getElementById('check-rgpd-prueba').checked = false;
-            mostrarToast("¡Solicitud enviada con éxito! El monitor ha recibido tu aviso.");
-        }
-
-        function registrarNuevoAlumno() {
-            if(!modoMonitorActivo) return mostrarToast("Acción no permitida.", "error");
-            let nombre = document.getElementById('nuevo-alumno-nombre').value.trim();
-            let pass = document.getElementById('nuevo-alumno-pass').value.trim();
-            let clases = parseInt(document.getElementById('nuevo-alumno-clases').value);
-            let aceptoRgpd = document.getElementById('check-rgpd-alumno').checked;
-            
-            if(isNaN(clases)) clases = 10;
-
-            if(!nombre || !pass) return mostrarToast("Escribe el nombre y la contraseña del alumno", "error");
-            
-            if(!aceptoRgpd) {
-                return mostrarToast("⚠️ Debes confirmar el consentimiento de protección de datos.", "warning");
-            }
-
-            if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
-
-            let existe = datosGlobales.alumnos.find(a => a.nombre.toLowerCase() === nombre.toLowerCase());
-            if(existe) return mostrarToast("Ya existe un alumno con ese nombre.", "error");
-
-            datosGlobales.alumnos.push({ nombre, pass, clasesBono: clases });
-            document.getElementById('nuevo-alumno-nombre').value = "";
-            document.getElementById('nuevo-alumno-pass').value = "";
-            document.getElementById('nuevo-alumno-clases').value = "10";
-            document.getElementById('check-rgpd-alumno').checked = true;
-            guardarDatos();
-            mostrarToast("¡Alumno creado con éxito!");
-        }
-
-        function cerrarSesionAlumno() {
-            alumnoActual = null;
-            mostrarToast("Sesión cerrada correctamente.");
-            volverAHome();
-        }
-
-        function solicitarRecargaBono() {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión en tu perfil.", "error");
-                volverAHome();
-                return;
-            }
-            if(!datosGlobales.avisos) datosGlobales.avisos = [];
-
-            let yaPedido = datosGlobales.avisos.find(a => a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono');
-            if(yaPedido) return mostrarToast("Ya tienes una solicitud de recarga pendiente.", "warning");
-
-            datosGlobales.avisos.push({
-                id: Date.now(),
-                alumno: alumnoActual.nombre,
-                tipo: 'Recarga Bono',
-                texto: `${alumnoActual.nombre} solicita recargar su Bono de 10 clases.`
-            });
-            guardarDatos();
-            mostrarToast("¡Aviso de recarga enviado al monitor correctamente!");
-        }
-
-        function resolverAviso(id) {
-            if(!modoMonitorActivo) return;
-            datosGlobales.avisos = datosGlobales.avisos.filter(a => a.id !== id);
-            guardarDatos();
-            mostrarToast("Aviso descartado.");
-        }
-
-        function aprobarRecargaBono(nombreAlumno) {
-            if(!modoMonitorActivo) return;
-            let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === nombreAlumno);
-            if(alumnoBD) {
-                alumnoBD.clasesBono += 10;
-                if(alumnoActual && alumnoActual.nombre === nombreAlumno) {
-                    alumnoActual.clasesBono = alumnoBD.clasesBono;
-                }
-                if(datosGlobales.avisos) {
-                    datosGlobales.avisos = datosGlobales.avisos.filter(a => !(a.alumno === nombreAlumno && a.tipo === 'Recarga Bono'));
-                }
-                guardarDatos();
-                mostrarToast(`✅ ¡Bono recargado! Se sumaron 10 clases a ${nombreAlumno}.`);
-            }
-        }
-
-        function devolverClase(entrenamientoId, nombreAlumno) {
-            if(!modoMonitorActivo) return;
-            if(confirm(`¿Estás seguro de devolver 1 clase a ${nombreAlumno} y eliminarle del entrenamiento?`)) {
-                let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
-                if(ent && ent.inscritos) {
-                    ent.inscritos = ent.inscritos.filter(nombre => nombre !== nombreAlumno);
-                }
-                let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === nombreAlumno);
-                if(alumnoBD) {
-                    alumnoBD.clasesBono += 1;
-                    if(alumnoActual && alumnoActual.nombre === nombreAlumno) {
-                        alumnoActual.clasesBono = alumnoBD.clasesBono;
-                    }
-                }
-                guardarDatos();
-                mostrarToast(`✅ Clase devuelta a ${nombreAlumno}.`);
-            }
-        }
-
-        function desapuntarseEntrenamientoPropio(entrenamientoId) {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero.", "error");
-                volverAHome();
-                return;
-            }
-            if(confirm("¿Seguro que deseas anular tu asistencia? Se te devolverá 1 clase a tu bono.")) {
-                let ent = datosGlobales.entrenamientos.find(e => e.id === entrenamientoId);
-                if(ent && ent.inscritos) {
-                    ent.inscritos = ent.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
-                }
-                let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
-                if(alumnoBD) {
-                    alumnoBD.clasesBono += 1;
-                    alumnoActual.clasesBono = alumnoBD.clasesBono;
-                }
-                guardarDatos();
-                mostrarToast("✅ Asistencia anulada y clase devuelta a tu bono.");
-            }
-        }
-
-        function desapuntarseTorneoPropio(torneoId) {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero.", "error");
-                volverAHome();
-                return;
-            }
-            if(confirm("¿Seguro que deseas anular tu inscripción en este torneo?")) {
-                let tor = datosGlobales.torneos.find(t => t.id === torneoId);
-                if(tor && tor.inscritos) {
-                    tor.inscritos = tor.inscritos.filter(nombre => nombre !== alumnoActual.nombre);
-                }
-                guardarDatos();
-                mostrarToast("✅ Te has desapuntado del torneo.");
-            }
-        }
-
-        function renderizar() {
-            let totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
-            
-            let globoNav = document.getElementById('globo-notificaciones');
-            let globoHome = document.getElementById('globo-notificaciones-home');
-            
-            if(totalAvisos > 0) {
-                globoNav.innerText = totalAvisos;
-                globoNav.style.display = 'inline-block';
-                globoHome.innerText = totalAvisos;
-                globoHome.style.display = 'inline-block';
-            } else {
-                globoNav.style.display = 'none';
-                globoHome.style.display = 'none';
-            }
-
-            if(alumnoActual) {
-                document.getElementById('panel-identificado').style.display = 'block';
-                document.getElementById('saludo-alumno').innerText = "¡Hola, " + alumnoActual.nombre + "!";
-                let reg = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
-                let clases = reg ? reg.clasesBono : 0;
-                alumnoActual.clasesBono = clases;
-                document.getElementById('info-bono-personal').innerText = clases;
-                document.getElementById('historial-bono-alumno').innerHTML = `📜 Estado de cuenta al día. Clases listas para reservar entrenamientos o torneos.`;
-            } else {
-                document.getElementById('panel-identificado').style.display = 'none';
-            }
-
-            let htmlEntrenamientos = "";
-            if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0) {
-                htmlEntrenamientos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay entrenamientos programados actualmente.</p>";
-            } else {
-                datosGlobales.entrenamientos.forEach(ent => {
-                    let btnBorrar = modoMonitorActivo ? `<button class="danger" onclick="borrarEntrenamiento(${ent.id})">🗑️ Borrar clase</button>` : '';
-                    let lugarTxt = '';
-                    if (ent.lugar) {
-                        let cacheKey = `${ent.lugar.trim().toLowerCase()}_${ent.fecha || 'hoy'}`;
-                        let climaPrevio = climaCache[cacheKey];
-                        let estiloDisplay = (climaPrevio) ? 'inline-flex' : 'none';
-                        lugarTxt = `<p>📍 <strong>Lugar:</strong> ${ent.lugar}</p><div class="weather-badge weather-badge-dynamic" style="display: ${estiloDisplay};" data-lugar="${ent.lugar}" data-fecha="${ent.fecha}">${climaPrevio || ''}</div>`;
-                    }
-                    
-                    let estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.includes(alumnoActual.nombre);
-                    let botonAccion = "";
-
-                    if(estaApuntado) {
-                        botonAccion = `<button class="danger" onclick="desapuntarseEntrenamientoPropio(${ent.id})">Anular asistencia</button>`;
-                    } else {
-                        botonAccion = `<button onclick="apuntarseEntrenamiento(${ent.id})">Apuntarme</button>`;
-                    }
-
-                    let listaInscritosHTML = "";
-                    let numInscritos = (ent.inscritos && ent.inscritos.length > 0) ? ent.inscritos.length : 0;
-
-                    if(modoMonitorActivo) {
-                        if(numInscritos > 0) {
-                            listaInscritosHTML = "<ul style='margin-left: 20px; margin-top: 8px;'>";
-                            ent.inscritos.forEach(alumnoNombre => {
-                                listaInscritosHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre} <button class='success' style='padding: 2px 8px; font-size: 0.75rem; width: auto; display: inline-block; margin-top: 0; margin-left: 8px;' onclick="devolverClase(${ent.id}, '${alumnoNombre}')">↩️ Devolver clase</button></li>`;
-                            });
-                            listaInscritosHTML += "</ul>";
-                        } else {
-                            listaInscritosHTML = "Nadie apuntado aún";
-                        }
-                    } else {
-                        listaInscritosHTML = `${numInscritos} personas apuntadas`;
-                    }
-
-                    let estadoInscripcionVisual = estaApuntado ? '<div style="margin-bottom:10px;"><span class="badge" style="background:#e8f5e9; color:var(--success);">✓ ESTÁS APUNTADO</span></div>' : '';
-
-                    htmlEntrenamientos += `
-                        <div class="card">
-                            <h3>🏓 ${ent.titulo}</h3>
-                            <p>📅 <strong>Fecha:</strong> ${ent.fecha}</p>
-                            ${lugarTxt}
-                            ${estadoInscripcionVisual}
-                            <p>👥 <strong>Inscritos:</strong> ${listaInscritosHTML}</p>
-                            ${botonAccion}
-                            ${btnBorrar}
-                        </div>
-                    `;
-                });
-            }
-            document.getElementById('lista-entrenamientos').innerHTML = htmlEntrenamientos;
-
-            let htmlTorneos = "";
-            if(!datosGlobales.torneos || datosGlobales.torneos.length === 0) {
-                htmlTorneos = "<p style='text-align:center; padding:20px; color:var(--text-light);'>No hay torneos programados actualmente.</p>";
-            } else {
-                datosGlobales.torneos.forEach(tor => {
-                    let btnBorrarTorneo = modoMonitorActivo ? `<button class="danger" onclick="borrarTorneo(${tor.id})">🗑️ Borrar torneo</button>` : '';
-                    let lugarTorneoTxt = '';
-                    if (tor.lugar) {
-                        let cacheKey = `${tor.lugar.trim().toLowerCase()}_${tor.fecha || 'hoy'}`;
-                        let climaPrevioTorneo = climaCache[cacheKey];
-                        let estiloDisplayTorneo = (climaPrevioTorneo) ? 'inline-flex' : 'none';
-                        lugarTorneoTxt = `<p>📍 <strong>Lugar:</strong> ${tor.lugar}</p><div class="weather-badge weather-badge-dynamic" style="display: ${estiloDisplayTorneo};" data-lugar="${tor.lugar}" data-fecha="${tor.fecha}">${climaPrevioTorneo || ''}</div>`;
-                    }
-                    
-                    let estaApuntadoTorneo = alumnoActual && tor.inscritos && tor.inscritos.includes(alumnoActual.nombre);
-                    let botonTorneoAccion = "";
-
-                    if(estaApuntadoTorneo) {
-                        botonTorneoAccion = `<button class="danger" onclick="desapuntarseTorneoPropio(${tor.id})">Anular inscripción</button>`;
-                    } else {
-                        botonTorneoAccion = `<button onclick="apuntarseTorneo(${tor.id})">Apuntarme</button>`;
-                    }
-
-                    let listaInscritosTorneoHTML = "";
-                    let numInscritosTorneo = (tor.inscritos && tor.inscritos.length > 0) ? tor.inscritos.length : 0;
-
-                    if(modoMonitorActivo) {
-                        if(numInscritosTorneo > 0) {
-                            listaInscritosTorneoHTML = "<ul style='margin-left: 20px; margin-top: 8px;'>";
-                            tor.inscritos.forEach(alumnoNombre => {
-                                listaInscritosTorneoHTML += `<li style='margin-bottom: 6px;'>${alumnoNombre}</li>`;
-                            });
-                            listaInscritosTorneoHTML += "</ul>";
-                        } else {
-                            listaInscritosTorneoHTML = "Nadie apuntado aún";
-                        }
-                    } else {
-                        listaInscritosTorneoHTML = `${numInscritosTorneo} personas apuntadas`;
-                    }
-
-                    let estadoInscripcionTorneoVisual = estaApuntadoTorneo ? '<div style="margin-bottom:10px;"><span class="badge" style="background:#e8f5e9; color:var(--success);">✓ ESTÁS INSCRITO</span></div>' : '';
-
-                    htmlTorneos += `
-                        <div class="card">
-                            <h3>🏆 ${tor.titulo}</h3>
-                            <p>📅 <strong>Fecha:</strong> ${tor.fecha}</p>
-                            ${lugarTorneoTxt}
-                            ${estadoInscripcionTorneoVisual}
-                            <p>👥 <strong>Participantes:</strong> ${listaInscritosTorneoHTML}</p>
-                            ${botonTorneoAccion}
-                            ${btnBorrarTorneo}
-                        </div>
-                    `;
-                });
-            }
-            document.getElementById('lista-torneos').innerHTML = htmlTorneos;
-
-            setTimeout(actualizarClimaEnTarjetas, 50);
-
-            if(modoMonitorActivo) {
-                let avisosHtml = "";
-                if(datosGlobales.avisos && datosGlobales.avisos.length > 0) {
-                    datosGlobales.avisos.forEach(aviso => {
-                        let botonExtraAviso = "";
-                        if(aviso.tipo === 'Recarga Bono') {
-                            botonExtraAviso = `<button class="success" style="padding: 10px; font-size: 0.9rem; margin-top: 8px;" onclick="aprobarRecargaBono('${aviso.alumno}')">🎟️ Añadir bono</button>`;
-                        }
-                        
-                        avisosHtml += `
-                            <div class="card" style="background: white; border-color: #fde047; padding: 16px; margin-bottom: 12px; box-shadow: none;">
-                                <p style="color: #b45309; font-weight: 600; margin-bottom: 6px;">⚠️ Solicitud: ${aviso.tipo}</p>
-                                <p style="color: var(--text); font-size: 0.95rem; margin-bottom: 8px;">${aviso.texto}</p>
-                                ${botonExtraAviso}
-                                <button class="danger" style="padding: 8px; font-size: 0.85rem; margin-top: 6px; background-color: #6b7280;" onclick="resolverAviso(${aviso.id})">✖ Descartar aviso</button>
-                            </div>
-                        `;
-                    });
-                } else {
-                    avisosHtml = `<p style="color: var(--text-light); font-size: 0.95rem;">No hay avisos pendientes.</p>`;
-                }
-                document.getElementById('lista-avisos-monitor').innerHTML = avisosHtml;
-
-                let listaAdminHtml = "";
-                if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0) {
-                    datosGlobales.alumnos.forEach((al, idx) => {
-                        listaAdminHtml += `
-                            <div class="card" style="padding:16px; margin-bottom:12px; background:white; box-shadow: none;">
-                                <p style="font-weight:600; color:var(--text); margin-bottom:4px; font-size: 1rem;">👤 ${al.nombre} <span style="font-weight:normal; font-size:0.85rem; color:var(--text-light);">(PIN: ${al.pass})</span></p>
-                                <p style="margin-bottom:12px; font-size: 0.9rem;">🎟️ Clases en bono: <strong>${al.clasesBono}</strong></p>
-                                <button class="success" style="padding: 10px 12px; font-size: 0.85rem; margin-top: 0; margin-bottom: 8px;" onclick="aprobarRecargaBono('${al.nombre}')">➕ Añadir bono</button>
-                                <div style="display:flex; gap:10px;">
-                                    <button onclick="modificarBono(${idx})" style="padding:10px 12px; font-size:0.85rem; margin-top:0;">Editar clases</button>
-                                    <button class="danger" style="padding:10px 12px; font-size:0.85rem; margin-top:0;" onclick="borrarAlumno(${idx})">Eliminar</button>
-                                </div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    listaAdminHtml = `<p style="color:var(--text-light)">No hay alumnos dados de alta todavía.</p>`;
-                }
-                document.getElementById('lista-alumnos-admin').innerHTML = listaAdminHtml;
-            }
-
-            document.getElementById('panel-crear-entrenamiento').style.display = modoMonitorActivo ? 'block' : 'none';
-            document.getElementById('panel-crear-torneo').style.display = modoMonitorActivo ? 'block' : 'none';
-        }
-
-        function apuntarseEntrenamiento(id) {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
-                return;
-            }
-
-            let alumnoBD = datosGlobales.alumnos.find(a => a.nombre === alumnoActual.nombre);
-
-            if(!alumnoBD || alumnoBD.clasesBono <= 0) {
-                mostrarToast("❌ No te quedan clases en tu bono. Solicita una recarga.", "error");
-                return;
-            }
-
-            let ent = datosGlobales.entrenamientos.find(e => e.id === id);
-            if(ent) {
-                if(!ent.inscritos) ent.inscritos = [];
-                if(!ent.inscritos.includes(alumnoActual.nombre)) {
-                    ent.inscritos.push(alumnoActual.nombre);
-                    alumnoBD.clasesBono -= 1;
-                    alumnoActual.clasesBono = alumnoBD.clasesBono;
-
-                    guardarDatos();
-                    mostrarToast("✅ ¡Apuntado con éxito! Se ha descontado 1 clase.");
-                } else { 
-                    mostrarToast("Ya estás apuntado a este entrenamiento.", "warning"); 
-                }
-            }
-        }
-
-        function apuntarseTorneo(id) {
-            if(!alumnoActual) {
-                mostrarToast("Debes iniciar sesión primero para apuntarte.", "warning");
-                return;
-            }
-            let tor = datosGlobales.torneos.find(t => t.id === id);
-            if(tor) {
-                if(!tor.inscritos) tor.inscritos = [];
-                if(!tor.inscritos.includes(alumnoActual.nombre)) {
-                    tor.inscritos.push(alumnoActual.nombre);
-                    guardarDatos();
-                    mostrarToast("¡Apuntado al torneo con éxito!");
-                } else { mostrarToast("Ya estás apuntado a este torneo.", "warning"); }
-            }
-        }
-
-        function agregarEntrenamiento() {
-            if(!modoMonitorActivo) return;
-            let titulo = document.getElementById('nuevo-titulo').value.trim();
-            let fechaInput = document.getElementById('nuevo-fecha').value;
-            let horaInput = document.getElementById('nuevo-hora').value;
-            let lugar = document.getElementById('nuevo-lugar').value.trim();
-            
-            if(!titulo || !fechaInput) return mostrarToast("Rellena el título y la fecha", "error");
-            
-            let fechaFormateada = fechaInput;
-            if(horaInput) {
-                fechaFormateada += " a las " + horaInput;
-            }
-
-            if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
-            datosGlobales.entrenamientos.push({ id: Date.now(), titulo, fecha: fechaFormateada, lugar, inscritos: [] });
-            
-            document.getElementById('nuevo-titulo').value = "";
-            document.getElementById('nuevo-fecha').value = "";
-            document.getElementById('nuevo-hora').value = "";
-            document.getElementById('nuevo-lugar').value = "";
-            guardarDatos();
-            mostrarToast("Clase creada correctamente.");
-        }
-
-        function borrarEntrenamiento(id) {
-            if(!modoMonitorActivo) return;
-            if(confirm("¿Seguro que quieres borrar este entrenamiento?")) {
-                datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(e => e.id !== id);
-                guardarDatos();
-                mostrarToast("Entrenamiento borrado.");
-            }
-        }
-
-        function agregarTorneo() {
-            if(!modoMonitorActivo) return;
-            let titulo = document.getElementById('torneo-titulo').value.trim();
-            let fechaInput = document.getElementById('torneo-fecha').value;
-            let horaInput = document.getElementById('torneo-hora').value;
-            let lugar = document.getElementById('torneo-lugar').value.trim();
-            
-            if(!titulo || !fechaInput) return mostrarToast("Rellena el título y la fecha", "error");
-            
-            let fechaFormateada = fechaInput;
-            if(horaInput) {
-                fechaFormateada += " a las " + horaInput;
-            }
-
-            if(!datosGlobales.torneos) datosGlobales.torneos = [];
-            datosGlobales.torneos.push({ id: Date.now(), titulo, fecha: fechaFormateada, lugar, inscritos: [] });
-            
-            document.getElementById('torneo-titulo').value = "";
-            document.getElementById('torneo-fecha').value = "";
-            document.getElementById('torneo-hora').value = "";
-            document.getElementById('torneo-lugar').value = "";
-            guardarDatos();
-            mostrarToast("Torneo creado correctamente.");
-        }
-
-        function borrarTorneo(id) {
-            if(!modoMonitorActivo) return;
-            if(confirm("¿Seguro que quieres borrar este torneo?")) {
-                datosGlobales.torneos = datosGlobales.torneos.filter(t => t.id !== id);
-                guardarDatos();
-            }
-        }
-
-        function modificarBono(index) {
-            if(!modoMonitorActivo) return;
-            let nuevoValor = prompt("Introduce el nuevo número de clases disponibles:", datosGlobales.alumnos[index].clasesBono);
-            if(nuevoValor !== null && !isNaN(nuevoValor)) {
-                datosGlobales.alumnos[index].clasesBono = parseInt(nuevoValor);
-                guardarDatos();
-                mostrarToast("Bono modificado correctamente.");
-            }
-        }
-
-        function borrarAlumno(index) {
-            if(!modoMonitorActivo) return;
-            if(confirm("¿Seguro que quieres eliminar a este alumno?")) {
-                datosGlobales.alumnos.splice(index, 1);
-                guardarDatos();
-                mostrarToast("Alumno eliminado.");
-            }
-        }
-
-        function reiniciarDatosCompletos() {
-            if(!modoMonitorActivo) return;
-            if(prompt("Escribe 'BORRAR' para vaciar absolutamente todo:") === 'BORRAR') {
-                datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [] };
-                guardarDatos();
-                mostrarToast("Datos reiniciados.", "warning");
-            }
-        }
-
-        cargarDatos();
-        setInterval(cargarDatos, 5005);
-    </script>
-</body>
-</html>
+    <div class="card" style="background:linear-gradient(135deg, var(--success-bg), var(--card-bg)); border-color:var(--success);">
+      <h3 style="color:var(--success);">🎁 ¿Nuevo en el club?</h3>
+      <p>Solicita tu clase de prueba gratuita</p>
+      <label>Nombre y apellidos</label>
+      <input type="text" id="input-nombre-prueba" placeholder="Ej: Laura Martínez" autocomplete="name">
+      <label>Teléfono de contacto (opcional)</label>
+      <input type="tel" id="input-telefono-prueba" placeholder="Ej: 600123456" autocomplete="tel">
+      <div class="terms-container">
+        <input type="checkbox" id="check-rgpd-prueba">
+        <label for="check-rgpd-prueba">
+          Acepto la <a href="#" onclick="mostrarPoliticaPrivacidad(); return false;">política de protección de datos</a> y el tratamiento de mis datos.
+        </label>
+      </div>
+      <button class="success" onclick="pedirClaseLibreSinRegistro()">Solicitar clase de prueba</button>
+    </div>
+  </div>
+
+  <!-- LOGIN ALUMNO -->
+  <div id="seccion-login-alumno" class="section">
+    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver</button>
+    <div class="card">
+      <h3>👤 Acceso de alumno</h3>
+      <p style="margin-bottom:16px;">Introduce tus datos para acceder a tu perfil y bonos.</p>
+      <label>Nombre</label>
+      <input type="text" id="input-login-nombre" placeholder="Tu nombre y apellidos" autocomplete="name">
+      <label>PIN</label>
+      <input type="password" id="input-login-pin" placeholder="Tu PIN personal" inputmode="numeric" autocomplete="current-password">
+      <button onclick="procesarAccesoAlumno()">Entrar</button>
+    </div>
+  </div>
+
+  <!-- ENTRENAMIENTOS -->
+  <div id="seccion-entrenamientos" class="section">
+    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <h2>📅 Próximos entrenamientos</h2>
+    <div id="lista-entrenamientos"></div>
+    <div class="card" id="panel-crear-entrenamiento" style="display:none; background:var(--bg); border:2px dashed var(--border-card);">
+      <h3>➕ Añadir nuevo entrenamiento</h3>
+      <label>Título / Nivel</label>
+      <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
+      <label>Fecha</label>
+      <input type="date" id="nuevo-fecha">
+      <label>Hora</label>
+      <input type="time" id="nuevo-hora" value="18:00">
+      <label>Lugar</label>
+      <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
+      <label>Plazas máximas (opcional)</label>
+      <input type="number" id="nuevo-plazas" placeholder="Ej: 8" min="1">
+      <button onclick="agregarEntrenamiento()">Crear clase</button>
+    </div>
+  </div>
+
+  <!-- TORNEOS -->
+  <div id="seccion-torneos" class="section">
+    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <h2>🏆 Torneos y competiciones</h2>
+    <div id="lista-torneos"></div>
+    <div class="card" id="panel-crear-torneo" style="display:none; background:var(--bg); border:2px dashed var(--border-card);">
+      <h3>➕ Crear nuevo torneo</h3>
+      <label>Nombre del torneo</label>
+      <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
+      <label>Fecha</label>
+      <input type="date" id="torneo-fecha">
+      <label>Hora</label>
+      <input type="time" id="torneo-hora" value="10:00">
+      <label>Lugar</label>
+      <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
+      <label>Plazas máximas (opcional)</label>
+      <input type="number" id="torneo-plazas" placeholder="Ej: 16" min="1">
+      <button onclick="agregarTorneo()">Crear torneo</button>
+    </div>
+  </div>
+
+  <!-- PERFIL ALUMNO -->
+  <div id="seccion-perfil" class="section">
+    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <h2>👤 Mi panel de alumno</h2>
+    <div id="panel-identificado" style="display:none;">
+      <div class="card">
+        <span class="badge">Sesión activa</span>
+        <h3 id="saludo-alumno" style="font-size:1.3rem; margin-bottom:4px;">¡Hola!</h3>
+        <div class="bono-card-container">
+          <p style="font-size:.8rem; text-transform:uppercase; letter-spacing:.5px; font-weight:600; color:var(--success); margin-bottom:4px;">🎟️ Tu bono</p>
+          <p id="info-bono-personal" style="font-size:2.5rem; color:var(--success); font-weight:700; line-height:1.1; margin-bottom:2px;">0</p>
+          <p style="font-size:.9rem; font-weight:500;">clases disponibles</p>
+          <button class="success" style="margin-top:16px;" onclick="solicitarRecargaBono()">+ Recargar bono</button>
+        </div>
+        <div id="historial-bono-alumno" style="margin-top:12px; font-size:.85rem; color:var(--text-light); background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--border-card);"></div>
+      </div>
+      <div class="card">
+        <h3>📊 Historial de asistencia</h3>
+        <div id="historial-asistencia"></div>
+      </div>
+      <button class="danger" onclick="cerrarSesionAlumno()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  <!-- ALUMNOS (MONITOR) -->
+  <div id="seccion-alumnos" class="section">
+    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <h2>👥 Gestión de alumnos</h2>
+    <div class="card" style="background:var(--warning-bg); border-color:var(--warning);">
+      <h3 style="color:var(--warning);">➕ Crear nuevo alumno</h3>
+      <label>Nombre del alumno</label>
+      <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
+      <label>PIN de acceso</label>
+      <input type="text" id="nuevo-alumno-pass" placeholder="Ej: 1234" inputmode="numeric">
+      <label>Clases iniciales en el bono</label>
+      <input type="number" id="nuevo-alumno-clases" value="10" min="0">
+      <div class="terms-container">
+        <input type="checkbox" id="check-rgpd-alumno" checked>
+        <label for="check-rgpd-alumno">Confirmo que el alumno ha dado su consentimiento para el tratamiento de sus datos deportivos.</label>
+      </div>
+      <button onclick="registrarNuevoAlumno()" class="warning">Crear alumno</button>
+    </div>
+    <div class="card">
+      <h3>👥 Alumnos registrados</h3>
+      <div id="lista-alumnos-admin"></div>
+    </div>
+  </div>
+
+  <!-- GESTIÓN (MONITOR) -->
+  <div id="seccion-gestion" class="section">
+    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <h2>⚙️ Panel de gestión</h2>
+    <div class="card" style="background:var(--warning-bg); border-color:var(--warning);">
+      <h3 style="color:var(--warning);">🚨 Solicitudes de alumnos</h3>
+      <div id="lista-avisos-monitor"></div>
+    </div>
+    <div class="card">
+      <h3>💾 Copia de seguridad</h3>
+      <p>Exporta o importa todos los datos del club.</p>
+      <button onclick="exportarDatos()">📤 Exportar JSON</button>
+      <label for="input-import" style="margin-top:14px;">Importar JSON:</label>
+      <input type="file" id="input-import" accept="application/json" onchange="importarDatos(event)">
+    </div>
+    <div class="card">
+      <h3 style="color:var(--danger);">⚠️ Zona peligrosa</h3>
+      <button class="danger" onclick="reiniciarDatosCompletos()">Vaciar / Reiniciar todo</button>
+    </div>
+  </div>
+
+</div>
+
+<nav id="barra-navegacion-inferior" style="display:none;">
+  <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active"><span class="icon">📅</span><span>Clases</span></button>
+  <button onclick="cambiarSeccion('torneos')" id="nav-torneos"><span class="icon">🏆</span><span>Torneos</span></button>
+  <button onclick="cambiarSeccion('perfil')" id="nav-perfil"><span class="icon">👤</span><span>Perfil</span></button>
+  <button onclick="cambiarSeccion('entrenamientos')" id="nav-monitor-clases" style="display:none;"><span class="icon">📅</span><span>Clases</span></button>
+  <button onclick="cambiarSeccion('torneos')" id="nav-monitor-torneos" style="display:none;"><span class="icon">🏆</span><span>Torneos</span></button>
+  <button onclick="cambiarSeccion('alumnos')" id="nav-monitor-alumnos" style="display:none;"><span class="icon">👥</span><span>Alumnos</span></button>
+  <button onclick="cambiarSeccion('gestion')" id="nav-monitor-gestion" style="display:none;">
+    <span class="icon">⚙️</span><span>Gestión</span>
+    <span id="globo-notificaciones" class="notification-badge">0</span>
+  </button>
+</nav>
+
+<script>
+/* =========================================================
+   CONSTANTES Y ESTADO
+   ========================================================= */
+const CLAVE_STORAGE = 'pickleball_club_v2';
+const PASS_MONITOR = '1234';
+const COORDENADAS = {
+  "madrid":{lat:40.4168,lon:-3.7038,n:"Madrid"},"barcelona":{lat:41.3851,lon:2.1734,n:"Barcelona"},
+  "valencia":{lat:39.4699,lon:-0.3763,n:"Valencia"},"sevilla":{lat:37.3891,lon:-5.9845,n:"Sevilla"},
+  "malaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},"málaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},
+  "bilbao":{lat:43.2630,lon:-2.9350,n:"Bilbao"},"zaragoza":{lat:41.6488,lon:-0.8891,n:"Zaragoza"},
+  "alicante":{lat:38.3452,lon:-0.4810,n:"Alicante"},"murcia":{lat:37.9922,lon:-1.1307,n:"Murcia"},
+  "palma":{lat:39.5696,lon:2.6502,n:"Palma"},"granada":{lat:37.1773,lon:-3.5986,n:"Granada"},
+  "cordoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"},"córdoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"}
+};
+
+let modoMonitorActivo = false;
+let alumnoActual = null;
+let climaCache = {};
+let datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [], historial: [] };
+let modalCallbackAceptar = null;
+
+/* =========================================================
+   PERSISTENCIA
+   ========================================================= */
+function guardarDatos(silencioso = false) {
+  try {
+    localStorage.setItem(CLAVE_STORAGE, JSON.stringify(datosGlobales));
+    if (!silencioso) {
+      document.getElementById('estado-sync').innerText = 'Guardado ✓';
+      setTimeout(() => document.getElementById('estado-sync').innerText = 'Local', 1200);
+    }
+  } catch (e) {
+    console.error('Error al guardar:', e);
+    mostrarToast('Error al guardar los datos.', 'error');
+  }
+  renderizar();
+}
+
+function cargarDatos() {
+  try {
+    const bruto = localStorage.getItem(CLAVE_STORAGE);
+    if (bruto) {
+      const parsed = JSON.parse(bruto);
+      datosGlobales = {
+        entrenamientos: parsed.entrenamientos || [],
+        torneos: parsed.torneos || [],
+        alumnos: parsed.alumnos || [],
+        avisos: parsed.avisos || [],
+        historial: parsed.historial || []
+      };
+    }
+  } catch (e) {
+    console.error('Error al cargar:', e);
+  }
+  document.getElementById('estado-sync').innerText = 'Local';
+  renderizar();
+}
+
+/* =========================================================
+   UTILIDADES
+   ========================================================= */
+function escapeHtml(str) {
+  if (str === null || str === undefined) return '';
+  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
+}
+
+function mostrarToast(mensaje, tipo = 'success') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${tipo}`;
+  const icono = tipo === 'error' ? '❌' : tipo === 'warning' ? '⚠️' : '✅';
+  toast.innerHTML = `<span>${icono}</span> <span>${escapeHtml(mensaje)}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+function mostrarModal(titulo, mensaje, callbackAceptar, opts = {}) {
+  document.getElementById('modal-titulo').innerText = titulo;
+  document.getElementById('modal-mensaje').innerText = mensaje;
+  const inputEl = document.getElementById('modal-input');
+  if (opts.input) {
+    inputEl.style.display = 'block';
+    inputEl.value = opts.inputValor || '';
+    inputEl.placeholder = opts.inputPlaceholder || '';
+    inputEl.type = opts.inputType || 'text';
+  } else {
+    inputEl.style.display = 'none';
+  }
+  document.getElementById('modal-aceptar').className = opts.danger ? 'danger' : '';
+  document.getElementById('modal-aceptar').innerText = opts.textoAceptar || 'Aceptar';
+  document.getElementById('modal-overlay').classList.add('active');
+  modalCallbackAceptar = () => {
+    const valor = inputEl.style.display !== 'none' ? inputEl.value.trim() : null;
+    callbackAceptar(valor);
+    cerrarModal();
+  };
+}
+function cerrarModal() {
+  document.getElementById('modal-overlay').classList.remove('active');
+  modalCallbackAceptar = null;
+}
+
+function toggleTema() {
+  const actual = document.documentElement.getAttribute('data-theme');
+  const nuevo = actual === 'dark' ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', nuevo);
+  localStorage.setItem('pickleball_tema', nuevo);
+  document.querySelector('.theme-toggle').innerText = nuevo === 'dark' ? '☀️' : '🌙';
+}
+
+function mostrarPoliticaPrivacidad() {
+  mostrarModal('Política de Privacidad',
+    'Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club, de conformidad con el RGPD. Podrá ejercer sus derechos de acceso, rectificación y supresión contactando con el club.',
+    () => {}, { textoAceptar: 'Entendido' });
+}
+
+/* =========================================================
+   CLIMA
+   ========================================================= */
+async function obtenerCl
