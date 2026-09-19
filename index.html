@@ -8,131 +8,77 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon" href="https://img.icons8.com/color/192/pickleball.png">
 <style>
-:root {
-  --primary: #0b132b;
-  --primary-light: #1c2541;
-  --primary-accent: #00b4d8;
-  --btn-hover: #0096c7;
-  --bg: #f4f6f9;
-  --card-bg: #ffffff;
-  --text: #1d3557;
-  --text-light: #6c757d;
-  --border-card: #e9ecef;
-  --success: #2a9d8f;
-  --success-bg: #e8f5e9;
-  --danger: #e63946;
-  --danger-bg: #fde8e8;
-  --warning: #f4a261;
-  --warning-bg: #fef3e2;
-  --radius: 20px;
-  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-[data-theme="dark"] {
-  --primary: #0d1117;
-  --primary-light: #161b22;
-  --bg: #0d1117;
-  --card-bg: #161b22;
-  --text: #e6edf3;
-  --text-light: #8b949e;
-  --border-card: #30363d;
-  --success-bg: #12261e;
-  --danger-bg: #2d1214;
-  --warning-bg: #2d1e12;
-}
-* { box-sizing: border-box; margin: 0; padding: 0; font-family: var(--font); -webkit-tap-highlight-color: transparent; }
-body { background: var(--bg); color: var(--text); padding-bottom: 130px; -webkit-font-smoothing: antialiased; transition: background .25s, color .25s; }
-
-/* Toasts */
-#toast-container { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 90%; max-width: 400px; pointer-events: none; }
-.toast { background: var(--primary); color: #fff; padding: 16px 20px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,.15); font-size: .95rem; font-weight: 500; display: flex; align-items: center; gap: 12px; pointer-events: auto; animation: fadeInDown .3s ease, fadeOutUp .3s ease 2.7s forwards; border-left: 5px solid var(--primary-accent); }
-.toast.success { border-left-color: var(--success); }
-.toast.error { border-left-color: var(--danger); }
-.toast.warning { border-left-color: var(--warning); }
-@keyframes fadeInDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes fadeOutUp { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-15px); } }
-
-/* Header */
-header { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: #fff; padding: 24px 20px 20px; border-bottom: 4px solid var(--primary-accent); box-shadow: 0 4px 20px rgba(0,0,0,.15); }
-.header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 10px; }
-header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.3px; display: flex; align-items: center; gap: 8px; }
-header p { font-size: .9rem; opacity: .8; }
-.sync-status { font-size: .7rem; color: var(--primary-accent); background: rgba(0,180,216,.12); padding: 5px 12px; border-radius: 20px; font-weight: 600; border: 1px solid rgba(0,180,216,.3); white-space: nowrap; }
-.theme-toggle { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); color: #fff; width: 38px; height: 38px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; cursor: pointer; padding: 0; margin: 0; box-shadow: none; flex-shrink: 0; }
-.theme-toggle:hover { background: rgba(255,255,255,.2); transform: none; }
-
-/* Container */
-.container { max-width: 580px; margin: 0 auto; padding: 24px 16px; }
-h2 { font-size: 1.25rem; color: var(--text); margin-bottom: 20px; font-weight: 700; letter-spacing: -.3px; display: flex; align-items: center; gap: 10px; }
-
-/* Cards */
-.card { background: var(--card-bg); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(0,0,0,.04); border: 1px solid var(--border-card); transition: transform .2s, box-shadow .2s; }
-.card h3 { color: var(--text); margin-bottom: 12px; font-size: 1.15rem; display: flex; align-items: center; gap: 8px; font-weight: 700; }
-.card p { font-size: 1rem; color: var(--text-light); margin-bottom: 8px; line-height: 1.5; }
-
-/* Buttons */
-button { background: var(--primary-accent); color: #fff; border: none; padding: 16px 20px; border-radius: 16px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: all .2s; margin-top: 14px; width: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 14px rgba(0,180,216,.25); }
-button:hover { background: var(--btn-hover); transform: translateY(-1px); box-shadow: 0 6px 18px rgba(0,180,216,.35); }
-button:active { transform: translateY(0); }
-button:disabled { opacity: .5; cursor: not-allowed; transform: none !important; }
-button.danger { background: var(--danger); box-shadow: 0 4px 14px rgba(230,57,70,.25); }
-button.danger:hover { background: #c1121f; }
-button.warning { background: var(--warning); box-shadow: 0 4px 14px rgba(244,162,97,.25); }
-button.warning:hover { background: #e76f51; }
-button.success { background: var(--success); box-shadow: 0 4px 14px rgba(42,157,143,.25); }
-button.success:hover { background: #218375; }
-button.btn-volver { background: var(--card-bg); color: var(--text); border: 1px solid var(--border-card); box-shadow: 0 2px 8px rgba(0,0,0,.02); font-weight: 500; }
-button.btn-volver:hover { background: var(--bg); }
-button.btn-mini { padding: 6px 12px; font-size: .8rem; width: auto; margin-top: 6px; border-radius: 10px; }
-
-/* Inputs */
-input, select, textarea { width: 100%; padding: 14px 16px; margin-top: 6px; margin-bottom: 14px; border: 1px solid var(--border-card); border-radius: 14px; font-size: 1rem; background: var(--card-bg); color: var(--text); outline: none; transition: all .2s; font-family: var(--font); }
-input:focus, select:focus, textarea:focus { border-color: var(--primary-accent); box-shadow: 0 0 0 4px rgba(0,180,216,.1); }
-label { font-size: .9rem; font-weight: 500; color: var(--text); display: block; margin-top: 6px; }
-
-/* Terms */
-.terms-container { display: flex; align-items: flex-start; gap: 12px; margin: 10px 0 18px; font-size: .9rem; line-height: 1.4; color: var(--text-light); }
-.terms-container input[type="checkbox"] { width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--primary-accent); cursor: pointer; flex-shrink: 0; }
-.terms-container label { font-weight: 400; display: inline; color: var(--text-light); }
-.terms-container a { color: var(--success); font-weight: 500; }
-
-/* Nav */
-nav { position: fixed; bottom: 16px; left: 16px; right: 16px; max-width: 580px; margin: 0 auto; background: var(--card-bg); opacity: .97; backdrop-filter: blur(16px); display: flex; justify-content: space-around; padding: 8px; box-shadow: 0 10px 30px rgba(0,0,0,.15); border-radius: 24px; border: 1px solid var(--border-card); z-index: 1000; }
-nav button { background: none; color: var(--text-light); font-size: .75rem; margin: 0; padding: 8px 4px; font-weight: 500; width: 25%; box-shadow: none; display: flex; flex-direction: column; align-items: center; gap: 4px; border-radius: 16px; position: relative; }
-nav button:hover { background: none; transform: none; box-shadow: none; }
-nav button span.icon { font-size: 1.35rem; transition: transform .2s; }
-nav button.active { color: var(--primary-accent); background: rgba(0,180,216,.08); font-weight: 600; }
-nav button.active span.icon { transform: scale(1.05); }
-.notification-badge { position: absolute; top: 4px; right: 22%; background: var(--danger); color: #fff; font-size: .65rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; border: 2px solid var(--card-bg); display: none; }
-
-/* Sections */
-.section { display: none; }
-.section.active { display: block; animation: fadeIn .25s ease-out; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
-
-/* Misc */
-.badge { display: inline-block; background: var(--success-bg); color: var(--success); padding: 4px 10px; border-radius: 8px; font-size: .8rem; font-weight: 600; margin-bottom: 12px; }
-.home-card-main { background: linear-gradient(135deg, var(--card-bg), var(--bg)); border: 1px solid var(--border-card); text-align: center; padding: 32px 20px; }
-.bono-card-container { background: linear-gradient(135deg, var(--success-bg), var(--card-bg)); border: 1px solid var(--success); text-align: center; padding: 24px; margin: 16px 0; border-radius: var(--radius); }
-.weather-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--bg); padding: 6px 12px; border-radius: 12px; font-size: .85rem; font-weight: 500; color: var(--text); margin: 4px 0 12px; border: 1px solid var(--border-card); }
-.empty-state { text-align: center; padding: 20px; color: var(--text-light); }
-.list-inscritos { margin-left: 20px; margin-top: 8px; }
-.list-inscritos li { margin-bottom: 6px; color: var(--text); }
-
-/* Modal */
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); display: none; align-items: center; justify-content: center; z-index: 5000; padding: 20px; animation: fadeIn .2s; }
-.modal-overlay.active { display: flex; }
-.modal-box { background: var(--card-bg); border-radius: var(--radius); padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 20px 60px rgba(0,0,0,.3); animation: fadeIn .25s; }
-.modal-box h3 { margin-bottom: 12px; color: var(--text); }
-.modal-box p { margin-bottom: 16px; color: var(--text-light); line-height: 1.5; }
-.modal-actions { display: flex; gap: 10px; margin-top: 12px; }
-.modal-actions button { margin-top: 0; }
+:root{--primary:#0b132b;--primary-light:#1c2541;--primary-accent:#00b4d8;--btn-hover:#0096c7;--bg:#f4f6f9;--card-bg:#fff;--text:#1d3557;--text-light:#6c757d;--border-card:#e9ecef;--success:#2a9d8f;--success-bg:#e8f5e9;--danger:#e63946;--danger-bg:#fde8e8;--warning:#f4a261;--warning-bg:#fef3e2;--radius:20px;--font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+[data-theme="dark"]{--primary:#0d1117;--primary-light:#161b22;--bg:#0d1117;--card-bg:#161b22;--text:#e6edf3;--text-light:#8b949e;--border-card:#30363d;--success-bg:#12261e;--danger-bg:#2d1214;--warning-bg:#2d1e12}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font);-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);padding-bottom:130px;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+#toast-container{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:10px;width:90%;max-width:400px;pointer-events:none}
+.toast{background:var(--primary);color:#fff;padding:16px 20px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.15);font-size:.95rem;font-weight:500;display:flex;align-items:center;gap:12px;pointer-events:auto;animation:fadeInDown .3s ease,fadeOutUp .3s ease 2.7s forwards;border-left:5px solid var(--primary-accent)}
+.toast.success{border-left-color:var(--success)}.toast.error{border-left-color:var(--danger)}.toast.warning{border-left-color:var(--warning)}
+@keyframes fadeInDown{from{opacity:0;transform:translateY(-15px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeOutUp{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-15px)}}
+header{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;padding:24px 20px 20px;border-bottom:4px solid var(--primary-accent);box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.header-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;gap:10px}
+header h1{font-size:1.25rem;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:8px}
+header p{font-size:.9rem;opacity:.8}
+.sync-status{font-size:.7rem;color:var(--primary-accent);background:rgba(0,180,216,.12);padding:5px 12px;border-radius:20px;font-weight:600;border:1px solid rgba(0,180,216,.3);white-space:nowrap}
+.theme-toggle{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;padding:0;margin:0;box-shadow:none;flex-shrink:0}
+.theme-toggle:hover{background:rgba(255,255,255,.2);transform:none}
+.container{max-width:580px;margin:0 auto;padding:24px 16px}
+h2{font-size:1.25rem;color:var(--text);margin-bottom:20px;font-weight:700;letter-spacing:-.3px;display:flex;align-items:center;gap:10px}
+.card{background:var(--card-bg);border-radius:var(--radius);padding:24px;margin-bottom:20px;box-shadow:0 8px 24px rgba(0,0,0,.04);border:1px solid var(--border-card);transition:transform .2s,box-shadow .2s}
+.card h3{color:var(--text);margin-bottom:12px;font-size:1.15rem;display:flex;align-items:center;gap:8px;font-weight:700}
+.card p{font-size:1rem;color:var(--text-light);margin-bottom:8px;line-height:1.5}
+button{background:var(--primary-accent);color:#fff;border:none;padding:16px 20px;border-radius:16px;font-size:1rem;font-weight:600;cursor:pointer;transition:all .2s;margin-top:14px;width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(0,180,216,.25)}
+button:hover{background:var(--btn-hover);transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,180,216,.35)}
+button:active{transform:translateY(0)}
+button:disabled{opacity:.5;cursor:not-allowed;transform:none!important}
+button.danger{background:var(--danger);box-shadow:0 4px 14px rgba(230,57,70,.25)}
+button.danger:hover{background:#c1121f}
+button.warning{background:var(--warning);box-shadow:0 4px 14px rgba(244,162,97,.25)}
+button.warning:hover{background:#e76f51}
+button.success{background:var(--success);box-shadow:0 4px 14px rgba(42,157,143,.25)}
+button.success:hover{background:#218375}
+button.btn-volver{background:var(--card-bg);color:var(--text);border:1px solid var(--border-card);box-shadow:0 2px 8px rgba(0,0,0,.02);font-weight:500}
+button.btn-volver:hover{background:var(--bg)}
+button.btn-mini{padding:6px 12px;font-size:.8rem;width:auto;margin-top:6px;border-radius:10px}
+input,select,textarea{width:100%;padding:14px 16px;margin-top:6px;margin-bottom:14px;border:1px solid var(--border-card);border-radius:14px;font-size:1rem;background:var(--card-bg);color:var(--text);outline:none;transition:all .2s;font-family:var(--font)}
+input:focus,select:focus,textarea:focus{border-color:var(--primary-accent);box-shadow:0 0 0 4px rgba(0,180,216,.1)}
+label{font-size:.9rem;font-weight:500;color:var(--text);display:block;margin-top:6px}
+.terms-container{display:flex;align-items:flex-start;gap:12px;margin:10px 0 18px;font-size:.9rem;line-height:1.4;color:var(--text-light)}
+.terms-container input[type="checkbox"]{width:20px;height:20px;margin:2px 0 0;accent-color:var(--primary-accent);cursor:pointer;flex-shrink:0}
+.terms-container label{font-weight:400;display:inline;color:var(--text-light)}
+.terms-container a{color:var(--success);font-weight:500}
+nav{position:fixed;bottom:16px;left:16px;right:16px;max-width:580px;margin:0 auto;background:var(--card-bg);opacity:.97;backdrop-filter:blur(16px);display:flex;justify-content:space-around;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.15);border-radius:24px;border:1px solid var(--border-card);z-index:1000}
+nav button{background:none;color:var(--text-light);font-size:.75rem;margin:0;padding:8px 4px;font-weight:500;width:25%;box-shadow:none;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:16px;position:relative}
+nav button:hover{background:none;transform:none;box-shadow:none}
+nav button span.icon{font-size:1.35rem;transition:transform .2s}
+nav button.active{color:var(--primary-accent);background:rgba(0,180,216,.08);font-weight:600}
+nav button.active span.icon{transform:scale(1.05)}
+.notification-badge{position:absolute;top:4px;right:22%;background:var(--danger);color:#fff;font-size:.65rem;font-weight:700;padding:2px 6px;border-radius:10px;border:2px solid var(--card-bg);display:none}
+.section{display:none}
+.section.active{display:block;animation:fadeIn .25s ease-out}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.badge{display:inline-block;background:var(--success-bg);color:var(--success);padding:4px 10px;border-radius:8px;font-size:.8rem;font-weight:600;margin-bottom:12px}
+.home-card-main{background:linear-gradient(135deg,var(--card-bg),var(--bg));border:1px solid var(--border-card);text-align:center;padding:32px 20px}
+.bono-card-container{background:linear-gradient(135deg,var(--success-bg),var(--card-bg));border:1px solid var(--success);text-align:center;padding:24px;margin:16px 0;border-radius:var(--radius)}
+.weather-badge{display:inline-flex;align-items:center;gap:6px;background:var(--bg);padding:6px 12px;border-radius:12px;font-size:.85rem;font-weight:500;color:var(--text);margin:4px 0 12px;border:1px solid var(--border-card)}
+.empty-state{text-align:center;padding:20px;color:var(--text-light)}
+.list-inscritos{margin-left:20px;margin-top:8px}
+.list-inscritos li{margin-bottom:6px;color:var(--text)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;z-index:5000;padding:20px;animation:fadeIn .2s}
+.modal-overlay.active{display:flex}
+.modal-box{background:var(--card-bg);border-radius:var(--radius);padding:24px;max-width:420px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:fadeIn .25s}
+.modal-box h3{margin-bottom:12px;color:var(--text)}
+.modal-box p{margin-bottom:16px;color:var(--text-light);line-height:1.5}
+.modal-actions{display:flex;gap:10px;margin-top:12px}
+.modal-actions button{margin-top:0}
 </style>
 </head>
 <body>
 
 <div id="toast-container"></div>
 
-<!-- Modal genérico -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal-box">
     <h3 id="modal-titulo">Confirmar</h3>
@@ -148,9 +94,9 @@ nav button.active span.icon { transform: scale(1.05); }
 <header>
   <div class="header-top">
     <h1>🏓 Pickleball Club</h1>
-    <div style="display:flex; gap:8px; align-items:center;">
+    <div style="display:flex;gap:8px;align-items:center;">
       <span class="sync-status" id="estado-sync">Local</span>
-      <button class="theme-toggle" onclick="toggleTema()" title="Modo oscuro/claro">🌙</button>
+      <button class="theme-toggle" id="btn-tema" title="Modo oscuro/claro">🌙</button>
     </div>
   </div>
   <p>Tu club. Tus clases. Tu juego.</p>
@@ -158,19 +104,18 @@ nav button.active span.icon { transform: scale(1.05); }
 
 <div class="container">
 
-  <!-- HOME -->
   <div id="seccion-home" class="section active">
     <div class="card home-card-main">
-      <h2 style="justify-content:center; font-size:1.5rem; margin-bottom:6px; color:var(--text);">Pickleball Club</h2>
-      <p style="font-size:1rem; margin-bottom:28px;">Tu club. Tus clases. Tu juego.</p>
-      <button onclick="mostrarAccesoAlumno()" style="font-size:1.05rem; padding:18px 20px; margin-bottom:12px;">👤 Soy alumno</button>
-      <button class="warning" onclick="entrarComoMonitorSeleccion()" style="font-size:1.05rem; padding:18px 20px; position:relative;">
+      <h2 style="justify-content:center;font-size:1.5rem;margin-bottom:6px;color:var(--text);">Pickleball Club</h2>
+      <p style="font-size:1rem;margin-bottom:28px;">Tu club. Tus clases. Tu juego.</p>
+      <button id="btn-soy-alumno" style="font-size:1.05rem;padding:18px 20px;margin-bottom:12px;">👤 Soy alumno</button>
+      <button id="btn-soy-monitor" class="warning" style="font-size:1.05rem;padding:18px 20px;position:relative;">
         🔑 Soy monitor
-        <span id="globo-notificaciones-home" class="notification-badge" style="top:14px; right:16px;">0</span>
+        <span id="globo-notificaciones-home" class="notification-badge" style="top:14px;right:16px;">0</span>
       </button>
     </div>
 
-    <div class="card" style="background:linear-gradient(135deg, var(--success-bg), var(--card-bg)); border-color:var(--success);">
+    <div class="card" style="background:linear-gradient(135deg,var(--success-bg),var(--card-bg));border-color:var(--success);">
       <h3 style="color:var(--success);">🎁 ¿Nuevo en el club?</h3>
       <p>Solicita tu clase de prueba gratuita</p>
       <label>Nombre y apellidos</label>
@@ -179,17 +124,14 @@ nav button.active span.icon { transform: scale(1.05); }
       <input type="tel" id="input-telefono-prueba" placeholder="Ej: 600123456" autocomplete="tel">
       <div class="terms-container">
         <input type="checkbox" id="check-rgpd-prueba">
-        <label for="check-rgpd-prueba">
-          Acepto la <a href="#" onclick="mostrarPoliticaPrivacidad(); return false;">política de protección de datos</a> y el tratamiento de mis datos.
-        </label>
+        <label for="check-rgpd-prueba">Acepto la <a href="#" id="link-privacidad">política de protección de datos</a>.</label>
       </div>
-      <button class="success" onclick="pedirClaseLibreSinRegistro()">Solicitar clase de prueba</button>
+      <button id="btn-solicitar-prueba" class="success">Solicitar clase de prueba</button>
     </div>
   </div>
 
-  <!-- LOGIN ALUMNO -->
   <div id="seccion-login-alumno" class="section">
-    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver</button>
+    <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-login">← Volver</button>
     <div class="card">
       <h3>👤 Acceso de alumno</h3>
       <p style="margin-bottom:16px;">Introduce tus datos para acceder a tu perfil y bonos.</p>
@@ -197,16 +139,15 @@ nav button.active span.icon { transform: scale(1.05); }
       <input type="text" id="input-login-nombre" placeholder="Tu nombre y apellidos" autocomplete="name">
       <label>PIN</label>
       <input type="password" id="input-login-pin" placeholder="Tu PIN personal" inputmode="numeric" autocomplete="current-password">
-      <button onclick="procesarAccesoAlumno()">Entrar</button>
+      <button id="btn-login-entrar">Entrar</button>
     </div>
   </div>
 
-  <!-- ENTRENAMIENTOS -->
   <div id="seccion-entrenamientos" class="section">
-    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-ent">← Volver a inicio</button>
     <h2>📅 Próximos entrenamientos</h2>
     <div id="lista-entrenamientos"></div>
-    <div class="card" id="panel-crear-entrenamiento" style="display:none; background:var(--bg); border:2px dashed var(--border-card);">
+    <div class="card" id="panel-crear-entrenamiento" style="display:none;background:var(--bg);border:2px dashed var(--border-card);">
       <h3>➕ Añadir nuevo entrenamiento</h3>
       <label>Título / Nivel</label>
       <input type="text" id="nuevo-titulo" placeholder="Ej: Iniciación Avanzada">
@@ -218,16 +159,15 @@ nav button.active span.icon { transform: scale(1.05); }
       <input type="text" id="nuevo-lugar" placeholder="Ej: Pista Municipal Nº 2">
       <label>Plazas máximas (opcional)</label>
       <input type="number" id="nuevo-plazas" placeholder="Ej: 8" min="1">
-      <button onclick="agregarEntrenamiento()">Crear clase</button>
+      <button id="btn-crear-ent">Crear clase</button>
     </div>
   </div>
 
-  <!-- TORNEOS -->
   <div id="seccion-torneos" class="section">
-    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-tor">← Volver a inicio</button>
     <h2>🏆 Torneos y competiciones</h2>
     <div id="lista-torneos"></div>
-    <div class="card" id="panel-crear-torneo" style="display:none; background:var(--bg); border:2px dashed var(--border-card);">
+    <div class="card" id="panel-crear-torneo" style="display:none;background:var(--bg);border:2px dashed var(--border-card);">
       <h3>➕ Crear nuevo torneo</h3>
       <label>Nombre del torneo</label>
       <input type="text" id="torneo-titulo" placeholder="Ej: Torneo Verano">
@@ -239,39 +179,37 @@ nav button.active span.icon { transform: scale(1.05); }
       <input type="text" id="torneo-lugar" placeholder="Ej: Club de Tenis">
       <label>Plazas máximas (opcional)</label>
       <input type="number" id="torneo-plazas" placeholder="Ej: 16" min="1">
-      <button onclick="agregarTorneo()">Crear torneo</button>
+      <button id="btn-crear-tor">Crear torneo</button>
     </div>
   </div>
 
-  <!-- PERFIL ALUMNO -->
   <div id="seccion-perfil" class="section">
-    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-perfil">← Volver a inicio</button>
     <h2>👤 Mi panel de alumno</h2>
     <div id="panel-identificado" style="display:none;">
       <div class="card">
         <span class="badge">Sesión activa</span>
-        <h3 id="saludo-alumno" style="font-size:1.3rem; margin-bottom:4px;">¡Hola!</h3>
+        <h3 id="saludo-alumno" style="font-size:1.3rem;margin-bottom:4px;">¡Hola!</h3>
         <div class="bono-card-container">
-          <p style="font-size:.8rem; text-transform:uppercase; letter-spacing:.5px; font-weight:600; color:var(--success); margin-bottom:4px;">🎟️ Tu bono</p>
-          <p id="info-bono-personal" style="font-size:2.5rem; color:var(--success); font-weight:700; line-height:1.1; margin-bottom:2px;">0</p>
-          <p style="font-size:.9rem; font-weight:500;">clases disponibles</p>
-          <button class="success" style="margin-top:16px;" onclick="solicitarRecargaBono()">+ Recargar bono</button>
+          <p style="font-size:.8rem;text-transform:uppercase;letter-spacing:.5px;font-weight:600;color:var(--success);margin-bottom:4px;">🎟️ Tu bono de clases</p>
+          <p id="info-bono-personal" style="font-size:2.5rem;color:var(--success);font-weight:700;line-height:1.1;margin-bottom:2px;">0</p>
+          <p style="font-size:.9rem;font-weight:500;">clases disponibles</p>
+          <button class="success" style="margin-top:16px;" id="btn-recarga-bono">+ Solicitar recarga</button>
         </div>
-        <div id="historial-bono-alumno" style="margin-top:12px; font-size:.85rem; color:var(--text-light); background:var(--bg); padding:12px; border-radius:12px; border:1px solid var(--border-card);"></div>
+        <div id="historial-bono-alumno" style="margin-top:12px;font-size:.85rem;color:var(--text-light);background:var(--bg);padding:12px;border-radius:12px;border:1px solid var(--border-card);"></div>
       </div>
       <div class="card">
         <h3>📊 Historial de asistencia</h3>
         <div id="historial-asistencia"></div>
       </div>
-      <button class="danger" onclick="cerrarSesionAlumno()">Cerrar sesión</button>
+      <button class="danger" id="btn-cerrar-sesion">Cerrar sesión</button>
     </div>
   </div>
 
-  <!-- ALUMNOS (MONITOR) -->
   <div id="seccion-alumnos" class="section">
-    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-alumnos">← Volver a inicio</button>
     <h2>👥 Gestión de alumnos</h2>
-    <div class="card" style="background:var(--warning-bg); border-color:var(--warning);">
+    <div class="card" style="background:var(--warning-bg);border-color:var(--warning);">
       <h3 style="color:var(--warning);">➕ Crear nuevo alumno</h3>
       <label>Nombre del alumno</label>
       <input type="text" id="nuevo-alumno-nombre" placeholder="Ej: Carlos Gómez">
@@ -281,9 +219,9 @@ nav button.active span.icon { transform: scale(1.05); }
       <input type="number" id="nuevo-alumno-clases" value="10" min="0">
       <div class="terms-container">
         <input type="checkbox" id="check-rgpd-alumno" checked>
-        <label for="check-rgpd-alumno">Confirmo que el alumno ha dado su consentimiento para el tratamiento de sus datos deportivos.</label>
+        <label for="check-rgpd-alumno">Confirmo el consentimiento del alumno para el tratamiento de sus datos.</label>
       </div>
-      <button onclick="registrarNuevoAlumno()" class="warning">Crear alumno</button>
+      <button id="btn-crear-alumno" class="warning">Crear alumno</button>
     </div>
     <div class="card">
       <h3>👥 Alumnos registrados</h3>
@@ -291,86 +229,133 @@ nav button.active span.icon { transform: scale(1.05); }
     </div>
   </div>
 
-  <!-- GESTIÓN (MONITOR) -->
   <div id="seccion-gestion" class="section">
-    <button class="btn-volver" style="margin-bottom:16px;" onclick="volverAHome()">← Volver a inicio</button>
+    <button class="btn-volver" style="margin-bottom:16px;" id="btn-volver-gestion">← Volver a inicio</button>
     <h2>⚙️ Panel de gestión</h2>
-    <div class="card" style="background:var(--warning-bg); border-color:var(--warning);">
+    <div class="card" style="background:var(--warning-bg);border-color:var(--warning);">
       <h3 style="color:var(--warning);">🚨 Solicitudes de alumnos</h3>
       <div id="lista-avisos-monitor"></div>
     </div>
     <div class="card">
       <h3>💾 Copia de seguridad</h3>
       <p>Exporta o importa todos los datos del club.</p>
-      <button onclick="exportarDatos()">📤 Exportar JSON</button>
+      <button id="btn-exportar">📤 Exportar JSON</button>
       <label for="input-import" style="margin-top:14px;">Importar JSON:</label>
-      <input type="file" id="input-import" accept="application/json" onchange="importarDatos(event)">
+      <input type="file" id="input-import" accept="application/json">
     </div>
     <div class="card">
       <h3 style="color:var(--danger);">⚠️ Zona peligrosa</h3>
-      <button class="danger" onclick="reiniciarDatosCompletos()">Vaciar / Reiniciar todo</button>
+      <button class="danger" id="btn-reiniciar">Vaciar / Reiniciar todo</button>
     </div>
   </div>
 
 </div>
 
 <nav id="barra-navegacion-inferior" style="display:none;">
-  <button onclick="cambiarSeccion('entrenamientos')" id="nav-entrenamientos" class="active"><span class="icon">📅</span><span>Clases</span></button>
-  <button onclick="cambiarSeccion('torneos')" id="nav-torneos"><span class="icon">🏆</span><span>Torneos</span></button>
-  <button onclick="cambiarSeccion('perfil')" id="nav-perfil"><span class="icon">👤</span><span>Perfil</span></button>
-  <button onclick="cambiarSeccion('entrenamientos')" id="nav-monitor-clases" style="display:none;"><span class="icon">📅</span><span>Clases</span></button>
-  <button onclick="cambiarSeccion('torneos')" id="nav-monitor-torneos" style="display:none;"><span class="icon">🏆</span><span>Torneos</span></button>
-  <button onclick="cambiarSeccion('alumnos')" id="nav-monitor-alumnos" style="display:none;"><span class="icon">👥</span><span>Alumnos</span></button>
-  <button onclick="cambiarSeccion('gestion')" id="nav-monitor-gestion" style="display:none;">
+  <button data-nav="entrenamientos" id="nav-entrenamientos" class="active"><span class="icon">📅</span><span>Clases</span></button>
+  <button data-nav="torneos" id="nav-torneos"><span class="icon">🏆</span><span>Torneos</span></button>
+  <button data-nav="perfil" id="nav-perfil"><span class="icon">👤</span><span>Perfil</span></button>
+  <button data-nav="entrenamientos" id="nav-monitor-clases" style="display:none;"><span class="icon">📅</span><span>Clases</span></button>
+  <button data-nav="torneos" id="nav-monitor-torneos" style="display:none;"><span class="icon">🏆</span><span>Torneos</span></button>
+  <button data-nav="alumnos" id="nav-monitor-alumnos" style="display:none;"><span class="icon">👥</span><span>Alumnos</span></button>
+  <button data-nav="gestion" id="nav-monitor-gestion" style="display:none;">
     <span class="icon">⚙️</span><span>Gestión</span>
     <span id="globo-notificaciones" class="notification-badge">0</span>
   </button>
 </nav>
 
 <script>
-/* =========================================================
-   CONSTANTES Y ESTADO
-   ========================================================= */
-const CLAVE_STORAGE = 'pickleball_club_v2';
-const PASS_MONITOR = '1234';
-const COORDENADAS = {
+"use strict";
+
+/* ========== CONSTANTES ========== */
+var CLAVE_STORAGE = 'pickleball_club_v3';
+var PASS_MONITOR = '1234';
+var COORDENADAS = {
   "madrid":{lat:40.4168,lon:-3.7038,n:"Madrid"},"barcelona":{lat:41.3851,lon:2.1734,n:"Barcelona"},
   "valencia":{lat:39.4699,lon:-0.3763,n:"Valencia"},"sevilla":{lat:37.3891,lon:-5.9845,n:"Sevilla"},
-  "malaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},"málaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},
-  "bilbao":{lat:43.2630,lon:-2.9350,n:"Bilbao"},"zaragoza":{lat:41.6488,lon:-0.8891,n:"Zaragoza"},
-  "alicante":{lat:38.3452,lon:-0.4810,n:"Alicante"},"murcia":{lat:37.9922,lon:-1.1307,n:"Murcia"},
-  "palma":{lat:39.5696,lon:2.6502,n:"Palma"},"granada":{lat:37.1773,lon:-3.5986,n:"Granada"},
-  "cordoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"},"córdoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"}
+  "malaga":{lat:36.7213,lon:-4.4214,n:"Málaga"},"bilbao":{lat:43.2630,lon:-2.9350,n:"Bilbao"},
+  "zaragoza":{lat:41.6488,lon:-0.8891,n:"Zaragoza"},"alicante":{lat:38.3452,lon:-0.4810,n:"Alicante"},
+  "murcia":{lat:37.9922,lon:-1.1307,n:"Murcia"},"palma":{lat:39.5696,lon:2.6502,n:"Palma"},
+  "granada":{lat:37.1773,lon:-3.5986,n:"Granada"},"cordoba":{lat:37.8882,lon:-4.7794,n:"Córdoba"}
 };
 
-let modoMonitorActivo = false;
-let alumnoActual = null;
-let climaCache = {};
-let datosGlobales = { entrenamientos: [], torneos: [], alumnos: [], avisos: [], historial: [] };
-let modalCallbackAceptar = null;
+/* ========== ESTADO ========== */
+var modoMonitorActivo = false;
+var alumnoActual = null;
+var climaCache = {};
+var datosGlobales = { entrenamientos:[], torneos:[], alumnos:[], avisos:[], historial:[] };
+var modalCallbackAceptar = null;
 
-/* =========================================================
-   PERSISTENCIA
-   ========================================================= */
-function guardarDatos(silencioso = false) {
+/* ========== UTILIDADES ========== */
+function $(id){ return document.getElementById(id); }
+
+function escapeHtml(str){
+  if(str===null||str===undefined) return '';
+  return String(str).replace(/[&<>"']/g,function(s){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s];
+  });
+}
+
+function mostrarToast(mensaje, tipo){
+  tipo = tipo || 'success';
+  var container = $('toast-container');
+  var toast = document.createElement('div');
+  toast.className = 'toast ' + tipo;
+  var icono = tipo==='error'?'❌':(tipo==='warning'?'⚠️':'✅');
+  toast.innerHTML = '<span>'+icono+'</span> <span>'+escapeHtml(mensaje)+'</span>';
+  container.appendChild(toast);
+  setTimeout(function(){ toast.remove(); }, 3000);
+}
+
+function mostrarModal(titulo, mensaje, callbackAceptar, opts){
+  opts = opts || {};
+  $('modal-titulo').innerText = titulo;
+  $('modal-mensaje').innerText = mensaje;
+  var inputEl = $('modal-input');
+  if(opts.input){
+    inputEl.style.display = 'block';
+    inputEl.value = opts.inputValor || '';
+    inputEl.placeholder = opts.inputPlaceholder || '';
+    inputEl.type = opts.inputType || 'text';
+  } else {
+    inputEl.style.display = 'none';
+  }
+  var btnAceptar = $('modal-aceptar');
+  btnAceptar.className = opts.danger ? 'danger' : '';
+  btnAceptar.innerText = opts.textoAceptar || 'Aceptar';
+  $('modal-overlay').classList.add('active');
+  modalCallbackAceptar = function(){
+    var valor = inputEl.style.display !== 'none' ? inputEl.value.trim() : null;
+    callbackAceptar(valor);
+    cerrarModal();
+  };
+}
+
+function cerrarModal(){
+  $('modal-overlay').classList.remove('active');
+  modalCallbackAceptar = null;
+}
+
+/* ========== PERSISTENCIA ========== */
+function guardarDatos(silencioso){
   try {
     localStorage.setItem(CLAVE_STORAGE, JSON.stringify(datosGlobales));
-    if (!silencioso) {
-      document.getElementById('estado-sync').innerText = 'Guardado ✓';
-      setTimeout(() => document.getElementById('estado-sync').innerText = 'Local', 1200);
+    if(!silencioso){
+      $('estado-sync').innerText = 'Guardado ✓';
+      setTimeout(function(){ $('estado-sync').innerText = 'Local'; }, 1200);
     }
-  } catch (e) {
+  } catch(e){
     console.error('Error al guardar:', e);
-    mostrarToast('Error al guardar los datos.', 'error');
+    mostrarToast('Error al guardar.', 'error');
   }
   renderizar();
 }
 
-function cargarDatos() {
+function cargarDatos(){
   try {
-    const bruto = localStorage.getItem(CLAVE_STORAGE);
-    if (bruto) {
-      const parsed = JSON.parse(bruto);
+    var bruto = localStorage.getItem(CLAVE_STORAGE);
+    if(bruto){
+      var parsed = JSON.parse(bruto);
       datosGlobales = {
         entrenamientos: parsed.entrenamientos || [],
         torneos: parsed.torneos || [],
@@ -379,72 +364,861 @@ function cargarDatos() {
         historial: parsed.historial || []
       };
     }
-  } catch (e) {
+  } catch(e){
     console.error('Error al cargar:', e);
   }
-  document.getElementById('estado-sync').innerText = 'Local';
+  $('estado-sync').innerText = 'Local';
   renderizar();
 }
 
-/* =========================================================
-   UTILIDADES
-   ========================================================= */
-function escapeHtml(str) {
-  if (str === null || str === undefined) return '';
-  return String(str).replace(/[&<>"']/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));
-}
-
-function mostrarToast(mensaje, tipo = 'success') {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = `toast ${tipo}`;
-  const icono = tipo === 'error' ? '❌' : tipo === 'warning' ? '⚠️' : '✅';
-  toast.innerHTML = `<span>${icono}</span> <span>${escapeHtml(mensaje)}</span>`;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
-}
-
-function mostrarModal(titulo, mensaje, callbackAceptar, opts = {}) {
-  document.getElementById('modal-titulo').innerText = titulo;
-  document.getElementById('modal-mensaje').innerText = mensaje;
-  const inputEl = document.getElementById('modal-input');
-  if (opts.input) {
-    inputEl.style.display = 'block';
-    inputEl.value = opts.inputValor || '';
-    inputEl.placeholder = opts.inputPlaceholder || '';
-    inputEl.type = opts.inputType || 'text';
-  } else {
-    inputEl.style.display = 'none';
-  }
-  document.getElementById('modal-aceptar').className = opts.danger ? 'danger' : '';
-  document.getElementById('modal-aceptar').innerText = opts.textoAceptar || 'Aceptar';
-  document.getElementById('modal-overlay').classList.add('active');
-  modalCallbackAceptar = () => {
-    const valor = inputEl.style.display !== 'none' ? inputEl.value.trim() : null;
-    callbackAceptar(valor);
-    cerrarModal();
-  };
-}
-function cerrarModal() {
-  document.getElementById('modal-overlay').classList.remove('active');
-  modalCallbackAceptar = null;
-}
-
-function toggleTema() {
-  const actual = document.documentElement.getAttribute('data-theme');
-  const nuevo = actual === 'dark' ? 'light' : 'dark';
+/* ========== TEMA ========== */
+function toggleTema(){
+  var actual = document.documentElement.getAttribute('data-theme');
+  var nuevo = actual === 'dark' ? 'light' : 'dark';
   document.documentElement.setAttribute('data-theme', nuevo);
   localStorage.setItem('pickleball_tema', nuevo);
-  document.querySelector('.theme-toggle').innerText = nuevo === 'dark' ? '☀️' : '🌙';
+  $('btn-tema').innerText = nuevo === 'dark' ? '☀️' : '🌙';
 }
 
-function mostrarPoliticaPrivacidad() {
+/* ========== PRIVACIDAD ========== */
+function mostrarPoliticaPrivacidad(){
   mostrarModal('Política de Privacidad',
-    'Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club, de conformidad con el RGPD. Podrá ejercer sus derechos de acceso, rectificación y supresión contactando con el club.',
-    () => {}, { textoAceptar: 'Entendido' });
+    'Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club, conforme al RGPD. Podrá ejercer sus derechos de acceso, rectificación y supresión contactando con el club.',
+    function(){}, { textoAceptar: 'Entendido' });
 }
 
-/* =========================================================
-   CLIMA
-   ========================================================= */
-async function obtenerCl
+/* ========== NAVEGACIÓN ========== */
+function volverAHome(){
+  modoMonitorActivo = false;
+  alumnoActual = null;
+  $('barra-navegacion-inferior').style.display = 'none';
+  cambiarSeccion('home');
+}
+
+function mostrarAccesoAlumno(){
+  $('input-login-nombre').value = '';
+  $('input-login-pin').value = '';
+  cambiarSeccion('login-alumno');
+}
+
+function ajustarMenuInferior(){
+  var btnsAlumno = ['nav-entrenamientos','nav-torneos','nav-perfil'];
+  var btnsMonitor = ['nav-monitor-clases','nav-monitor-torneos','nav-monitor-alumnos','nav-monitor-gestion'];
+  var i;
+  if(modoMonitorActivo){
+    for(i=0;i<btnsAlumno.length;i++) $(btnsAlumno[i]).style.display = 'none';
+    for(i=0;i<btnsMonitor.length;i++){
+      $(btnsMonitor[i]).style.display = 'flex';
+      $(btnsMonitor[i]).style.width = '25%';
+    }
+  } else {
+    for(i=0;i<btnsMonitor.length;i++) $(btnsMonitor[i]).style.display = 'none';
+    for(i=0;i<btnsAlumno.length;i++){
+      $(btnsAlumno[i]).style.display = 'flex';
+      $(btnsAlumno[i]).style.width = '33.33%';
+    }
+  }
+}
+
+function cambiarSeccion(seccion){
+  if((seccion === 'alumnos' || seccion === 'gestion') && !modoMonitorActivo){
+    mostrarToast('Acceso denegado.', 'error');
+    volverAHome();
+    return;
+  }
+  var secciones = document.querySelectorAll('.section');
+  var i;
+  for(i=0;i<secciones.length;i++) secciones[i].classList.remove('active');
+  var botones = document.querySelectorAll('nav button');
+  for(i=0;i<botones.length;i++) botones[i].classList.remove('active');
+
+  var seccionEl = $('seccion-' + seccion);
+  if(seccionEl) seccionEl.classList.add('active');
+
+  if(seccion !== 'home' && seccion !== 'login-alumno'){
+    var btn = $('nav-' + seccion);
+    if(!btn && modoMonitorActivo) btn = $('nav-monitor-' + seccion);
+    if(btn) btn.classList.add('active');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  renderizar();
+}
+
+/* ========== AUTENTICACIÓN ========== */
+function procesarAccesoAlumno(){
+  var nombre = $('input-login-nombre').value.trim();
+  var pin = $('input-login-pin').value.trim();
+  if(!nombre) return mostrarToast('Introduce tu nombre.', 'error');
+  if(!pin) return mostrarToast('Introduce tu PIN.', 'error');
+
+  var alumno = null;
+  for(var i=0;i<datosGlobales.alumnos.length;i++){
+    if(datosGlobales.alumnos[i].nombre.toLowerCase() === nombre.toLowerCase()){
+      alumno = datosGlobales.alumnos[i];
+      break;
+    }
+  }
+  if(alumno && alumno.pass === pin){
+    alumnoActual = alumno;
+    modoMonitorActivo = false;
+    $('barra-navegacion-inferior').style.display = 'flex';
+    ajustarMenuInferior();
+    mostrarToast('¡Bienvenido, ' + alumno.nombre + '!');
+    cambiarSeccion('entrenamientos');
+  } else {
+    mostrarToast('Nombre o PIN incorrectos.', 'error');
+  }
+}
+
+function entrarComoMonitorSeleccion(){
+  mostrarModal('Acceso monitor', 'Introduce la contraseña de monitor:', function(valor){
+    if(valor === PASS_MONITOR){
+      modoMonitorActivo = true;
+      alumnoActual = null;
+      $('barra-navegacion-inferior').style.display = 'flex';
+      ajustarMenuInferior();
+      cambiarSeccion('entrenamientos');
+      mostrarToast('Bienvenido, monitor.');
+    } else {
+      mostrarToast('Contraseña incorrecta.', 'error');
+    }
+  }, { input: true, inputType: 'password', inputPlaceholder: 'Contraseña' });
+}
+
+function cerrarSesionAlumno(){
+  alumnoActual = null;
+  mostrarToast('Sesión cerrada.');
+  volverAHome();
+}
+
+/* ========== CLIMA ========== */
+function obtenerClima(lugar, fechaTexto){
+  if(!lugar) return Promise.resolve(null);
+  var lugarClean = lugar.trim().toLowerCase();
+  var cacheKey = lugarClean + '_' + (fechaTexto || 'hoy');
+  if(climaCache[cacheKey] !== undefined) return Promise.resolve(climaCache[cacheKey]);
+
+  var fechaObjeto = null;
+  if(fechaTexto){
+    var matchFecha = fechaTexto.match(/\d{4}-\d{2}-\d{2}/);
+    if(matchFecha) fechaObjeto = new Date(matchFecha[0]);
+  }
+  var hoy = new Date();
+  var hoySinHora = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate());
+  var fechaSinHora = fechaObjeto ? new Date(fechaObjeto.getFullYear(), fechaObjeto.getMonth(), fechaObjeto.getDate()) : hoySinHora;
+  var diasDiferencia = Math.ceil((fechaSinHora - hoySinHora) / (1000*60*60*24));
+
+  if(diasDiferencia < 0 || diasDiferencia > 3){
+    climaCache[cacheKey] = null;
+    return Promise.resolve(null);
+  }
+
+  var lat = 40.4168, lon = -3.7038, nombreUbicacion = lugar;
+  for(var clave in COORDENADAS){
+    if(lugarClean.indexOf(clave) !== -1){
+      lat = COORDENADAS[clave].lat;
+      lon = COORDENADAS[clave].lon;
+      nombreUbicacion = COORDENADAS[clave].n;
+      break;
+    }
+  }
+
+  var dateStr = fechaSinHora.toISOString().split('T')[0];
+  var url = 'https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&hourly=temperature_2m,weather_code&timezone=Europe%2FMadrid&start_date='+dateStr+'&end_date='+dateStr;
+
+  return fetch(url)
+    .then(function(r){ return r.json(); })
+    .then(function(json){
+      if(json && json.hourly && json.hourly.time){
+        var horaClase = 18;
+        if(fechaTexto){
+          var matchHora = fechaTexto.match(/(\d{2}):(\d{2})/);
+          if(matchHora) horaClase = parseInt(matchHora[1]);
+        }
+        var idx = -1;
+        for(var i=0;i<json.hourly.time.length;i++){
+          if(json.hourly.time[i].indexOf('T'+String(horaClase).padStart(2,'0')+':00') !== -1){ idx = i; break; }
+        }
+        if(idx === -1) idx = Math.min(Math.max(horaClase,0), json.hourly.time.length-1);
+
+        var temp = Math.round(json.hourly.temperature_2m[idx]);
+        var code = json.hourly.weather_code[idx];
+        var icono = '🌤️';
+        if(code>=1 && code<=3) icono='⛅';
+        else if(code>=45 && code<=48) icono='🌫️';
+        else if(code>=51 && code<=67) icono='🌧️';
+        else if(code>=71 && code<=77) icono='❄️';
+        else if(code>=95) icono='⚡';
+
+        var resultado = icono+' '+temp+'°C ('+nombreUbicacion+')';
+        climaCache[cacheKey] = resultado;
+        return resultado;
+      }
+      climaCache[cacheKey] = null;
+      return null;
+    })
+    .catch(function(e){
+      console.error('Error clima:', e);
+      climaCache[cacheKey] = null;
+      return null;
+    });
+}
+
+function cargarClimasPendientes(){
+  var badges = document.querySelectorAll('.weather-badge-dynamic');
+  var promises = [];
+  for(var i=0;i<badges.length;i++){
+    (function(el){
+      if(el.innerText.trim()) return;
+      var lugar = el.getAttribute('data-lugar');
+      var fecha = el.getAttribute('data-fecha');
+      if(lugar){
+        promises.push(obtenerClima(lugar, fecha).then(function(clima){
+          if(clima){
+            el.innerText = clima;
+            el.style.display = 'inline-flex';
+          }
+        }));
+      }
+    })(badges[i]);
+  }
+  return Promise.all(promises);
+}
+
+/* ========== HISTORIAL ========== */
+function registrarHistorial(alumno, accion, detalle){
+  if(!datosGlobales.historial) datosGlobales.historial = [];
+  datosGlobales.historial.unshift({
+    id: Date.now(), alumno: alumno, accion: accion,
+    detalle: detalle, fecha: new Date().toLocaleString('es-ES')
+  });
+  if(datosGlobales.historial.length > 200) datosGlobales.historial.length = 200;
+}
+
+/* ========== ACCIONES ALUMNO ========== */
+function apuntarseEntrenamiento(id){
+  if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'warning');
+  var alumnoBD = null;
+  for(var i=0;i<datosGlobales.alumnos.length;i++){
+    if(datosGlobales.alumnos[i].nombre === alumnoActual.nombre){ alumnoBD = datosGlobales.alumnos[i]; break; }
+  }
+  if(!alumnoBD || alumnoBD.clasesBono <= 0) return mostrarToast('No te quedan clases en el bono.', 'error');
+
+  var ent = null;
+  for(var j=0;j<datosGlobales.entrenamientos.length;j++){
+    if(datosGlobales.entrenamientos[j].id === id){ ent = datosGlobales.entrenamientos[j]; break; }
+  }
+  if(!ent) return;
+  if(!ent.inscritos) ent.inscritos = [];
+  if(ent.inscritos.indexOf(alumnoActual.nombre) !== -1) return mostrarToast('Ya estás apuntado.', 'warning');
+
+  var plazas = ent.plazas || 0;
+  if(plazas > 0 && ent.inscritos.length >= plazas) return mostrarToast('Clase completa.', 'warning');
+
+  ent.inscritos.push(alumnoActual.nombre);
+  alumnoBD.clasesBono -= 1;
+  alumnoActual.clasesBono = alumnoBD.clasesBono;
+  registrarHistorial(alumnoActual.nombre, 'Apuntado a clase', ent.titulo);
+  guardarDatos();
+  mostrarToast('¡Apuntado! Se descontó 1 clase.');
+}
+
+function desapuntarseEntrenamientoPropio(id){
+  if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'error');
+  mostrarModal('Anular asistencia', '¿Seguro? Se te devolverá 1 clase.', function(){
+    var ent = null;
+    for(var i=0;i<datosGlobales.entrenamientos.length;i++){
+      if(datosGlobales.entrenamientos[i].id === id){ ent = datosGlobales.entrenamientos[i]; break; }
+    }
+    if(ent && ent.inscritos){
+      ent.inscritos = ent.inscritos.filter(function(n){ return n !== alumnoActual.nombre; });
+    }
+    var alumnoBD = null;
+    for(var j=0;j<datosGlobales.alumnos.length;j++){
+      if(datosGlobales.alumnos[j].nombre === alumnoActual.nombre){ alumnoBD = datosGlobales.alumnos[j]; break; }
+    }
+    if(alumnoBD){
+      alumnoBD.clasesBono += 1;
+      alumnoActual.clasesBono = alumnoBD.clasesBono;
+    }
+    registrarHistorial(alumnoActual.nombre, 'Anuló clase', ent ? ent.titulo : '');
+    guardarDatos();
+    mostrarToast('Asistencia anulada.');
+  }, { danger: true });
+}
+
+/* ⚠️ TORNEOS: NO descuentan clase */
+function apuntarseTorneo(id){
+  if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'warning');
+  var tor = null;
+  for(var i=0;i<datosGlobales.torneos.length;i++){
+    if(datosGlobales.torneos[i].id === id){ tor = datosGlobales.torneos[i]; break; }
+  }
+  if(!tor) return;
+  if(!tor.inscritos) tor.inscritos = [];
+  if(tor.inscritos.indexOf(alumnoActual.nombre) !== -1) return mostrarToast('Ya estás inscrito.', 'warning');
+
+  var plazas = tor.plazas || 0;
+  if(plazas > 0 && tor.inscritos.length >= plazas) return mostrarToast('Torneo completo.', 'warning');
+
+  tor.inscritos.push(alumnoActual.nombre);
+  registrarHistorial(alumnoActual.nombre, 'Inscrito a torneo', tor.titulo);
+  guardarDatos();
+  mostrarToast('¡Inscrito al torneo! (No consume clases)');
+}
+
+function desapuntarseTorneoPropio(id){
+  if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'error');
+  mostrarModal('Anular inscripción', '¿Seguro que quieres anular tu inscripción?', function(){
+    var tor = null;
+    for(var i=0;i<datosGlobales.torneos.length;i++){
+      if(datosGlobales.torneos[i].id === id){ tor = datosGlobales.torneos[i]; break; }
+    }
+    if(tor && tor.inscritos){
+      tor.inscritos = tor.inscritos.filter(function(n){ return n !== alumnoActual.nombre; });
+    }
+    registrarHistorial(alumnoActual.nombre, 'Anuló torneo', tor ? tor.titulo : '');
+    guardarDatos();
+    mostrarToast('Te has desapuntado del torneo.');
+  }, { danger: true });
+}
+
+function solicitarRecargaBono(){
+  if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'error');
+  if(!datosGlobales.avisos) datosGlobales.avisos = [];
+  for(var i=0;i<datosGlobales.avisos.length;i++){
+    var a = datosGlobales.avisos[i];
+    if(a.alumno === alumnoActual.nombre && a.tipo === 'Recarga Bono'){
+      return mostrarToast('Ya tienes una solicitud pendiente.', 'warning');
+    }
+  }
+  datosGlobales.avisos.push({
+    id: Date.now(), alumno: alumnoActual.nombre, tipo: 'Recarga Bono',
+    texto: alumnoActual.nombre + ' solicita recargar su bono de clases.'
+  });
+  guardarDatos();
+  mostrarToast('Solicitud enviada al monitor.');
+}
+
+/* ========== CLASE PRUEBA ========== */
+function pedirClaseLibreSinRegistro(){
+  var nombre = $('input-nombre-prueba').value.trim();
+  var telefono = $('input-telefono-prueba').value.trim();
+  var acepto = $('check-rgpd-prueba').checked;
+
+  if(!nombre) return mostrarToast('Introduce tu nombre.', 'error');
+  if(!acepto) return mostrarToast('Debes aceptar la política de datos.', 'warning');
+
+  if(!datosGlobales.avisos) datosGlobales.avisos = [];
+  var texto = nombre + ' ha solicitado una Clase de Prueba gratuita.';
+  if(telefono) texto += ' (Contacto: ' + telefono + ')';
+
+  datosGlobales.avisos.push({
+    id: Date.now(), alumno: nombre, tipo: 'Clase de Prueba', texto: texto
+  });
+
+  $('input-nombre-prueba').value = '';
+  $('input-telefono-prueba').value = '';
+  $('check-rgpd-prueba').checked = false;
+  guardarDatos();
+  mostrarToast('¡Solicitud enviada!');
+}
+
+/* ========== ACCIONES MONITOR ========== */
+function registrarNuevoAlumno(){
+  if(!modoMonitorActivo) return;
+  var nombre = $('nuevo-alumno-nombre').value.trim();
+  var pass = $('nuevo-alumno-pass').value.trim();
+  var clases = parseInt($('nuevo-alumno-clases').value);
+  var acepto = $('check-rgpd-alumno').checked;
+  if(isNaN(clases)) clases = 10;
+
+  if(!nombre || !pass) return mostrarToast('Nombre y PIN obligatorios.', 'error');
+  if(!acepto) return mostrarToast('Confirma el consentimiento de datos.', 'warning');
+  if(!datosGlobales.alumnos) datosGlobales.alumnos = [];
+
+  for(var i=0;i<datosGlobales.alumnos.length;i++){
+    if(datosGlobales.alumnos[i].nombre.toLowerCase() === nombre.toLowerCase()){
+      return mostrarToast('Ya existe ese alumno.', 'error');
+    }
+  }
+
+  datosGlobales.alumnos.push({ nombre: nombre, pass: pass, clasesBono: clases });
+  $('nuevo-alumno-nombre').value = '';
+  $('nuevo-alumno-pass').value = '';
+  $('nuevo-alumno-clases').value = '10';
+  guardarDatos();
+  mostrarToast('Alumno creado.');
+}
+
+function agregarEntrenamiento(){
+  if(!modoMonitorActivo) return;
+  var titulo = $('nuevo-titulo').value.trim();
+  var fecha = $('nuevo-fecha').value;
+  var hora = $('nuevo-hora').value;
+  var lugar = $('nuevo-lugar').value.trim();
+  var plazas = parseInt($('nuevo-plazas').value) || 0;
+
+  if(!titulo || !fecha) return mostrarToast('Título y fecha obligatorios.', 'error');
+
+  var fechaFormateada = fecha;
+  if(hora) fechaFormateada += ' a las ' + hora;
+
+  if(!datosGlobales.entrenamientos) datosGlobales.entrenamientos = [];
+  datosGlobales.entrenamientos.push({
+    id: Date.now(), titulo: titulo, fecha: fechaFormateada, lugar: lugar, plazas: plazas, inscritos: []
+  });
+
+  $('nuevo-titulo').value = '';
+  $('nuevo-fecha').value = '';
+  $('nuevo-hora').value = '18:00';
+  $('nuevo-lugar').value = '';
+  $('nuevo-plazas').value = '';
+  guardarDatos();
+  mostrarToast('Clase creada.');
+}
+
+function borrarEntrenamiento(id){
+  if(!modoMonitorActivo) return;
+  mostrarModal('Borrar clase', '¿Seguro?', function(){
+    datosGlobales.entrenamientos = datosGlobales.entrenamientos.filter(function(e){ return e.id !== id; });
+    guardarDatos();
+  }, { danger: true });
+}
+
+function agregarTorneo(){
+  if(!modoMonitorActivo) return;
+  var titulo = $('torneo-titulo').value.trim();
+  var fecha = $('torneo-fecha').value;
+  var hora = $('torneo-hora').value;
+  var lugar = $('torneo-lugar').value.trim();
+  var plazas = parseInt($('torneo-plazas').value) || 0;
+
+  if(!titulo || !fecha) return mostrarToast('Título y fecha obligatorios.', 'error');
+
+  var fechaFormateada = fecha;
+  if(hora) fechaFormateada += ' a las ' + hora;
+
+  if(!datosGlobales.torneos) datosGlobales.torneos = [];
+  datosGlobales.torneos.push({
+    id: Date.now(), titulo: titulo, fecha: fechaFormateada, lugar: lugar, plazas: plazas, inscritos: []
+  });
+
+  $('torneo-titulo').value = '';
+  $('torneo-fecha').value = '';
+  $('torneo-hora').value = '10:00';
+  $('torneo-lugar').value = '';
+  $('torneo-plazas').value = '';
+  guardarDatos();
+  mostrarToast('Torneo creado.');
+}
+
+function borrarTorneo(id){
+  if(!modoMonitorActivo) return;
+  mostrarModal('Borrar torneo', '¿Seguro?', function(){
+    datosGlobales.torneos = datosGlobales.torneos.filter(function(t){ return t.id !== id; });
+    guardarDatos();
+  }, { danger: true });
+}
+
+function modificarBono(nombre){
+  if(!modoMonitorActivo) return;
+  var alumno = null;
+  for(var i=0;i<datosGlobales.alumnos.length;i++){
+    if(datosGlobales.alumnos[i].nombre === nombre){ alumno = datosGlobales.alumnos[i]; break; }
+  }
+  if(!alumno) return;
+  mostrarModal('Editar bono', 'Nuevo número de clases para ' + nombre + ':', function(valor){
+    var num = parseInt(valor);
+    if(!isNaN(num) && num >= 0){
+      alumno.clasesBono = num;
+      if(alumnoActual && alumnoActual.nombre === nombre) alumnoActual.clasesBono = num;
+      guardarDatos();
+      mostrarToast('Bono actualizado.');
+    }
+  }, { input: true, inputType: 'number', inputValor: alumno.clasesBono });
+}
+
+function borrarAlumno(nombre){
+  if(!modoMonitorActivo) return;
+  mostrarModal('Eliminar alumno', '¿Seguro que quieres eliminar a ' + nombre + '?', function(){
+    datosGlobales.alumnos = datosGlobales.alumnos.filter(function(a){ return a.nombre !== nombre; });
+    guardarDatos();
+    mostrarToast('Alumno eliminado.');
+  }, { danger: true });
+}
+
+function resolverAviso(id){
+  if(!modoMonitorActivo) return;
+  datosGlobales.avisos = datosGlobales.avisos.filter(function(a){ return a.id !== id; });
+  guardarDatos();
+  mostrarToast('Aviso descartado.');
+}
+
+function aprobarRecargaBono(nombreAlumno){
+  if(!modoMonitorActivo) return;
+  mostrarModal('Recargar bono', '¿Cuántas clases añadir a ' + nombreAlumno + '?', function(valor){
+    var num = parseInt(valor) || 10;
+    var alumno = null;
+    for(var i=0;i<datosGlobales.alumnos.length;i++){
+      if(datosGlobales.alumnos[i].nombre === nombreAlumno){ alumno = datosGlobales.alumnos[i]; break; }
+    }
+    if(alumno){
+      alumno.clasesBono += num;
+      if(alumnoActual && alumnoActual.nombre === nombreAlumno) alumnoActual.clasesBono = alumno.clasesBono;
+      datosGlobales.avisos = datosGlobales.avisos.filter(function(a){
+        return !(a.alumno === nombreAlumno && a.tipo === 'Recarga Bono');
+      });
+      guardarDatos();
+      mostrarToast('Bono +' + num + ' a ' + nombreAlumno + '.');
+    }
+  }, { input: true, inputType: 'number', inputValor: '10' });
+}
+
+function devolverClase(entrenamientoId, nombreAlumno){
+  if(!modoMonitorActivo) return;
+  mostrarModal('Devolver clase', '¿Devolver 1 clase a ' + nombreAlumno + '?', function(){
+    var ent = null;
+    for(var i=0;i<datosGlobales.entrenamientos.length;i++){
+      if(datosGlobales.entrenamientos[i].id === entrenamientoId){ ent = datosGlobales.entrenamientos[i]; break; }
+    }
+    if(ent && ent.inscritos){
+      ent.inscritos = ent.inscritos.filter(function(n){ return n !== nombreAlumno; });
+    }
+    var alumnoBD = null;
+    for(var j=0;j<datosGlobales.alumnos.length;j++){
+      if(datosGlobales.alumnos[j].nombre === nombreAlumno){ alumnoBD = datosGlobales.alumnos[j]; break; }
+    }
+    if(alumnoBD){
+      alumnoBD.clasesBono += 1;
+      if(alumnoActual && alumnoActual.nombre === nombreAlumno) alumnoActual.clasesBono = alumnoBD.clasesBono;
+    }
+    registrarHistorial(nombreAlumno, 'Clase devuelta por monitor', ent ? ent.titulo : '');
+    guardarDatos();
+    mostrarToast('Clase devuelta a ' + nombreAlumno + '.');
+  }, { danger: true });
+}
+
+function reiniciarDatosCompletos(){
+  if(!modoMonitorActivo) return;
+  mostrarModal('⚠️ Zona peligrosa', 'Esto borrará TODOS los datos. Escribe BORRAR:', function(valor){
+    if(valor === 'BORRAR'){
+      datosGlobales = { entrenamientos:[], torneos:[], alumnos:[], avisos:[], historial:[] };
+      guardarDatos();
+      mostrarToast('Datos reiniciados.', 'warning');
+    } else {
+      mostrarToast('Cancelado.', 'warning');
+    }
+  }, { input: true, inputPlaceholder: 'BORRAR', danger: true, textoAceptar: 'Confirmar' });
+}
+
+function exportarDatos(){
+  var blob = new Blob([JSON.stringify(datosGlobales, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'pickleball_backup_' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  mostrarToast('Backup exportado.');
+}
+
+function importarDatos(event){
+  var file = event.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      var parsed = JSON.parse(e.target.result);
+      mostrarModal('Importar datos', '¿Reemplazar todos los datos?', function(){
+        datosGlobales = {
+          entrenamientos: parsed.entrenamientos || [],
+          torneos: parsed.torneos || [],
+          alumnos: parsed.alumnos || [],
+          avisos: parsed.avisos || [],
+          historial: parsed.historial || []
+        };
+        guardarDatos();
+        mostrarToast('Datos importados.');
+      }, { danger: true });
+    } catch(err){
+      mostrarToast('Archivo JSON inválido.', 'error');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+/* ========== RENDERIZADO ========== */
+function renderizar(){
+  var i;
+
+  // Badge notificaciones
+  var totalAvisos = datosGlobales.avisos ? datosGlobales.avisos.length : 0;
+  var globoNav = $('globo-notificaciones');
+  var globoHome = $('globo-notificaciones-home');
+  if(totalAvisos > 0){
+    globoNav.innerText = totalAvisos; globoNav.style.display = 'inline-block';
+    globoHome.innerText = totalAvisos; globoHome.style.display = 'inline-block';
+  } else {
+    globoNav.style.display = 'none';
+    globoHome.style.display = 'none';
+  }
+
+  // Perfil alumno
+  if(alumnoActual){
+    $('panel-identificado').style.display = 'block';
+    $('saludo-alumno').innerText = '¡Hola, ' + alumnoActual.nombre + '!';
+    var reg = null;
+    for(i=0;i<datosGlobales.alumnos.length;i++){
+      if(datosGlobales.alumnos[i].nombre === alumnoActual.nombre){ reg = datosGlobales.alumnos[i]; break; }
+    }
+    var clases = reg ? reg.clasesBono : 0;
+    alumnoActual.clasesBono = clases;
+    $('info-bono-personal').innerText = clases;
+    $('historial-bono-alumno').innerHTML = '📜 Estado de cuenta al día.';
+
+    var miHistorial = (datosGlobales.historial || []).filter(function(h){ return h.alumno === alumnoActual.nombre; }).slice(0, 15);
+    var contHistorial = $('historial-asistencia');
+    if(miHistorial.length === 0){
+      contHistorial.innerHTML = '<p class="empty-state">Aún no tienes actividad registrada.</p>';
+    } else {
+      contHistorial.innerHTML = miHistorial.map(function(h){
+        return '<div style="padding:10px;border-bottom:1px solid var(--border-card);font-size:.9rem;">' +
+          '<strong>' + escapeHtml(h.accion) + '</strong>' + (h.detalle ? ' — ' + escapeHtml(h.detalle) : '') +
+          '<div style="font-size:.75rem;color:var(--text-light);">' + escapeHtml(h.fecha) + '</div></div>';
+      }).join('');
+    }
+  } else {
+    $('panel-identificado').style.display = 'none';
+  }
+
+  // Entrenamientos
+  var listaEnt = $('lista-entrenamientos');
+  if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0){
+    listaEnt.innerHTML = '<p class="empty-state">No hay entrenamientos programados.</p>';
+  } else {
+    listaEnt.innerHTML = datosGlobales.entrenamientos.map(function(ent){
+      var numInscritos = ent.inscritos ? ent.inscritos.length : 0;
+      var plazas = ent.plazas || 0;
+      var lleno = plazas > 0 && numInscritos >= plazas;
+      var estaApuntado = alumnoActual && ent.inscritos && ent.inscritos.indexOf(alumnoActual.nombre) !== -1;
+
+      var lugarTxt = '';
+      if(ent.lugar){
+        var cacheKey = ent.lugar.trim().toLowerCase() + '_' + (ent.fecha || 'hoy');
+        var climaPrevio = climaCache[cacheKey];
+        var estilo = climaPrevio ? 'inline-flex' : 'none';
+        lugarTxt = '<p>📍 <strong>Lugar:</strong> ' + escapeHtml(ent.lugar) + '</p>' +
+          '<div class="weather-badge weather-badge-dynamic" style="display:' + estilo + ';" data-lugar="' + escapeHtml(ent.lugar) + '" data-fecha="' + escapeHtml(ent.fecha) + '">' + (climaPrevio || '') + '</div>';
+      }
+
+      var listaInscritosHTML;
+      if(modoMonitorActivo){
+        if(numInscritos > 0){
+          listaInscritosHTML = '<ul class="list-inscritos">' + ent.inscritos.map(function(n){
+            var nEsc = escapeHtml(n).replace(/'/g, "\\'");
+            return '<li>' + escapeHtml(n) + ' <button class="success btn-mini" onclick="devolverClase(' + ent.id + ', \'' + nEsc + '\')">↩️ Devolver</button></li>';
+          }).join('') + '</ul>';
+        } else {
+          listaInscritosHTML = 'Nadie apuntado aún';
+        }
+      } else {
+        listaInscritosHTML = plazas > 0 ? (numInscritos + '/' + plazas + ' plazas') : (numInscritos + ' personas apuntadas');
+      }
+
+      var botonAccion = '';
+      if(alumnoActual){
+        if(estaApuntado){
+          botonAccion = '<button class="danger" onclick="desapuntarseEntrenamientoPropio(' + ent.id + ')">Anular asistencia</button>';
+        } else if(lleno){
+          botonAccion = '<button disabled>Clase completa</button>';
+        } else {
+          botonAccion = '<button onclick="apuntarseEntrenamiento(' + ent.id + ')">Apuntarme (1 clase)</button>';
+        }
+      }
+
+      var btnBorrar = modoMonitorActivo ? '<button class="danger" style="margin-top:8px;" onclick="borrarEntrenamiento(' + ent.id + ')">🗑️ Borrar clase</button>' : '';
+      var badgeApuntado = estaApuntado ? '<div style="margin-bottom:10px;"><span class="badge">✓ Estás apuntado</span></div>' : '';
+
+      return '<div class="card">' +
+        '<h3>🏓 ' + escapeHtml(ent.titulo) + '</h3>' +
+        '<p>📅 <strong>Fecha:</strong> ' + escapeHtml(ent.fecha) + '</p>' +
+        lugarTxt + badgeApuntado +
+        '<p>👥 <strong>Inscritos:</strong> ' + listaInscritosHTML + '</p>' +
+        botonAccion + btnBorrar +
+        '</div>';
+    }).join('');
+  }
+
+  // Torneos
+  var listaTor = $('lista-torneos');
+  if(!datosGlobales.torneos || datosGlobales.torneos.length === 0){
+    listaTor.innerHTML = '<p class="empty-state">No hay torneos programados.</p>';
+  } else {
+    listaTor.innerHTML = datosGlobales.torneos.map(function(tor){
+      var numInscritos = tor.inscritos ? tor.inscritos.length : 0;
+      var plazas = tor.plazas || 0;
+      var lleno = plazas > 0 && numInscritos >= plazas;
+      var estaApuntado = alumnoActual && tor.inscritos && tor.inscritos.indexOf(alumnoActual.nombre) !== -1;
+
+      var lugarTxt = '';
+      if(tor.lugar){
+        var cacheKey = tor.lugar.trim().toLowerCase() + '_' + (tor.fecha || 'hoy');
+        var climaPrevio = climaCache[cacheKey];
+        var estilo = climaPrevio ? 'inline-flex' : 'none';
+        lugarTxt = '<p>📍 <strong>Lugar:</strong> ' + escapeHtml(tor.lugar) + '</p>' +
+          '<div class="weather-badge weather-badge-dynamic" style="display:' + estilo + ';" data-lugar="' + escapeHtml(tor.lugar) + '" data-fecha="' + escapeHtml(tor.fecha) + '">' + (climaPrevio || '') + '</div>';
+      }
+
+      var listaInscritosHTML;
+      if(modoMonitorActivo){
+        if(numInscritos > 0){
+          listaInscritosHTML = '<ul class="list-inscritos">' + tor.inscritos.map(function(n){
+            return '<li>' + escapeHtml(n) + '</li>';
+          }).join('') + '</ul>';
+        } else {
+          listaInscritosHTML = 'Nadie apuntado aún';
+        }
+      } else {
+        listaInscritosHTML = plazas > 0 ? (numInscritos + '/' + plazas + ' plazas') : (numInscritos + ' personas apuntadas');
+      }
+
+      var botonAccion = '';
+      if(alumnoActual){
+        if(estaApuntado){
+          botonAccion = '<button class="danger" onclick="desapuntarseTorneoPropio(' + tor.id + ')">Anular inscripción</button>';
+        } else if(lleno){
+          botonAccion = '<button disabled>Torneo completo</button>';
+        } else {
+          botonAccion = '<button onclick="apuntarseTorneo(' + tor.id + ')">Apuntarme (gratis)</button>';
+        }
+      }
+
+      var btnBorrar = modoMonitorActivo ? '<button class="danger" style="margin-top:8px;" onclick="borrarTorneo(' + tor.id + ')">🗑️ Borrar torneo</button>' : '';
+      var badgeApuntado = estaApuntado ? '<div style="margin-bottom:10px;"><span class="badge">✓ Estás inscrito</span></div>' : '';
+
+      return '<div class="card">' +
+        '<h3>🏆 ' + escapeHtml(tor.titulo) + '</h3>' +
+        '<p>📅 <strong>Fecha:</strong> ' + escapeHtml(tor.fecha) + '</p>' +
+        lugarTxt + badgeApuntado +
+        '<p>👥 <strong>Participantes:</strong> ' + listaInscritosHTML + '</p>' +
+        botonAccion + btnBorrar +
+        '</div>';
+    }).join('');
+  }
+
+  setTimeout(cargarClimasPendientes, 50);
+
+  // Panel monitor
+  if(modoMonitorActivo){
+    var contAvisos = $('lista-avisos-monitor');
+    if(datosGlobales.avisos && datosGlobales.avisos.length > 0){
+      contAvisos.innerHTML = datosGlobales.avisos.map(function(aviso){
+        var botonExtra = '';
+        if(aviso.tipo === 'Recarga Bono'){
+          var alEsc = escapeHtml(aviso.alumno).replace(/'/g, "\\'");
+          botonExtra = '<button class="success btn-mini" onclick="aprobarRecargaBono(\'' + alEsc + '\')">🎟️ Añadir bono</button>';
+        }
+        return '<div class="card" style="padding:16px;margin-bottom:12px;background:var(--card-bg);box-shadow:none;">' +
+          '<p style="color:var(--warning);font-weight:600;margin-bottom:6px;">⚠️ ' + escapeHtml(aviso.tipo) + '</p>' +
+          '<p style="font-size:.95rem;margin-bottom:8px;">' + escapeHtml(aviso.texto) + '</p>' +
+          botonExtra +
+          '<button class="danger btn-mini" style="background:#6b7280;" onclick="resolverAviso(' + aviso.id + ')">✖ Descartar</button>' +
+          '</div>';
+      }).join('');
+    } else {
+      contAvisos.innerHTML = '<p class="empty-state">No hay avisos pendientes.</p>';
+    }
+
+    var listaAdmin = $('lista-alumnos-admin');
+    if(datosGlobales.alumnos && datosGlobales.alumnos.length > 0){
+      listaAdmin.innerHTML = datosGlobales.alumnos.map(function(al){
+        var alEsc = escapeHtml(al.nombre).replace(/'/g, "\\'");
+        return '<div class="card" style="padding:16px;margin-bottom:12px;background:var(--card-bg);box-shadow:none;">' +
+          '<p style="font-weight:600;margin-bottom:4px;">👤 ' + escapeHtml(al.nombre) + ' <span style="font-weight:normal;font-size:.85rem;color:var(--text-light);">(PIN: ' + escapeHtml(al.pass) + ')</span></p>' +
+          '<p style="margin-bottom:12px;font-size:.9rem;">🎟️ Clases en bono: <strong>' + al.clasesBono + '</strong></p>' +
+          '<button class="success btn-mini" onclick="aprobarRecargaBono(\'' + alEsc + '\')">➕ Añadir bono</button> ' +
+          '<button class="btn-mini" onclick="modificarBono(\'' + alEsc + '\')">Editar clases</button> ' +
+          '<button class="danger btn-mini" onclick="borrarAlumno(\'' + alEsc + '\')">Eliminar</button>' +
+          '</div>';
+      }).join('');
+    } else {
+      listaAdmin.innerHTML = '<p class="empty-state">No hay alumnos dados de alta.</p>';
+    }
+  }
+
+  $('panel-crear-entrenamiento').style.display = modoMonitorActivo ? 'block' : 'none';
+  $('panel-crear-torneo').style.display = modoMonitorActivo ? 'block' : 'none';
+}
+
+/* ========== INICIALIZACIÓN ========== */
+document.addEventListener('DOMContentLoaded', function(){
+  // Tema guardado
+  var temaGuardado = localStorage.getItem('pickleball_tema');
+  if(temaGuardado === 'dark'){
+    document.documentElement.setAttribute('data-theme', 'dark');
+    $('btn-tema').innerText = '☀️';
+  }
+
+  // Botón tema
+  $('btn-tema').addEventListener('click', toggleTema);
+
+  // Modal
+  $('modal-cancelar').addEventListener('click', cerrarModal);
+  $('modal-aceptar').addEventListener('click', function(){
+    if(modalCallbackAceptar) modalCallbackAceptar();
+  });
+  $('modal-overlay').addEventListener('click', function(e){
+    if(e.target.id === 'modal-overlay') cerrarModal();
+  });
+
+  // Botones home
+  $('btn-soy-alumno').addEventListener('click', mostrarAccesoAlumno);
+  $('btn-soy-monitor').addEventListener('click', entrarComoMonitorSeleccion);
+  $('btn-solicitar-prueba').addEventListener('click', pedirClaseLibreSinRegistro);
+  $('link-privacidad').addEventListener('click', function(e){ e.preventDefault(); mostrarPoliticaPrivacidad(); });
+
+  // Botones volver
+  $('btn-volver-login').addEventListener('click', volverAHome);
+  $('btn-volver-ent').addEventListener('click', volverAHome);
+  $('btn-volver-tor').addEventListener('click', volverAHome);
+  $('btn-volver-perfil').addEventListener('click', volverAHome);
+  $('btn-volver-alumnos').addEventListener('click', volverAHome);
+  $('btn-volver-gestion').addEventListener('click', volverAHome);
+
+  // Login alumno
+  $('btn-login-entrar').addEventListener('click', procesarAccesoAlumno);
+  $('input-login-pin').addEventListener('keypress', function(e){
+    if(e.key === 'Enter') procesarAccesoAlumno();
+  });
+
+  // Crear entrenamiento/torneo/alumno
+  $('btn-crear-ent').addEventListener('click', agregarEntrenamiento);
+  $('btn-crear-tor').addEventListener('click', agregarTorneo);
+  $('btn-crear-alumno').addEventListener('click', registrarNuevoAlumno);
+
+  // Perfil
+  $('btn-recarga-bono').addEventListener('click', solicitarRecargaBono);
+  $('btn-cerrar-sesion').addEventListener('click', cerrarSesionAlumno);
+
+  // Gestión
+  $('btn-exportar').addEventListener('click', exportarDatos);
+  $('btn-reiniciar').addEventListener('click', reiniciarDatosCompletos);
+  $('input-import').addEventListener('change', importarDatos);
+
+  // Nav inferior: delegación
+  var navBtns = document.querySelectorAll('nav button[data-nav]');
+  for(var i=0;i<navBtns.length;i++){
+    (function(btn){
+      btn.addEventListener('click', function(){
+        cambiarSeccion(btn.getAttribute('data-nav'));
+      });
+    })(navBtns[i]);
+  }
+
+  cargarDatos();
+});
+</script>
+</body>
+</html>
