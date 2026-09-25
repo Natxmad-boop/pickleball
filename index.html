@@ -58,7 +58,7 @@ body{background:var(--bg);color:var(--text);padding-bottom:130px;-webkit-font-sm
 header{background:linear-gradient(160deg,var(--verde-oscuro) 0%,#062a16 60%,#041a0d 100%);color:#fff;padding:20px 20px 22px;box-shadow:0 6px 30px rgba(0,0,0,.35);position:relative;overflow:hidden;border-bottom:3px solid var(--dorado)}
 header::before{content:'';position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0,transparent 30px,rgba(123,201,111,.04) 30px,rgba(123,201,111,.04) 32px);pointer-events:none}
 .header-inner{max-width:580px;margin:0 auto;display:flex;align-items:center;gap:16px;position:relative;z-index:1}
-.logo-svg{width:70px;height:84px;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}
+.logo-svg{width:70px;height:84px;flex-shrink:0;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4));object-fit:contain}
 .header-text{flex:1;min-width:0}
 header h1{font-family:var(--font-titulo);font-size:1.35rem;font-weight:400;letter-spacing:1.5px;text-transform:uppercase;color:var(--plata);line-height:1;margin-bottom:4px;text-shadow:0 2px 4px rgba(0,0,0,.5)}
 header .sub{font-size:.75rem;letter-spacing:3px;text-transform:uppercase;color:var(--dorado);font-weight:600;margin-bottom:6px}
@@ -123,7 +123,7 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 .home-hero{background:linear-gradient(160deg,var(--card-bg),#f8faf8);border:2px solid var(--verde-oscuro);border-radius:var(--radius);padding:32px 20px;margin-bottom:20px;text-align:center;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(10,61,32,.12)}
 [data-theme="dark"] .home-hero{background:linear-gradient(160deg,var(--card-bg),#0f1f15)}
 .home-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--verde-oscuro),var(--dorado),var(--verde-oscuro))}
-.home-hero .logo-grande{width:140px;height:168px;margin:0 auto 16px;display:block;filter:drop-shadow(0 6px 16px rgba(10,61,32,.25))}
+.home-hero .logo-grande{width:220px;height:220px;margin:0 auto 16px;display:block;filter:drop-shadow(0 6px 16px rgba(10,61,32,.25));object-fit:contain}
 .home-hero h2{justify-content:center;font-size:1.4rem;margin-bottom:4px;color:var(--verde-oscuro);letter-spacing:2px}
 [data-theme="dark"] .home-hero h2{color:var(--verde-lima)}
 .home-hero .sub{font-size:.72rem;letter-spacing:4px;color:var(--dorado);font-weight:700;text-transform:uppercase;margin-bottom:20px}
@@ -228,70 +228,6 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
   </symbol>
 </svg>
 
-<!-- ESCUDO -->
-<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="escudo-club" viewBox="0 0 200 240">
-    <defs>
-      <linearGradient id="verdeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#0d4a25"/>
-        <stop offset="100%" stop-color="#062a13"/>
-      </linearGradient>
-      <linearGradient id="plataGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#f5f5f5"/>
-        <stop offset="50%" stop-color="#c8c8c8"/>
-        <stop offset="100%" stop-color="#8a8a8a"/>
-      </linearGradient>
-    </defs>
-    <path d="M100 4 L190 30 L190 130 Q190 200 100 236 Q10 200 10 130 L10 30 Z" fill="url(#verdeGrad)" stroke="#1a1a1a" stroke-width="3"/>
-    <path d="M100 10 L184 34 L184 130 Q184 195 100 228 Q16 195 16 130 L16 34 Z" fill="none" stroke="#a88a2a" stroke-width="1.5"/>
-    <path d="M16 100 L50 55 L75 85 L100 45 L125 85 L150 55 L184 100 L184 130 L16 130 Z" fill="#062a13"/>
-    <path d="M50 55 L65 78 L75 70 L75 85 Z" fill="#1a1a1a" opacity="0.6"/>
-    <path d="M100 45 L115 68 L125 60 L125 85 Z" fill="#1a1a1a" opacity="0.6"/>
-    <path d="M150 55 L165 78 L175 70 L175 85 Z" fill="#1a1a1a" opacity="0.6"/>
-    <path d="M46 60 L50 55 L54 60 L50 63 Z" fill="#e8e8e8"/>
-    <path d="M96 50 L100 45 L104 50 L100 53 Z" fill="#e8e8e8"/>
-    <path d="M146 60 L150 55 L154 60 L150 63 Z" fill="#e8e8e8"/>
-    <rect x="78" y="55" width="44" height="65" rx="8" fill="#0a0a0a" stroke="#a88a2a" stroke-width="1.5"/>
-    <g stroke="#7bc96f" stroke-width="1.2" opacity="0.6">
-      <line x1="100" y1="62" x2="100" y2="70"/>
-      <line x1="100" y1="105" x2="100" y2="113"/>
-      <line x1="85" y1="87" x2="93" y2="87"/>
-      <line x1="107" y1="87" x2="115" y2="87"/>
-    </g>
-    <ellipse cx="100" cy="82" rx="14" ry="17" fill="url(#plataGrad)" stroke="#1a1a1a" stroke-width="1.5"/>
-    <rect x="97" y="96" width="6" height="22" rx="2" fill="url(#plataGrad)" stroke="#1a1a1a" stroke-width="1"/>
-    <circle cx="100" cy="82" r="9" fill="#f5f5f5" stroke="#1a1a1a" stroke-width="1"/>
-    <circle cx="96" cy="78" r="1.3" fill="#1a1a1a"/>
-    <circle cx="104" cy="78" r="1.3" fill="#1a1a1a"/>
-    <circle cx="100" cy="82" r="1.3" fill="#1a1a1a"/>
-    <circle cx="95" cy="85" r="1.3" fill="#1a1a1a"/>
-    <circle cx="105" cy="85" r="1.3" fill="#1a1a1a"/>
-    <circle cx="100" cy="88" r="1.3" fill="#1a1a1a"/>
-    <circle cx="100" cy="75" r="1.3" fill="#1a1a1a"/>
-    <g stroke="#e8e8e8" stroke-width="0.6" opacity="0.85">
-      <line x1="20" y1="120" x2="180" y2="120"/>
-      <line x1="20" y1="125" x2="180" y2="125"/>
-      <line x1="20" y1="130" x2="180" y2="130"/>
-      <line x1="20" y1="135" x2="180" y2="135"/>
-      <line x1="30" y1="118" x2="30" y2="137"/>
-      <line x1="45" y1="118" x2="45" y2="137"/>
-      <line x1="60" y1="118" x2="60" y2="137"/>
-      <line x1="75" y1="118" x2="75" y2="137"/>
-      <line x1="90" y1="118" x2="90" y2="137"/>
-      <line x1="110" y1="118" x2="110" y2="137"/>
-      <line x1="125" y1="118" x2="125" y2="137"/>
-      <line x1="140" y1="118" x2="140" y2="137"/>
-      <line x1="155" y1="118" x2="155" y2="137"/>
-      <line x1="170" y1="118" x2="170" y2="137"/>
-    </g>
-    <path d="M10 145 L190 145 L190 175 L100 182 L10 175 Z" fill="#062a13" stroke="#a88a2a" stroke-width="1.5"/>
-    <text x="100" y="167" text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-size="18" font-weight="900" fill="#e8e8e8" letter-spacing="0.5">EL ESCORIAL</text>
-    <path d="M25 180 L175 180 L175 200 L100 205 L25 200 Z" fill="#0a0a0a" stroke="#a88a2a" stroke-width="1"/>
-    <text x="100" y="196" text-anchor="middle" font-family="'Arial Black',Arial,sans-serif" font-size="13" font-weight="900" fill="#e8e8e8" letter-spacing="1">PICKLEBALL</text>
-    <path d="M85 218 L100 228 L115 218" fill="none" stroke="#a88a2a" stroke-width="1.5"/>
-  </symbol>
-</svg>
-
 <div id="toast-container"></div>
 
 <div class="modal-overlay" id="modal-overlay">
@@ -315,7 +251,7 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     <svg><use href="#icon-luna"/></svg>
   </button>
   <div class="header-inner">
-    <svg class="logo-svg"><use href="#escudo-club"/></svg>
+    <img class="logo-svg" src="logo.png" alt="Pickleball El Escorial">
     <div class="header-text">
       <h1>Pickleball</h1>
       <div class="sub">El Escorial</div>
@@ -328,7 +264,7 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 
   <div id="seccion-home" class="section active">
     <div class="home-hero">
-      <svg class="logo-grande"><use href="#escudo-club"/></svg>
+      <img class="logo-grande" src="logo.png" alt="Pickleball El Escorial">
       <h2>Pickleball</h2>
       <div class="sub">El Escorial</div>
       <p class="tagline">Tu club de pickleball en la sierra de Madrid</p>
@@ -492,7 +428,7 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 // ============ CONFIGURACIÓN ============
 var API_URL = "https://api.npoint.io/3a455d7f585f36c26a3f";
 var PASS_MONITOR = "1234";
-var INTERVALO_REFRESCO = 30000; // 30 segundos
+var INTERVALO_REFRESCO = 30000;
 
 // ============ COORDENADAS PARA EL CLIMA ============
 var COORDENADAS = {
@@ -523,7 +459,6 @@ var alumnoActual = null;
 var climaCache = {};
 var datosGlobales = { entrenamientos:[], torneos:[], alumnos:[], avisos:[], historial:[] };
 var modalCallbackAceptar = null;
-var intervaloRefrescoId = null;
 
 // ============ UTILIDADES ============
 function $(id){ return document.getElementById(id); }
@@ -580,7 +515,7 @@ function cerrarModal(){
   modalCallbackAceptar = null;
 }
 
-// ============ SINCRONIZACIÓN CON NPOINT.IO ============
+// ============ SINCRONIZACIÓN ============
 function cargarDatos(silencioso){
   if(!silencioso) $('estado-sync').innerText = "Cargando...";
   return fetch(API_URL + "?t=" + Date.now())
@@ -594,7 +529,6 @@ function cargarDatos(silencioso){
           avisos: json.avisos || [],
           historial: json.historial || []
         };
-        // Actualizar alumnoActual con datos frescos
         if(alumnoActual){
           var actualizado = datosGlobales.alumnos.find(function(a){ return a.nombre === alumnoActual.nombre; });
           if(actualizado) alumnoActual = actualizado;
@@ -640,7 +574,7 @@ function toggleTema(){
     : '<svg><use href="#icon-luna"/></svg>';
 }
 
-// ============ POLÍTICA PRIVACIDAD ============
+// ============ PRIVACIDAD ============
 function mostrarPoliticaPrivacidad(){
   mostrarModal('Política de Privacidad',
     'Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club, conforme al RGPD. Podrá ejercer sus derechos contactando con el club.',
@@ -907,7 +841,6 @@ function desapuntarseEntrenamientoPropio(id){
   }, { danger: true });
 }
 
-// TORNEOS: NO descuentan clase
 function apuntarseTorneo(id){
   if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'warning');
   var tor = null;
@@ -1229,7 +1162,7 @@ function renderizar(){
       if(ent.lugar){
         var cacheKey = ent.lugar.trim().toLowerCase() + '_' + (ent.fecha || 'hoy');
         var climaPrevio = climaCache[cacheKey];
-        var estilo = climaPrevio ? 'inline-flex' : 'inline-flex';
+        var estilo = 'inline-flex';
         lugarTxt = '<div class="meta">' + iconSvg('icon-ubicacion', 14) + ' <strong>Lugar:</strong> ' + escapeHtml(ent.lugar) + '</div>' +
           '<div class="weather-badge weather-badge-dynamic" style="display:' + estilo + ';" data-lugar="' + escapeHtml(ent.lugar) + '" data-fecha="' + escapeHtml(ent.fecha) + '">' + (climaPrevio || '🌤️ Consultando...') + '</div>';
       }
@@ -1287,7 +1220,7 @@ function renderizar(){
       if(tor.lugar){
         var cacheKey = tor.lugar.trim().toLowerCase() + '_' + (tor.fecha || 'hoy');
         var climaPrevio = climaCache[cacheKey];
-        var estilo = climaPrevio ? 'inline-flex' : 'inline-flex';
+        var estilo = 'inline-flex';
         lugarTxt = '<div class="meta">' + iconSvg('icon-ubicacion', 14) + ' <strong>Lugar:</strong> ' + escapeHtml(tor.lugar) + '</div>' +
           '<div class="weather-badge weather-badge-dynamic" style="display:' + estilo + ';" data-lugar="' + escapeHtml(tor.lugar) + '" data-fecha="' + escapeHtml(tor.fecha) + '">' + (climaPrevio || '🌤️ Consultando...') + '</div>';
       }
@@ -1375,7 +1308,6 @@ function renderizar(){
 
 // ============ INICIALIZACIÓN ============
 document.addEventListener('DOMContentLoaded', function(){
-  // Tema
   var temaGuardado = localStorage.getItem('pickleball_tema');
   if(temaGuardado === 'dark'){
     document.documentElement.setAttribute('data-theme', 'dark');
@@ -1384,14 +1316,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
   $('btn-tema').addEventListener('click', toggleTema);
 
-  // Botón refresh manual
   $('btn-refresh').addEventListener('click', function(){
     var btn = this;
     btn.classList.add('girando');
     cargarDatos().then(function(){ btn.classList.remove('girando'); });
   });
 
-  // Modal
   $('modal-cancelar').addEventListener('click', cerrarModal);
   $('modal-aceptar').addEventListener('click', function(){
     if(modalCallbackAceptar) modalCallbackAceptar();
@@ -1400,13 +1330,11 @@ document.addEventListener('DOMContentLoaded', function(){
     if(e.target.id === 'modal-overlay') cerrarModal();
   });
 
-  // Home
   $('btn-soy-alumno').addEventListener('click', mostrarAccesoAlumno);
   $('btn-soy-monitor').addEventListener('click', entrarComoMonitorSeleccion);
   $('btn-solicitar-prueba').addEventListener('click', pedirClaseLibreSinRegistro);
   $('link-privacidad').addEventListener('click', function(e){ e.preventDefault(); mostrarPoliticaPrivacidad(); });
 
-  // Volver
   $('btn-volver-login').addEventListener('click', volverAHome);
   $('btn-volver-ent').addEventListener('click', volverAHome);
   $('btn-volver-tor').addEventListener('click', volverAHome);
@@ -1414,25 +1342,20 @@ document.addEventListener('DOMContentLoaded', function(){
   $('btn-volver-alumnos').addEventListener('click', volverAHome);
   $('btn-volver-gestion').addEventListener('click', volverAHome);
 
-  // Login
   $('btn-login-entrar').addEventListener('click', procesarAccesoAlumno);
   $('input-login-pin').addEventListener('keypress', function(e){
     if(e.key === 'Enter') procesarAccesoAlumno();
   });
 
-  // Crear
   $('btn-crear-ent').addEventListener('click', agregarEntrenamiento);
   $('btn-crear-tor').addEventListener('click', agregarTorneo);
   $('btn-crear-alumno').addEventListener('click', registrarNuevoAlumno);
 
-  // Perfil
   $('btn-recarga-bono').addEventListener('click', solicitarRecargaBono);
   $('btn-cerrar-sesion').addEventListener('click', cerrarSesionAlumno);
 
-  // Gestión
   $('btn-reiniciar').addEventListener('click', reiniciarDatosCompletos);
 
-  // Nav
   var navBtns = document.querySelectorAll('nav button[data-nav]');
   for(var i=0;i<navBtns.length;i++){
     (function(btn){
@@ -1442,13 +1365,8 @@ document.addEventListener('DOMContentLoaded', function(){
     })(navBtns[i]);
   }
 
-  // Carga inicial
   cargarDatos();
-
-  // Auto-refresco cada 30s
-  intervaloRefrescoId = setInterval(function(){
-    cargarDatos(true);
-  }, INTERVALO_REFRESCO);
+  setInterval(function(){ cargarDatos(true); }, INTERVALO_REFRESCO);
 });
 </script>
 </body>
