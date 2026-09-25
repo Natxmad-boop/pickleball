@@ -251,7 +251,7 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
     <svg><use href="#icon-luna"/></svg>
   </button>
   <div class="header-inner">
-    <img class="logo-svg" src="logo.png" alt="Pickleball El Escorial">
+    <img class="logo-svg" src="logo.png.svg" alt="Pickleball El Escorial">
     <div class="header-text">
       <h1>Pickleball</h1>
       <div class="sub">El Escorial</div>
@@ -264,7 +264,7 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 
   <div id="seccion-home" class="section active">
     <div class="home-hero">
-      <img class="logo-grande" src="logo.png" alt="Pickleball El Escorial">
+      <img class="logo-grande" src="logo.png.svg" alt="Pickleball El Escorial">
       <h2>Pickleball</h2>
       <div class="sub">El Escorial</div>
       <p class="tagline">Tu club de pickleball en la sierra de Madrid</p>
@@ -425,12 +425,10 @@ nav button.active svg{transform:scale(1.1);color:var(--dorado)}
 <script>
 "use strict";
 
-// ============ CONFIGURACIÓN ============
 var API_URL = "https://api.npoint.io/3a455d7f585f36c26a3f";
 var PASS_MONITOR = "1234";
 var INTERVALO_REFRESCO = 30000;
 
-// ============ COORDENADAS PARA EL CLIMA ============
 var COORDENADAS = {
   "madrid":{lat:40.4168,lon:-3.7038,n:"Madrid"},
   "barcelona":{lat:41.3851,lon:2.1734,n:"Barcelona"},
@@ -453,14 +451,12 @@ var COORDENADAS = {
   "valdemorillo":{lat:40.5000,lon:-4.0667,n:"Valdemorillo"}
 };
 
-// ============ ESTADO GLOBAL ============
 var modoMonitorActivo = false;
 var alumnoActual = null;
 var climaCache = {};
 var datosGlobales = { entrenamientos:[], torneos:[], alumnos:[], avisos:[], historial:[] };
 var modalCallbackAceptar = null;
 
-// ============ UTILIDADES ============
 function $(id){ return document.getElementById(id); }
 
 function escapeHtml(str){
@@ -515,7 +511,6 @@ function cerrarModal(){
   modalCallbackAceptar = null;
 }
 
-// ============ SINCRONIZACIÓN ============
 function cargarDatos(silencioso){
   if(!silencioso) $('estado-sync').innerText = "Cargando...";
   return fetch(API_URL + "?t=" + Date.now())
@@ -563,7 +558,6 @@ function guardarDatos(){
   });
 }
 
-// ============ TEMA ============
 function toggleTema(){
   var actual = document.documentElement.getAttribute('data-theme');
   var nuevo = actual === 'dark' ? 'light' : 'dark';
@@ -574,14 +568,12 @@ function toggleTema(){
     : '<svg><use href="#icon-luna"/></svg>';
 }
 
-// ============ PRIVACIDAD ============
 function mostrarPoliticaPrivacidad(){
   mostrarModal('Política de Privacidad',
     'Sus datos serán tratados exclusivamente para gestionar la clase de prueba y la comunicación interna del club, conforme al RGPD. Podrá ejercer sus derechos contactando con el club.',
     function(){}, { textoAceptar: 'Entendido' });
 }
 
-// ============ NAVEGACIÓN ============
 function volverAHome(){
   modoMonitorActivo = false;
   alumnoActual = null;
@@ -638,7 +630,6 @@ function cambiarSeccion(seccion){
   renderizar();
 }
 
-// ============ AUTENTICACIÓN ============
 function procesarAccesoAlumno(){
   var nombre = $('input-login-nombre').value.trim();
   var pin = $('input-login-pin').value.trim();
@@ -685,7 +676,6 @@ function cerrarSesionAlumno(){
   volverAHome();
 }
 
-// ============ CLIMA ============
 function obtenerClima(lugar, fechaTexto){
   if(!lugar) return Promise.resolve(null);
   var lugarClean = lugar.trim().toLowerCase();
@@ -779,7 +769,6 @@ function cargarClimasPendientes(){
   }
 }
 
-// ============ HISTORIAL ============
 function registrarHistorial(alumno, accion, detalle){
   if(!datosGlobales.historial) datosGlobales.historial = [];
   datosGlobales.historial.unshift({
@@ -789,7 +778,6 @@ function registrarHistorial(alumno, accion, detalle){
   if(datosGlobales.historial.length > 200) datosGlobales.historial.length = 200;
 }
 
-// ============ ACCIONES ALUMNO ============
 function apuntarseEntrenamiento(id){
   if(!alumnoActual) return mostrarToast('Debes iniciar sesión.', 'warning');
   var alumnoBD = null;
@@ -893,7 +881,6 @@ function solicitarRecargaBono(){
   mostrarToast('Solicitud enviada al monitor.');
 }
 
-// ============ CLASE PRUEBA ============
 function pedirClaseLibreSinRegistro(){
   var nombre = $('input-nombre-prueba').value.trim();
   var telefono = $('input-telefono-prueba').value.trim();
@@ -917,7 +904,6 @@ function pedirClaseLibreSinRegistro(){
   mostrarToast('¡Solicitud enviada!');
 }
 
-// ============ ACCIONES MONITOR ============
 function registrarNuevoAlumno(){
   if(!modoMonitorActivo) return;
   var nombre = $('nuevo-alumno-nombre').value.trim();
@@ -1105,7 +1091,6 @@ function reiniciarDatosCompletos(){
   }, { input: true, inputPlaceholder: 'BORRAR', danger: true, textoAceptar: 'Confirmar' });
 }
 
-// ============ RENDERIZADO ============
 function renderizar(){
   var i;
 
@@ -1147,7 +1132,6 @@ function renderizar(){
     $('panel-identificado').style.display = 'none';
   }
 
-  // ENTRENAMIENTOS
   var listaEnt = $('lista-entrenamientos');
   if(!datosGlobales.entrenamientos || datosGlobales.entrenamientos.length === 0){
     listaEnt.innerHTML = '<p class="empty-state">No hay entrenamientos programados.</p>';
@@ -1162,9 +1146,8 @@ function renderizar(){
       if(ent.lugar){
         var cacheKey = ent.lugar.trim().toLowerCase() + '_' + (ent.fecha || 'hoy');
         var climaPrevio = climaCache[cacheKey];
-        var estilo = 'inline-flex';
         lugarTxt = '<div class="meta">' + iconSvg('icon-ubicacion', 14) + ' <strong>Lugar:</strong> ' + escapeHtml(ent.lugar) + '</div>' +
-          '<div class="weather-badge weather-badge-dynamic" style="display:' + estilo + ';" data-lugar="' + escapeHtml(ent.lugar) + '" data-fecha="' + escapeHtml(ent.fecha) + '">' + (climaPrevio || '🌤️ Consultando...') + '</div>';
+          '<div class="weather-badge weather-badge-dynamic" style="display:inline-flex;" data-lugar="' + escapeHtml(ent.lugar) + '" data-fecha="' + escapeHtml(ent.fecha) + '">' + (climaPrevio || '🌤️ Consultando...') + '</div>';
       }
 
       var listaInscritosHTML;
@@ -1205,7 +1188,6 @@ function renderizar(){
     }).join('');
   }
 
-  // TORNEOS
   var listaTor = $('lista-torneos');
   if(!datosGlobales.torneos || datosGlobales.torneos.length === 0){
     listaTor.innerHTML = '<p class="empty-state">No hay torneos programados.</p>';
@@ -1220,9 +1202,8 @@ function renderizar(){
       if(tor.lugar){
         var cacheKey = tor.lugar.trim().toLowerCase() + '_' + (tor.fecha || 'hoy');
         var climaPrevio = climaCache[cacheKey];
-        var estilo = 'inline-flex';
         lugarTxt = '<div class="meta">' + iconSvg('icon-ubicacion', 14) + ' <strong>Lugar:</strong> ' + escapeHtml(tor.lugar) + '</div>' +
-          '<div class="weather-badge weather-badge-dynamic" style="display:' + estilo + ';" data-lugar="' + escapeHtml(tor.lugar) + '" data-fecha="' + escapeHtml(tor.fecha) + '">' + (climaPrevio || '🌤️ Consultando...') + '</div>';
+          '<div class="weather-badge weather-badge-dynamic" style="display:inline-flex;" data-lugar="' + escapeHtml(tor.lugar) + '" data-fecha="' + escapeHtml(tor.fecha) + '">' + (climaPrevio || '🌤️ Consultando...') + '</div>';
       }
 
       var listaInscritosHTML;
@@ -1264,7 +1245,6 @@ function renderizar(){
 
   setTimeout(cargarClimasPendientes, 50);
 
-  // PANEL MONITOR
   if(modoMonitorActivo){
     var contAvisos = $('lista-avisos-monitor');
     if(datosGlobales.avisos && datosGlobales.avisos.length > 0){
@@ -1306,7 +1286,6 @@ function renderizar(){
   $('panel-crear-torneo').style.display = modoMonitorActivo ? 'block' : 'none';
 }
 
-// ============ INICIALIZACIÓN ============
 document.addEventListener('DOMContentLoaded', function(){
   var temaGuardado = localStorage.getItem('pickleball_tema');
   if(temaGuardado === 'dark'){
